@@ -1,0 +1,1 @@
+此目录放置linux nginx的相关安装文件，后缀名为*.tar.gz

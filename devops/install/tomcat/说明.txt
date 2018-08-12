@@ -1,0 +1,6 @@
+此目录放置linux tomcat相关的安装文件，后缀名为*.tar.gz。
+
+因为一般是引用oralce jdk，所以此目录会放置以下两文件：
+
+apache-tomcat-8.0.50.tar.gz
+jdk-8u162-linux-x64.tar.gz
