@@ -1,0 +1,35 @@
+<Server port="$shutdownport" shutdown="SHUTDOWN">
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" />
+    <!--Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" /-->
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+    <Listener className="org.apache.catalina.storeconfig.StoreConfigLifecycleListener"/>
+
+    <GlobalNamingResources>
+    <!-- Used by Manager webapp -->
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+       description="User database that can be updated and saved"
+           factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+          pathname="conf/tomcat-users.xml" />
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+    <Connector port="$port" protocol="org.apache.coyote.http11.Http11NioProtocol" maxThreads="150" minSpareThreads="25"
+               enableLookups="false" redirectPort="8443" acceptCount="200"
+               connectionTimeout="40000" 
+               disableUploadTimeout="false"/>
+
+    <!-- This is here for compatibility only, not required -->
+    <!-- <Connector port="59009" protocol="AJP/1.3" /> -->
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+             resourceName="UserDatabase" />
+      <Host name="localhost" appBase="$appBase" unpackWARs="true">
+          <Valve className="org.apache.catalina.valves.AccessLogValve" rotatable="true"
+                 directory="logs"  prefix="access.log"
+                 pattern="%h %{X-FORWARDED-FOR}i %l %u %t %r %s %b  %q %{User-Agent}i %T %D" resolveHosts="false"/>
+      </Host>
+    </Engine>
+  </Service>
+</Server>
