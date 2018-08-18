@@ -1,4 +1,4 @@
-/metronic/
+/ipoms/static/metronic/
 *.zip
 *.tar.gz
 *.pyc
