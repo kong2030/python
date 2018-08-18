@@ -2,3 +2,5 @@
 *.zip
 *.tar.gz
 *.pyc
+*DS_Store
+*idea
