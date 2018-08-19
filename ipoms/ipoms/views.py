@@ -8,13 +8,16 @@ from django.http import HttpResponse
 # Create your views here.
 
 ##加载首页
-def index(request):
+def default_page(request):
+	return HttpResponseRedirect("/ipoms/index.html")
+
+def index_page(request):
 	result={'login':1};
 	return render(request,'index.html',result)
 
 ##加载登录页面
 def login_page(request):
-	return render(request,'base.html')
+	return render(request,'login.html')
 
 ##登录验证
 @csrf_exempt

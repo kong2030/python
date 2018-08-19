@@ -16,11 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+
 from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
-    url(r'^ipoms/login$', views.login_page),
-    url(r'^ipoms/index$', views.index),
+    url(r'^ipoms/login.html$', views.login_page),
+    url(r'^ipoms/index.html$', views.index_page),
+    url(r'^ipoms/$', views.default_page),
 ]
