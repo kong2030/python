@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'systemconfig',
+    'stock',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=(
     os.path.join(BASE_DIR,'static'),
 )
+
+# login page
+LOGIN_URL = '/ipoms/login'

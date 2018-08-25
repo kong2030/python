@@ -24,7 +24,7 @@
                                 </div>
                             </li>
                             <!-- END SIDEBAR TOGGLER BUTTON -->
-                            <li class="nav-item start active open">
+                            <li class="nav-item ">
                                 <a href="{% url 'index' %}" class="nav-link">
                                     <i class="icon-home"></i>
                                     <span class="title">首页</span>
@@ -32,11 +32,12 @@
                                     <span class="open"></span>
                                 </a>
                             </li>
-                            <li class="nav-item  ">
+                            <li class="nav-item  start active open">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-diamond"></i>
                                     <span class="title">新股日历</span>
-                                    <span class="arrow "></span>
+                                    <span class="arrow open"></span>
+                                    <span class="selected"></span>
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="nav-item  ">
@@ -54,7 +55,7 @@
                                             <span class="title">券商列表</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item  ">
+                                    <li class="nav-item  active">
                                         <a href="{% url 'stock:listProduct' %}" class="nav-link ">
                                             <span class="title">产品列表</span>
                                         </a>
@@ -124,11 +125,11 @@
                         <div class="page-bar">
                             <ul class="page-breadcrumb">
                                 <li>
-                                    <span>Home</span>
-                                    <i class="fa fa-circle"></i>
+                                    <span>新股日历</span>
+                                    <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <span>Dashboard</span>
+                                    <span>产品列表</span>
                                 </li>
                             </ul>
                         </div>
@@ -139,61 +140,7 @@
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
-                        <!-- BEGIN DASHBOARD STATS 1-->
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <a class="dashboard-stat dashboard-stat-v2 blue" href="#">
-                                    <div class="visual">
-                                        <i class="fa fa-comments"></i>
-                                    </div>
-                                    <div class="details">
-                                        <div class="number">
-                                            <span data-counter="counterup" data-value="98">0</span>
-                                        </div>
-                                        <div class="desc"> 新股总数 </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <a class="dashboard-stat dashboard-stat-v2 red" href="#">
-                                    <div class="visual">
-                                        <i class="fa fa-bar-chart-o"></i>
-                                    </div>
-                                    <div class="details">
-                                        <div class="number">
-                                            <span data-counter="counterup" data-value="25">0</span></div>
-                                        <div class="desc"> 产品总数 </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <a class="dashboard-stat dashboard-stat-v2 green" href="#">
-                                    <div class="visual">
-                                        <i class="fa fa-shopping-cart"></i>
-                                    </div>
-                                    <div class="details">
-                                        <div class="number">
-                                            <span data-counter="counterup" data-value="80">0</span>
-                                        </div>
-                                        <div class="desc"> 申购次数 </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <a class="dashboard-stat dashboard-stat-v2 purple" href="#">
-                                    <div class="visual">
-                                        <i class="fa fa-globe"></i>
-                                    </div>
-                                    <div class="details">
-                                        <div class="number"> +
-                                            <span data-counter="counterup" data-value="100"></span>% </div>
-                                        <div class="desc"> 成功率 </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <!-- END DASHBOARD STATS 1-->
+
                     </div>
                     <!-- END CONTENT BODY -->
                 </div>
