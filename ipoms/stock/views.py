@@ -19,8 +19,8 @@ def list_stock(request):
 
 
 @login_required
-def list_securitiesCo(request):
-    return render(request, "stock/securitiesCo_list.html")
+def list_underwriter(request):
+    return render(request, "stock/underwriter_list.html")
 
 
 @login_required
