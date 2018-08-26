@@ -33,14 +33,34 @@ def list_underwriter(request):
 @login_required
 @csrf_exempt
 def add_underwriter(request):
+    try:
+        # 获取 post 数据
+        underwriter = request.POST["underwriter"]
+        shortname = request.POST["shortname"]
+        telephone = request.POST["telephone"]
+        email = request.POST["email"]
+
+        # 更新数据库
+        Underwriter.objects.update_or_create(underwriter=underwriter, defaults={"shortname":shortname, "telephone":telephone, "email":email})
+
+        return HttpResponse("success")
+
+    except Exception as e:
+        print e.message
+        return HttpResponse("error")
+
+
+@login_required
+@csrf_exempt
+def delete_underwriter(request):
     # 获取 post 数据
-    underwriter = request.POST["underwriter"]
-    shortname = request.POST["shortname"]
-    telephone = request.POST["telephone"]
-    email = request.POST["email"]
+    underwriter = request.POST["underwriter"].replace(" ", "")
+    shortname = request.POST["shortname"].replace(" ", "")
+    telephone = request.POST["telephone"].replace(" ", "")
+    email = request.POST["email"].replace(" ", "")
 
     # 更新数据库
-    Underwriter.objects.update_or_create(underwriter=underwriter, defaults={"shortname":shortname, "telephone":telephone, "email":email})
+    Underwriter.objects.filter(underwriter=underwriter).delete()
 
     return HttpResponse("success")
 

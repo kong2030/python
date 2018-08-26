@@ -26,6 +26,7 @@ urlpatterns = [
 
     url(r'^listUnderwriter$', views.list_underwriter, name='listUnderwriter'),
     url(r'^addUnderwriter$', views.add_underwriter, name='addUnderwriter'),
+    url(r'^deleteUnderwriter$', views.delete_underwriter, name='deleteUnderwriter'),
 
     url(r'^listProduct$', views.list_product, name='listProduct'),
 

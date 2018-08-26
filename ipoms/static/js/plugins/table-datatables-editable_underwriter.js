@@ -113,6 +113,7 @@ var TableDatatablesEditable = function () {
             nNew = true;
         });
 
+        // 删除 使用此函数
         table.on('click', '.delete', function (e) {
             e.preventDefault();
 
@@ -122,7 +123,28 @@ var TableDatatablesEditable = function () {
 
             var nRow = $(this).parents('tr')[0];
             oTable.fnDeleteRow(nRow);
-            alert("Deleted! Do not forget to do some ajax to sync with backend :)");
+            //alert("Deleted! Do not forget to do some ajax to sync with backend :)");
+
+            // 先获取参数
+            jqTds = $('>td', nRow);
+            var underwriter = jqTds[0].innerHTML;
+            var shortname = jqTds[1].innerHTML;
+            var telephone = jqTds[2].innerHTML;
+            var email = jqTds[3].innerHTML;
+
+            //alert("underwrite:"+underwriter+"shortname:"+shortname+"telephone:"+telephone+"email:"+email)
+
+            //ajax请求到后端
+            $.ajax({
+                 type: "POST",
+                 url: "/ipoms/stock/deleteUnderwriter",
+                 data: {"underwriter":underwriter,"shortname":shortname,"telephone":telephone,"email":email},
+                 success: function(result,status){
+                    //alert(result);
+                    swal("Good job!", "", "success");
+                 }
+            })
+
         });
 
         table.on('click', '.cancel', function (e) {
@@ -137,6 +159,7 @@ var TableDatatablesEditable = function () {
             }
         });
 
+        //编辑 或者 新建 都是使用此函数
         table.on('click', '.edit', function (e) {
             e.preventDefault();
             nNew = false;
@@ -168,7 +191,12 @@ var TableDatatablesEditable = function () {
                     url: "/ipoms/stock/addUnderwriter",
                     data: {"underwriter":underwriter,"shortname":shortname,"telephone":telephone,"email":email},
                     success: function(result,status){
-                        alert(result);
+                        if(result == "success"){
+                            swal("Good job!", "", "success");
+                        }else{
+                            swal("Good job!", "", "error");
+                        }
+
                     }
                 })
 
