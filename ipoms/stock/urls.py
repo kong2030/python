@@ -23,7 +23,10 @@ urlpatterns = [
 
     url(r'^addStock$', views.add_stock, name='addStock'),
     url(r'^listStock$', views.list_stock, name='listStock'),
+
     url(r'^listUnderwriter$', views.list_underwriter, name='listUnderwriter'),
+    url(r'^addUnderwriter$', views.add_underwriter, name='addUnderwriter'),
+
     url(r'^listProduct$', views.list_product, name='listProduct'),
 
 ]

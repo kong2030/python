@@ -4,6 +4,10 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from models import *
 
 # Create your views here.
 
@@ -20,7 +24,25 @@ def list_stock(request):
 
 @login_required
 def list_underwriter(request):
-    return render(request, "stock/underwriter_list.html")
+    # 获取所有承销商信息
+    underwriters = Underwriter.objects.all()
+
+    return render(request, "stock/underwriter_list.html", {"underwriters": underwriters})
+
+
+@login_required
+@csrf_exempt
+def add_underwriter(request):
+    # 获取 post 数据
+    underwriter = request.POST["underwriter"]
+    shortname = request.POST["shortname"]
+    telephone = request.POST["telephone"]
+    email = request.POST["email"]
+
+    # 更新数据库
+    Underwriter.objects.update_or_create(underwriter=underwriter, defaults={"shortname":shortname, "telephone":telephone, "email":email})
+
+    return HttpResponse("success")
 
 
 @login_required
