@@ -121,8 +121,10 @@ var TableDatatablesEditable = function () {
                 return;
             }
 
+             //获取当前删除行
             var nRow = $(this).parents('tr')[0];
-            oTable.fnDeleteRow(nRow);
+            //删除当前行
+            //oTable.fnDeleteRow(nRow);
             //alert("Deleted! Do not forget to do some ajax to sync with backend :)");
 
             // 先获取参数
@@ -141,7 +143,15 @@ var TableDatatablesEditable = function () {
                  data: {"underwriter":underwriter,"shortname":shortname,"telephone":telephone,"email":email},
                  success: function(result,status){
                     //alert(result);
-                    swal("Good job!", "", "success");
+                    if(result == "success"){
+                        //删除页面当前行
+                        oTable.fnDeleteRow(nRow);
+                        swal("Good job!", "", "success");
+                    }else{
+                        swal("Sorry! error to delete this row.", "", "error");
+
+                    }
+
                  }
             })
 
@@ -163,7 +173,7 @@ var TableDatatablesEditable = function () {
         table.on('click', '.edit', function (e) {
             e.preventDefault();
             nNew = false;
-            
+
             /* Get the row as a parent of the link that was clicked on */
             var nRow = $(this).parents('tr')[0];
 
@@ -194,7 +204,7 @@ var TableDatatablesEditable = function () {
                         if(result == "success"){
                             swal("Good job!", "", "success");
                         }else{
-                            swal("Good job!", "", "error");
+                            swal("Sorry! error to save this row.", "please refresh the page.", "error");
                         }
 
                     }

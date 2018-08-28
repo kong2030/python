@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--
+<!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
 Version: 4.7.5
 Author: KeenThemes
@@ -15,7 +15,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en" ng-app="mainApp">
+<html lang="en">
     <!--<![endif]-->
     <!-- BEGIN HEAD -->
 
@@ -106,118 +106,16 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- END HEADER & CONTENT DIVIDER -->
             <!-- BEGIN CONTAINER -->
             <div class="page-container">
+
+                <!-- ---------------html 模板继承------------------------ -->
+
                 <!-- BEGIN SIDEBAR -->
-                <div class="page-sidebar-wrapper">
-                    <!-- BEGIN SIDEBAR -->
-                    <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-                    <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-                    <div class="page-sidebar navbar-collapse collapse">
-                        <!-- BEGIN SIDEBAR MENU -->
-                        <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-                        <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-                        <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-                        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-                        <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-                        <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-                        <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
-                            <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
-                            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-                            <li class="sidebar-toggler-wrapper hide">
-                                <div class="sidebar-toggler">
-                                    <span></span>
-                                </div>
-                            </li>
-                            <!-- END SIDEBAR TOGGLER BUTTON -->
-                            <li {% block index_start_class %}{% endblock %}>
-                                <a href="{% url 'index' %}" class="nav-link">
-                                    <i class="icon-home"></i>
-                                    <span class="title">首页</span>
-                                    <span {% block index_selected_class %}{% endblock %}></span>
-                                </a>
-                            </li>
-                            <li  {% block stock_start_class %}{% endblock %}>
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-diamond"></i>
-                                    <span class="title">新股日历</span>
-                                    <span {% block stock_open_class %}{% endblock %}></span>
-                                    <span {% block stock_selected_class %}{% endblock %}></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li {% block stockAdd_active_class %}{% endblock %}>
-                                        <a href="{% url 'stock:addStock' %}" class="nav-link ">
-                                            <span class="title">新增新股</span>
-                                        </a>
-                                    </li>
-                                    <li {% block stockList_active_class %}{% endblock %}>
-                                        <a href="{% url 'stock:listStock' %}" class="nav-link ">
-                                            <span class="title">新股列表</span>
-                                        </a>
-                                    </li>
-                                    <li {% block underwriterList_active_class %}{% endblock %}>
-                                        <a href="{% url 'stock:listUnderwriter' %}" class="nav-link ">
-                                            <span class="title">承销商列表</span>
-                                        </a>
-                                    </li>
-                                    <li {% block productList_active_class %}{% endblock %}>
-                                        <a href="{% url 'stock:listProduct' %}" class="nav-link ">
-                                            <span class="title">产品列表</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li {% block stockOps_start_class %}{% endblock %}>
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-puzzle"></i>
-                                    <span class="title">新股申购</span>
-                                    <span {% block stockOps_open_class %}{% endblock %}></span>
-                                    <span {% block stockOps_selected_class %}{% endblock %}></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li {% block stockStatus_active_class %}{% endblock %}>
-                                        <a href="#" class="nav-link ">
-                                            <span class="title">新股状态</span>
-                                        </a>
-                                    </li>
-                                    <li {% block statusOps_active_class %}{% endblock %}>
-                                        <a href="#" class="nav-link ">
-                                            <span class="title">状态流转</span>
-                                        </a>
-                                    </li>
-                                    <li {% block statusHistory_active_class %}{% endblock %}>
-                                        <a href="#" class="nav-link ">
-                                            <span class="title">流转历史</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li {% block sysconfig_start_class %}{% endblock %}>
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-settings"></i>
-                                    <span class="title">系统管理</span>
-                                    <span {% block sysconfig_open_class %}{% endblock %}></span>
-                                    <span {% block sysconfig_selected_class %}{% endblock %}></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li {% block admin_active_class %}{% endblock %}>
-                                        <a href="/admin" class="nav-link " target="_blank">
-                                            <span class="title">用户管理</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="#" class="nav-link ">
-                                            <span class="title">权限管理</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <!-- END SIDEBAR MENU -->
-                    </div>
-                    <!-- END SIDEBAR -->
-                </div>
+
+                {% block sidebar %}{% endblock %}
+
                 <!-- END SIDEBAR -->
 
-    <!-- ---------------html 模板继承------------------------ -->
+
                 <!-- BEGIN CONTENT -->
 
                 {% block content %}{% endblock %}
@@ -254,7 +152,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- END CORE PLUGINS -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <script src="/static/metronic/assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
-        <script src="/static/metronic/assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/asset/assets//assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <script src="/static/metronic/assets/global/scripts/datatable.js" type="text/javascript"></script>
@@ -276,13 +174,6 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- BEGIN EXTRA SCRIPTS -->
         {% block script %}{% endblock %}
         <!-- END EXTRA SCRIPTS   -->
-
-        <!-- BEGIN MY SCRIPTS -->
-        <script src="/static/js/plugins/angular.min.js"></script>
-        <script src="/static/js/plugins/ui-bootstrap-tpls.min.js"></script>
-        <script src="/static/js/app.js"></script>
-
-        <!-- BEGIN MY SCRIPTS -->
 
         <script>
             $(document).ready(function()

@@ -28,5 +28,6 @@ app.controller('loginCtrl', function($scope, $http,$compile) {
 
 
         });
-    }
+    };
+
 });
