@@ -26,11 +26,11 @@ class="selected"
 {% endblock %}
 
 {% block stockAdd_active_class %}
-class="nav-item  active"
+class="nav-item  "
 {% endblock %}
 
 {% block stockList_active_class %}
-class="nav-item  "
+class="nav-item  active"
 {% endblock %}
 
 {% block underwriterList_active_class %}
@@ -104,14 +104,14 @@ class="nav-item  "
                                     <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <span>新增新股</span>
+                                    <span>新股列表</span>
                                 </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
                         <h1 class="page-title"> 新股管理
-                            <small>新建新股</small>
+                            <small>编辑新股</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -134,7 +134,7 @@ class="nav-item  "
                                                         <div class="col-md-3">
                                                             <div class="input-icon right">
                                                                 <i class="fa"></i>
-                                                                <input type="text" class="form-control" name="stockCode" placeholder="例如：603225.SH" value="" required/> </div>
+                                                                <input type="text" class="form-control" name="stockCode" placeholder="例如：603225.SH" value="{{ stock.stock_code }}" readonly /> </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -144,7 +144,7 @@ class="nav-item  "
                                                         <div class="col-md-3">
                                                             <div class="input-icon right">
                                                                 <i class="fa"></i>
-                                                                <input type="text" class="form-control" name="stockName" placeholder="新股名称" value="" required/> </div>
+                                                                <input type="text" class="form-control" name="stockName" placeholder="新股名称" value="{{ stock.stock_name }}" readonly /> </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -154,8 +154,8 @@ class="nav-item  "
                                                         <div class="col-md-3">
                                                             <select class="bs-select form-control" name="stockType" required>
                                                                 <option value="">请选择</option>
-                                                                <option>深市</option>
-                                                                <option>沪市</option>
+                                                                <option {% if stock.stock_type == '深市' %} selected {% endif %} >深市</option>
+                                                                <option {% if stock.stock_type == '沪市' %} selected {% endif %} >沪市</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -168,7 +168,7 @@ class="nav-item  "
                                                                 <option value="">请选择</option>
 
                                                                 {% for obj in underwriters %}
-                                                                <option value="{{ obj.underwriter }}">{{ obj.shortname }}</option>
+                                                                <option value="{{ obj.underwriter }}" {% if stock.underwriter.underwriter == obj.underwriter %} selected {% endif %} >{{ obj.shortname }}</option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
@@ -179,13 +179,13 @@ class="nav-item  "
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="zgStartDate" class="form-control" size="16" type="text" value="" placeholder="开始时间" readonly required>
+                                                                <input  name="zgStartDate" class="form-control" size="16" type="text" value="{{ stock.zg_start_date | date:'Y-m-d' }}" placeholder="开始时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="zgEndDate" class="form-control" size="16" type="text" value="" placeholder="结束时间" readonly required>
+                                                                <input  name="zgEndDate" class="form-control" size="16" type="text" value="{{ stock.zg_end_date | date:'Y-m-d' }}" placeholder="结束时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
@@ -196,13 +196,13 @@ class="nav-item  "
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="clStartDate" class="form-control" size="16" type="text" value="" placeholder="开始时间" readonly required>
+                                                                <input  name="clStartDate" class="form-control" size="16" type="text" value="{{ stock.cl_start_date | date:'Y-m-d' }}" placeholder="开始时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="clEndDate" class="form-control" size="16" type="text" value="" placeholder="结束时间" readonly required>
+                                                                <input  name="clEndDate" class="form-control" size="16" type="text" value="{{ stock.cl_end_date | date:'Y-m-d' }}" placeholder="结束时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
@@ -213,13 +213,13 @@ class="nav-item  "
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="xjStartDate" class="form-control" size="16" type="text" value="" placeholder="开始时间" readonly required>
+                                                                <input  name="xjStartDate" class="form-control" size="16" type="text" value="{{ stock.xj_start_date | date:'Y-m-d' }}" placeholder="开始时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="xjEndDate" class="form-control" size="16" type="text" value="" placeholder="结束时间" readonly required>
+                                                                <input  name="xjEndDate" class="form-control" size="16" type="text" value="{{ stock.xj_end_date | date:'Y-m-d' }}" placeholder="结束时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
@@ -230,13 +230,13 @@ class="nav-item  "
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="sgStartDate" class="form-control" size="16" type="text" value="" placeholder="开始时间" readonly required>
+                                                                <input  name="sgStartDate" class="form-control" size="16" type="text" value="{{ stock.sg_start_date | date:'Y-m-d' }}" placeholder="开始时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="sgEndDate" class="form-control" size="16" type="text" value="" placeholder="结束时间" readonly required>
+                                                                <input  name="sgEndDate" class="form-control" size="16" type="text" value="{{ stock.sg_end_date | date:'Y-m-d' }}" placeholder="结束时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
@@ -247,24 +247,24 @@ class="nav-item  "
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="jkStartDate" class="form-control" size="16" type="text" value="" placeholder="开始时间" readonly required>
+                                                                <input  name="jkStartDate" class="form-control" size="16" type="text" value="{{ stock.jk_start_date | date:'Y-m-d' }}" placeholder="开始时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="jkEndDate" class="form-control" size="16" type="text" value="" placeholder="结束时间" readonly required>
+                                                                <input  name="jkEndDate" class="form-control" size="16" type="text" value="{{ stock.jk_end_date | date:'Y-m-d' }}" placeholder="结束时间" readonly required>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group" hidden>
+                                                    <div class="form-group">
                                                         <label class="control-label col-md-3">六、上市时间
                                                             <span> * </span>
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                                <input  name="ssDate" class="form-control" size="16" type="text" value="" placeholder="上市时间" readonly >
+                                                                <input  name="ssDate" class="form-control" size="16" type="text" value="{{ stock.ss_date | date:'Y-m-d' }}" placeholder="上市时间" readonly >
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
                                                             <span class="help-block"> 在确认真正上市时间后再填即可 </span>
@@ -275,7 +275,7 @@ class="nav-item  "
                                                     <div class="row">
                                                         <div class="col-md-offset-4 col-md-9">
                                                             <button type="submit" class="btn green">提交</button>
-                                                            <button type="button" class="btn default">取消</button>
+                                                            <button type="button" class="btn default"><a href="{% url 'stock:listStock' %}" style="text-decoration:none;color:#666">取消</a></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -305,18 +305,20 @@ class="nav-item  "
         <!-- END PAGE LEVEL SCRIPTS -->
 
         <!-- datetimepicker -->
-	<script type="text/javascript">
-		$(".form_date").datetimepicker({
-			language : 'zh-CN',
-			weekStart : 1,
-			autoclose : 1,
-			todayHighlight : 1,
-			startView : 2,
-			minView : 2,
-			forceParse : 0,
-			pickerPosition:'top-right'
-		});
-	</script>
+        <script type="text/javascript">
+            $(".form_date").datetimepicker({
+                language : 'zh-CN',
+                weekStart : 1,
+                autoclose : 1,
+                todayHighlight : 1,
+                startView : 2,
+                minView : 2,
+                forceParse : 0,
+                pickerPosition:'top-right',
+                format:'yyyy-mm-dd'
+            });
+        </script>
+
 
 
 {% endblock %}

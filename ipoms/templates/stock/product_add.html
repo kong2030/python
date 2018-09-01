@@ -79,12 +79,20 @@
                                                             <input type="text" class="form-control" name="shAccount" placeholder="例如：B880693632" value="{{ product.sh_account }}" required/> </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">目前状态
+                                                        <span class="required"> * </span>
+                                                    </label>
+                                                    <div class="col-md-7">
+                                                        <label class="radio-inline"> <input type="radio" value="1" name="status" {% if product.status != 0 %} checked {% endif %} >正常</label>
+                                                        <label class="radio-inline"> <input type="radio" value="0" name="status" {% if product.status == 0 %} checked {% endif %} >已到期</label>
+                                                    </div>
+                                                </div>
                                             <div class="form-actions">
                                                 <div class="row">
                                                     <div class="col-md-offset-4 col-md-9">
-                                                        <button type="submit" class="btn green">Submit</button>
-                                                        <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+                                                        <button type="submit" class="btn green">提交</button>
+                                                        <button type="button" class="btn default" ng-click="cancel()">取消</button>
                                                     </div>
                                                 </div>
                                             </div>

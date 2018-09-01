@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
+
 from django.shortcuts import render
 
 from django.contrib.auth.decorators import login_required
@@ -8,18 +10,97 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
 from models import *
+from . import services
 
 # Create your views here.
 
 
+# 打开新股 新建页面
 @login_required
 def add_stock(request):
-    return render(request, "stock/stock_add.html")
+    underwriters = Underwriter.objects.all()
+    return render(request, "stock/stock_add.html", {"underwriters": underwriters})
 
 
+# 显示所有新股信息
 @login_required
 def list_stock(request):
-    return render(request, "stock/stock_list.html")
+    stocks = Stock.objects.all()
+    for stock in stocks:
+        if stock.current_status == 0:
+            stock.current_status_str = "刚刚录入"
+        if stock.current_status == 1:
+            stock.current_status_str = "准备招股"
+        if stock.current_status == 2:
+            stock.current_status_str = "准备材料"
+        if stock.current_status == 3:
+            stock.current_status_str = "准备询价"
+        if stock.current_status == 4:
+            stock.current_status_str = "准备申购"
+        if stock.current_status == 5:
+            stock.current_status_str = "准备缴款"
+        if stock.current_status == 6:
+            stock.current_status_str = "准备上市"
+        if stock.current_status == 7:
+            stock.current_status_str = "已经上市"
+
+    return render(request, "stock/stock_list.html", {"stocks": stocks})
+
+
+# 打开新股编辑页面
+@login_required
+def edit_stock(request, stock_code):
+    stock = Stock.objects.filter(stock_code=stock_code)[0]
+    underwriters = Underwriter.objects.all()
+    return render(request, "stock/stock_edit.html", {"stock": stock, "underwriters": underwriters})
+
+
+# 保存新股
+@login_required
+@csrf_exempt
+def save_stock(request):
+    # 获取参数
+    stock_code = request.POST["stockCode"]
+    stock_name = request.POST["stockName"]
+    stock_type = request.POST["stockType"]
+    underwriter = Underwriter.objects.filter(underwriter=request.POST["underwriter"])[0]
+    zg_start_date = datetime.datetime.strptime(request.POST["zgStartDate"], "%Y-%m-%d").date()
+    zg_end_date = datetime.datetime.strptime(request.POST["zgEndDate"], "%Y-%m-%d").date()
+    cl_start_date = datetime.datetime.strptime(request.POST["clStartDate"], "%Y-%m-%d").date()
+    cl_end_date = datetime.datetime.strptime(request.POST["clEndDate"], "%Y-%m-%d").date()
+    xj_start_date = datetime.datetime.strptime(request.POST["xjStartDate"], "%Y-%m-%d").date()
+    xj_end_date = datetime.datetime.strptime(request.POST["xjEndDate"], "%Y-%m-%d").date()
+    sg_start_date = datetime.datetime.strptime(request.POST["sgStartDate"], "%Y-%m-%d").date()
+    sg_end_date = datetime.datetime.strptime(request.POST["sgEndDate"], "%Y-%m-%d").date()
+    jk_start_date = datetime.datetime.strptime(request.POST["jkStartDate"], "%Y-%m-%d").date()
+    jk_end_date = datetime.datetime.strptime(request.POST["jkEndDate"], "%Y-%m-%d").date()
+    # 上市时间如果还没确定，延迟录入
+    if request.POST["ssDate"] is not None and request.POST["ssDate"] != "":
+        ss_date = datetime.datetime.strptime(request.POST["ssDate"], "%Y-%m-%d").date()
+    else:
+        ss_date = None
+
+    # 需要更新的字段
+    update_field = {"stock_name":stock_name,"stock_type":stock_type,"underwriter":underwriter,"zg_start_date":zg_start_date,\
+                    "zg_end_date":zg_end_date,"cl_start_date":cl_start_date,"cl_end_date":cl_end_date,"xj_start_date":xj_start_date,\
+                    "xj_end_date":xj_end_date,"sg_start_date":sg_start_date,"sg_end_date":sg_end_date,"jk_start_date":jk_start_date,\
+                    "jk_end_date":jk_end_date,"ss_date":ss_date}
+
+    stock = Stock(**update_field)
+    # 设置此只新股的状态
+    services.set_stock_status(stock)
+    update_field["current_status"] = stock.current_status
+    # 新建 或 更新 数据库
+    Stock.objects.update_or_create(stock_code=stock_code, defaults=update_field)
+
+    '''
+    stock = Stock(stock_code=stock_code,stock_name=stock_name,stock_type=stock_type,underwriter=underwriter,zg_start_date=zg_start_date, \
+                  zg_end_date=zg_end_date,cl_start_date=cl_start_date,cl_end_date=cl_end_date,xj_start_date=xj_start_date,xj_end_date=xj_end_date, \
+                  sg_start_date=sg_start_date,sg_end_date=sg_end_date,jk_start_date=jk_start_date,jk_end_date=jk_end_date)
+    stock.save()              
+    '''
+
+    return HttpResponseRedirect("/ipoms/stock/listStock")
 
 
 # 显示所有承销商
@@ -111,9 +192,11 @@ def save_product(request):
         shortname = request.POST["shortname"]
         sz_account = request.POST["szAccount"]
         sh_account = request.POST["shAccount"]
+        status = request.POST["status"]
 
         # 更新数据库
-        update_field = {"record_code": record_code, "product_name": product_name, "shortname":shortname, "sz_account": sz_account, "sh_account": sh_account}
+        update_field = {"record_code": record_code, "product_name": product_name, "shortname":shortname,\
+                        "sz_account": sz_account, "sh_account": sh_account, "status": status}
         Product.objects.update_or_create(product_code=product_code, defaults=update_field)
 
     except Exception as e:

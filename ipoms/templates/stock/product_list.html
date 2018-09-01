@@ -186,9 +186,9 @@ class="nav-item  "
                                                     <th> 产品编号 </th>
                                                     <th> 备案函号 </th>
                                                     <th> 产品名称 </th>
-                                                    <th> 产品简称 </th>
                                                     <th> 深市编码 </th>
-                                                    <th> 沪市编码</th>
+                                                    <th> 沪市编码 </th>
+                                                    <th> 产品状态 </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -203,9 +203,9 @@ class="nav-item  "
                                                     <td> {{ obj.product_code }} </td>
                                                     <td> {{ obj.record_code }} </td>
                                                     <td> {{ obj.product_name }} </td>
-                                                    <td> {{ obj.shortname }} </td>
                                                     <td> {{ obj.sz_account }} </td>
                                                     <td> {{ obj.sh_account }} </td>
+                                                    <td> {% if obj.status == 0 %} 已到期 {% else %} 正常 {% endif %}  </td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
