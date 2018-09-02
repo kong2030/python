@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'systemconfig',
     'stock',
 ]
@@ -127,8 +128,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS=(
-    os.path.join(BASE_DIR,'static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 # login page
 LOGIN_URL = '/ipoms/login'
+
+# cron tasks
+CRONJOBS = [
+    ('*/5 * * * *', 'ipoms.crons.update_stock_status', '>>' + os.path.join(BASE_DIR, 'logs/crons.log'))
+]

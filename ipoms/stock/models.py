@@ -13,6 +13,9 @@ class Underwriter(models.Model):
     telephone = models.CharField(max_length=50)
     email = models.CharField(max_length=50, null=True, blank=True)
 
+    def __unicode__(self):
+        return self.underwriter
+
 
 # 打新产品 model
 class Product(models.Model):
