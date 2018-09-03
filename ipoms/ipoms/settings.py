@@ -136,5 +136,5 @@ LOGIN_URL = '/ipoms/login'
 
 # cron tasks
 CRONJOBS = [
-    ('*/5 * * * *', 'ipoms.crons.update_stock_status', '>>' + os.path.join(BASE_DIR, 'logs/crons.log'))
+    ('*/1 * * * *', 'ipoms.crons.update_stock_status', '>>' + os.path.join(BASE_DIR, 'logs/crons.log'))
 ]
