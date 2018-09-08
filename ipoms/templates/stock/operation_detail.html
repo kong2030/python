@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+
+<!-- BEGIN EXTRA CSS -->
+
+{% block css %}
+
+
+{% endblock %}
+
+<!-- END EXTRA CSS -->
+
+
+<!-- BEGIN SIDEBAR -->
+
+<!-- index  begin-->
+{% block index_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block index_selected_class %}{% endblock %}
+
+<!-- index end -->
+
+<!-- 新股日历 模块 begin-->
+
+{% block stock_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block stock_open_class %}
+class="arrow "
+{% endblock %}
+
+{% block stock_selected_class %}
+
+{% endblock %}
+
+{% block stockAdd_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block stockList_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block underwriterList_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block productList_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 新股日历 模块 end -->
+
+<!-- 新股申购 模块 begin-->
+
+{% block stockOps_start_class %}
+class="nav-item start active open"
+{% endblock %}
+
+{% block stockOps_open_class %}
+class="arrow open"
+{% endblock %}
+
+{% block stockOps_selected_class %}
+class="selected"
+{% endblock %}
+
+{% block stockStatus_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block statusOps_active_class %}
+class="nav-item active"
+{% endblock %}
+
+{% block statusHistory_active_class %}
+class="nav-item "
+{% endblock %}
+
+<!-- 新股申购 模块 end -->
+
+<!-- 系统管理 模块 begin -->
+
+{% block sysconfig_start_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block sysconfig_open_class %}
+class="arrow"
+{% endblock %}
+
+{% block sysconfig_selected_class %}{% endblock %}
+
+{% block admin_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 系统管理 模块 end -->
+
+<!-- END SIDEBAR -->
+
+
+{% block content %}
+
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper">
+                    <!-- BEGIN CONTENT BODY -->
+                    <div class="page-content">
+                        <!-- BEGIN PAGE HEADER-->
+                        <!-- BEGIN PAGE BAR -->
+                        <div class="page-bar">
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <span>新股申购</span>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li>
+                                    <span>状态流转</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END PAGE BAR -->
+                        <!-- BEGIN PAGE TITLE-->
+                        <h1 class="page-title">
+                            {% if stock.current_status == 1 %}
+                                招股公告 <i class="fa fa-arrow-circle-right"></i> 提交材料
+                            {% elif stock.current_status == 2 %}
+                                提交材料 <i class="fa fa-arrow-circle-right"></i> 初步询价
+                            {% elif stock.current_status == 3 %}
+                                初步询价 <i class="fa fa-arrow-circle-right"></i> 网下申购
+                            {% elif stock.current_status == 4 %}
+                                网下申购 <i class="fa fa-arrow-circle-right"></i> 配售缴款
+                            {% elif stock.current_status == 5 %}
+                                配售缴款 <i class="fa fa-arrow-circle-right"></i> 等待上市
+                            {% endif %}
+                        </h1>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+
+                        <!-- BEGIN MY -->
+                        <!-- BEGIN MY -->
+                        <div class="row" >
+
+                        </div>
+                        <!-- END MY  -->
+                    </div>
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+
+{% endblock %}
+
+<!-- BEGIN EXTRA SCRIPTS -->
+{% block script %}
+
+
+{% endblock %}
+<!-- END EXTRA SCRIPTS -->

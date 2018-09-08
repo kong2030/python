@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+
+<!-- BEGIN EXTRA CSS -->
+
+{% block css %}
+
+
+{% endblock %}
+
+<!-- END EXTRA CSS -->
+
+
+<!-- BEGIN SIDEBAR -->
+
+<!-- index  begin-->
+{% block index_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block index_selected_class %}{% endblock %}
+
+<!-- index end -->
+
+<!-- 新股日历 模块 begin-->
+
+{% block stock_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block stock_open_class %}
+class="arrow "
+{% endblock %}
+
+{% block stock_selected_class %}
+
+{% endblock %}
+
+{% block stockAdd_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block stockList_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block underwriterList_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block productList_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 新股日历 模块 end -->
+
+<!-- 新股申购 模块 begin-->
+
+{% block stockOps_start_class %}
+class="nav-item start active open"
+{% endblock %}
+
+{% block stockOps_open_class %}
+class="arrow open"
+{% endblock %}
+
+{% block stockOps_selected_class %}
+class="selected"
+{% endblock %}
+
+{% block stockStatus_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block statusOps_active_class %}
+class="nav-item active"
+{% endblock %}
+
+{% block statusHistory_active_class %}
+class="nav-item "
+{% endblock %}
+
+<!-- 新股申购 模块 end -->
+
+<!-- 系统管理 模块 begin -->
+
+{% block sysconfig_start_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block sysconfig_open_class %}
+class="arrow"
+{% endblock %}
+
+{% block sysconfig_selected_class %}{% endblock %}
+
+{% block admin_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 系统管理 模块 end -->
+
+<!-- END SIDEBAR -->
+
+
+{% block content %}
+
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper" ng-controller="stockOperationCtrl">
+                    <!-- BEGIN CONTENT BODY -->
+                    <div class="page-content">
+                        <!-- BEGIN PAGE HEADER-->
+                        <!-- BEGIN PAGE BAR -->
+                        <div class="page-bar">
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <span>新股申购</span>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li>
+                                    <span>状态流转</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END PAGE BAR -->
+                        <!-- BEGIN PAGE TITLE-->
+                        <h1 class="page-title"> 新股操作
+                            <small>今天操作</small>
+                        </h1>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+
+                        <!-- BEGIN MY -->
+                        <!-- BEGIN MY -->
+                        <div class="row" >
+                            <div class="col-md-12">
+                                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                                <div class="portlet light portlet-fit bordered">
+
+                                    <div class="portlet-body">
+                                        <table class="table table-striped table-hover table-bordered" id="table_stock_operation">
+                                            <thead>
+                                                <tr>
+                                                    <th> 新股代码 </th>
+                                                    <th> 新股名称 </th>
+                                                    <th> 开始时间 </th>
+                                                    <th> 结束时间 </th>
+                                                    <th> 状态流转 </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for obj in zg_stocks %}
+                                                <tr>
+                                                    <td>{{ obj.stock_code }}</td>
+                                                    <td>{{ obj.stock_name }}</td>
+                                                    <td>{{ obj.zg_start_date | date:'Y-m-d'}}</td>
+                                                    <td>{{ obj.zg_end_date | date:'Y-m-d'}}</td>
+                                                    <td><a href="{% url 'stock:operationDetail' obj.stock_code %}" style="text-decoration:none;"> 招股公告 <i class="fa fa-arrow-circle-right"></i> 提交材料 </a></td>
+                                                </tr>
+                                                {% endfor %}
+
+                                                {% for obj in cl_stocks %}
+                                                <tr>
+                                                    <td>{{ obj.stock_code }}</td>
+                                                    <td>{{ obj.stock_name }}</td>
+                                                    <td>{{ obj.cl_start_date | date:'Y-m-d'}}</td>
+                                                    <td>{{ obj.cl_end_date | date:'Y-m-d'}}</td>
+                                                    <td><a href="{% url 'stock:operationDetail' obj.stock_code %}" style="text-decoration:none;"> 提交材料 <i class="fa fa-arrow-circle-right"></i> 初步询价 </a></td>
+                                                </tr>
+                                                {% endfor %}
+
+                                                {% for obj in xj_stocks %}
+                                                <tr>
+                                                    <td>{{ obj.stock_code }}</td>
+                                                    <td>{{ obj.stock_name }}</td>
+                                                    <td>{{ obj.xj_start_date | date:'Y-m-d'}}</td>
+                                                    <td>{{ obj.xj_end_date | date:'Y-m-d'}}</td>
+                                                    <td><a href="{% url 'stock:operationDetail' obj.stock_code %}" style="text-decoration:none;"> 初步询价 <i class="fa fa-arrow-circle-right"></i> 网下申购 </a></td>
+                                                </tr>
+                                                {% endfor %}
+
+                                                {% for obj in sg_stocks %}
+                                                <tr>
+                                                    <td>{{ obj.stock_code }}</td>
+                                                    <td>{{ obj.stock_name }}</td>
+                                                    <td>{{ obj.sg_start_date | date:'Y-m-d'}}</td>
+                                                    <td>{{ obj.sg_end_date | date:'Y-m-d'}}</td>
+                                                    <td><a href="{% url 'stock:operationDetail' obj.stock_code %}" style="text-decoration:none;"> 网下申购 <i class="fa fa-arrow-circle-right"></i> 配售缴款 </a></td>
+                                                </tr>
+                                                {% endfor %}
+
+                                                {% for obj in jk_stocks %}
+                                                <tr>
+                                                    <td>{{ obj.stock_code }}</td>
+                                                    <td>{{ obj.stock_name }}</td>
+                                                    <td>{{ obj.jk_start_date | date:'Y-m-d'}}</td>
+                                                    <td>{{ obj.jk_end_date | date:'Y-m-d'}}</td>
+                                                    <td><a href="{% url 'stock:operationDetail' obj.stock_code %}" style="text-decoration:none;"> 配售缴款 <i class="fa fa-arrow-circle-right"></i> 等待上市 </a></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- END EXAMPLE TABLE PORTLET-->
+                            </div>
+                        </div>
+                        <!-- END MY  -->
+                    </div>
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+
+{% endblock %}
+
+<!-- BEGIN EXTRA SCRIPTS -->
+{% block script %}
+
+
+{% endblock %}
+<!-- END EXTRA SCRIPTS -->

@@ -19,15 +19,15 @@ def set_stock_status(stock):
     jk_end_date = stock.jk_end_date
     ss_date = stock.ss_date
 
-    if today < zg_end_date:
+    if today <= zg_end_date:
         stock.current_status = 1
-    elif today < cl_end_date:
+    elif today <= cl_end_date:
         stock.current_status = 2
-    elif today < xj_end_date:
+    elif today <= xj_end_date:
         stock.current_status = 3
-    elif today < sg_end_date:
+    elif today <= sg_end_date:
         stock.current_status = 4
-    elif today < jk_end_date:
+    elif today <= jk_end_date:
         stock.current_status = 5
     elif ss_date is None or today < ss_date:
         stock.current_status = 6

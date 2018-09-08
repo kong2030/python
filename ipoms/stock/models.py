@@ -58,3 +58,22 @@ class Stock(models.Model):
     # 当前状态: 0：开始; 1：招股公告；2：材料提交；3：初步询价；4：网下申购；5：配售缴款；6：准备上市；7：结束
     current_status = models.IntegerField(default=0)
 
+    def __unicode__(self):
+        return self.stock_name
+
+
+# 新股申购 model
+class Operation(models.Model):
+    stock = models.ForeignKey(Stock, on_delete=models.PROTECT)
+    stock_code = models.CharField(max_length=50)
+    stock_name = models.CharField(max_length=50)
+    step = models.IntegerField()
+    current_status = models.IntegerField()
+    done_time = models.DateTimeField()
+    product_list = models.CharField(max_length=255, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    shares = models.IntegerField(null=True, blank=True)
+    operator = models.CharField(max_length=50, null=True, blank=True)
+    reviewer = models.CharField(max_length=50, null=True, blank=True)
+    remark = models.CharField(max_length=255, null=True, blank=True)
+

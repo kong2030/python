@@ -175,12 +175,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                                 <ul class="sub-menu">
                                     <li {% block stockStatus_active_class %}{% endblock %}>
-                                        <a href="#" class="nav-link ">
+                                        <a href="{% url 'stock:statusStock' 1 %}" class="nav-link ">
                                             <span class="title">新股状态</span>
                                         </a>
                                     </li>
                                     <li {% block statusOps_active_class %}{% endblock %}>
-                                        <a href="#" class="nav-link ">
+                                        <a href="{% url 'stock:operationStock' %}" class="nav-link ">
                                             <span class="title">状态流转</span>
                                         </a>
                                     </li>
@@ -289,16 +289,6 @@ License: You must have a valid license purchased only from themeforest(the above
         <script src="/static/js/app.js"></script>
 
         <!-- BEGIN MY SCRIPTS -->
-
-        <script>
-            $(document).ready(function()
-            {
-                $('#clickmewow').click(function()
-                {
-                    $('#radio1003').attr('checked', 'checked');
-                });
-            })
-        </script>
     </body>
 
 </html>

@@ -30,5 +30,5 @@ urlpatterns = [
     url(r'^ipoms/logout$', views.logout_check, name='logout'),
 
     # sub module url
-    url(r'^ipoms/stock/',include('stock.urls',namespace='stock')),
+    url(r'^ipoms/stock/',include('stock.urls', namespace='stock')),
 ]

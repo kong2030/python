@@ -98,3 +98,61 @@ app.controller('productAddCtrl', function($scope, $modalInstance, data) {
       }
 });
 
+
+// 新股状态页 controller
+app.controller('stockStatusCtrl', function($scope, $http) {
+    // 表格插件初始化
+    var oTable = $('#table_stock_status').dataTable({
+        "lengthMenu": [
+            [5, 15, 20, -1],
+            [5, 15, 20, "All"] // change per page values here
+        ],
+        // set the initial value
+        "pageLength": 5,
+
+        "language": {
+            "lengthMenu": " _MENU_ records",
+        },
+        "columnDefs": [{ // set default column settings
+            'orderable': true,
+            'targets': [0]
+        }, {
+            "searchable": true,
+            "targets": [0]
+        }],
+        "order": [
+            [0, "asc"]
+        ] // set first column as a default sort by asc
+    });
+
+});
+
+// 新股状态流转页 controller
+app.controller('stockOperationCtrl', function($scope, $http) {
+    // 表格插件初始化
+    var oTable = $('#table_stock_operation').dataTable({
+        "lengthMenu": [
+            [5, 15, 20, -1],
+            [5, 15, 20, "All"] // change per page values here
+        ],
+        // set the initial value
+        "pageLength": 5,
+
+        "language": {
+            "lengthMenu": " _MENU_ records",
+        },
+        "columnDefs": [{ // set default column settings
+            'orderable': true,
+            'targets': [0]
+        }, {
+            "searchable": true,
+            "targets": [0]
+        }],
+        "order": [
+            [0, "asc"]
+        ] // set first column as a default sort by asc
+    });
+
+});
+
+
