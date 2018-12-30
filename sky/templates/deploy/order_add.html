@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+
+<!-- BEGIN SIDEBAR -->
+
+<!-- index  begin-->
+{% block index_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block index_selected_class %}
+
+{% endblock %}
+
+<!-- index end -->
+
+<!-- 发布单 模块 begin-->
+
+{% block fbd_start_class %}
+class="nav-item start active open"
+{% endblock %}
+
+{% block fbd_open_class %}
+class="arrow open"
+{% endblock %}
+
+{% block fbd_selected_class %}
+class="selected"
+{% endblock %}
+
+{% block fbd_list_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block fbd_add_active_class %}
+class="nav-item active"
+{% endblock %}
+
+{% block fbd_addsql_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 发布单 模块 end -->
+
+<!-- 部署发布 模块 begin-->
+
+{% block bsfb_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block bsfb_open_class %}
+class="arrow"
+{% endblock %}
+
+{% block bsfb_selected_class %}{% endblock %}
+
+{% block bsfb_hjlz_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block bsfb_ksfb_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block bsfb_fbls_active_class %}
+class="nav-item "
+{% endblock %}
+
+<!-- 部署发布 模块 end -->
+
+<!-- 日常维护 模块 begin -->
+
+{% block rcwh_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block rcwh_open_class %}
+class="arrow "
+{% endblock %}
+
+{% block rcwh_selected_class %}
+
+{% endblock %}
+
+{% block rcwh_xzzj_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block rcwh_dbpz_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block rcwh_mmgj_active_class %}
+class="nav-item "
+{% endblock %}
+
+<!-- 日常维护 模块 end -->
+
+
+<!-- 系统管理 模块 begin -->
+
+{% block sysconfig_start_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block sysconfig_open_class %}
+class="arrow"
+{% endblock %}
+
+{% block sysconfig_selected_class %}{% endblock %}
+
+{% block admin_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 系统管理 模块 end -->
+
+<!-- END SIDEBAR -->
+
+{% block content %}
+
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper" ng-controller="orderCtrl">
+                    <!-- BEGIN CONTENT BODY -->
+                    <div class="page-content">
+                        <!-- BEGIN PAGE HEADER-->
+                        <!-- BEGIN PAGE BAR -->
+                        <div class="page-bar">
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <span>发布单</span>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li>
+                                    <span>新增发布单(上传)</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END PAGE BAR -->
+                        <!-- BEGIN PAGE TITLE-->
+                        <h1 class="page-title"> 发布单
+                            <small>新增</small>
+                        </h1>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                    <!-- BEGIN SAMPLE FORM PORTLET-->
+                                    <div class="portlet light bordered">
+                                        <div class="portlet-body">
+                                            <!-- BEGIN FORM-->
+                                            <form action="{% url 'deploy:saveOrder' %}" id="form_sample_2" class="form-horizontal" method="post" enctype="multipart/form-data">
+                                                <div class="form-body">
+                                                    <div class="alert alert-danger display-hide">
+                                                        <button class="close" data-close="alert"></button> You have some form errors. Please check below. </div>
+                                                    <div class="alert alert-success display-hide">
+                                                        <button class="close" data-close="alert"></button> Your form validation is successful! </div>
+                                                    <div class="form-group  margin-top-10">
+                                                        <label class="control-label col-md-3">发布单号
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <div class="input-icon right">
+                                                                <i class="fa"></i>
+                                                                <input type="text" class="form-control" name="moduleName" placeholder="自动生成" value="" readonly/> </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">应用系统
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <select class="bs-select form-control" data-live-search="true" data-size="8" name="appSystem" ng-change="selectChange()" ng-model="app_name" required>
+                                                                <option value="">请选择</option>
+
+                                                                {% for obj in appSystems %}
+                                                                <option value="{{ obj.app_name }}">{{ obj.chinese_name }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" >
+                                                        <label class="control-label col-md-3">组件
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <select class="form-control" data-live-search="true" data-size="8" name="module"  required>
+                                                                <option value="">请选择</option>
+                                                                <option value="{[ module_name ]}" ng-repeat="module_name in modules">{[ module_name ]}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">上传升级包
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <div class="input-icon right">
+                                                                <input type="file" class="form-control" name="updateFile" value="" accept=".zip" required/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">注意
+                                                            <span > : </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <label class="control-label">
+                                                                暂只支持上传zip包
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <br><br>
+                                                <div class="form-actions">
+                                                    <div class="row">
+                                                        <div class="col-md-offset-3 col-md-9">
+                                                            <button type="submit" class="btn green">提交</button>
+                                                            <button type="button" class="btn default"><a href="{% url 'deploy:listOrder' %}" style="text-decoration:none;color:#666">取消</a></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!-- END FORM-->
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+
+{% endblock %}
+
+<!-- BEGIN EXTRA SCRIPTS -->
+{% block script %}
+
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/static/metronic/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+        <script src="/static/js/plugins/bootstrap-datetimepicker.zh-CN.js"></script>
+        <script src="/static/metronic/assets/pages/scripts/form-validation.min.js" type="text/javascript"></script>
+        <!-- END PAGE LEVEL SCRIPTS -->
+
+
+{% endblock %}
+<!-- END EXTRA SCRIPTS -->

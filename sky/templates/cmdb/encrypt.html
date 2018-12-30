@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+
+<!-- BEGIN SIDEBAR -->
+
+<!-- index  begin-->
+{% block index_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block index_selected_class %}
+
+{% endblock %}
+
+<!-- index end -->
+
+<!-- 发布单 模块 begin-->
+
+{% block fbd_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block fbd_open_class %}
+class="arrow "
+{% endblock %}
+
+{% block fbd_selected_class %}
+
+{% endblock %}
+
+{% block fbd_list_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block fbd_add_active_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block fbd_addsql_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 发布单 模块 end -->
+
+<!-- 部署发布 模块 begin-->
+
+{% block bsfb_start_class %}
+class="nav-item "
+{% endblock %}
+
+{% block bsfb_open_class %}
+class="arrow"
+{% endblock %}
+
+{% block bsfb_selected_class %}{% endblock %}
+
+{% block bsfb_hjlz_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block bsfb_ksfb_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block bsfb_fbls_active_class %}
+class="nav-item "
+{% endblock %}
+
+<!-- 部署发布 模块 end -->
+
+<!-- 日常维护 模块 begin -->
+
+{% block rcwh_start_class %}
+class="nav-item start active open"
+{% endblock %}
+
+{% block rcwh_open_class %}
+class="arrow open"
+{% endblock %}
+
+{% block rcwh_selected_class %}
+class="selected"
+{% endblock %}
+
+{% block rcwh_xzzj_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block rcwh_dbpz_active_class %}
+class="nav-item "
+{% endblock %}
+
+{% block rcwh_mmgj_active_class %}
+class="nav-item active"
+{% endblock %}
+
+<!-- 日常维护 模块 end -->
+
+
+<!-- 系统管理 模块 begin -->
+
+{% block sysconfig_start_class %}
+class="nav-item  "
+{% endblock %}
+
+{% block sysconfig_open_class %}
+class="arrow"
+{% endblock %}
+
+{% block sysconfig_selected_class %}{% endblock %}
+
+{% block admin_active_class %}
+class="nav-item  "
+{% endblock %}
+
+<!-- 系统管理 模块 end -->
+
+<!-- END SIDEBAR -->
+
+{% block content %}
+
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper" ng-controller="encryptCtrl">
+                    <!-- BEGIN CONTENT BODY -->
+                    <div class="page-content">
+                        <!-- BEGIN PAGE HEADER-->
+                        <!-- BEGIN PAGE BAR -->
+                        <div class="page-bar">
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <span>日常维护</span>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li>
+                                    <span>密码工具</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END PAGE BAR -->
+                        <!-- BEGIN PAGE TITLE-->
+                        <h1 class="page-title"> 密码加密
+                            <small>加密工具</small>
+                        </h1>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                    <!-- BEGIN SAMPLE FORM PORTLET-->
+                                    <div class="portlet light bordered">
+                                        <div class="portlet-body">
+                                            <!-- BEGIN FORM-->
+                                            <form class="form-horizontal">
+                                                <div class="form-body" >
+                                                    <div class="form-group  margin-top-10">
+                                                        <label class="control-label col-md-3">明文密码
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <div class="input-icon right">
+                                                                <i class="fa"></i>
+                                                                <input type="password" class="form-control" ng-model="password" name="password" value=""/> </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  margin-top-10" >
+                                                        <label class="control-label col-md-3">加密密码：
+                                                        </label>
+                                                        <label class="control-label" style="background-color:yellow;">{[ encrypt_str ]}
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-group  margin-top-10">
+                                                        <label class="control-label col-md-3">原始密码：
+                                                        </label>
+                                                        <label class="control-label ">{[ password_ ]}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-actions">
+                                                    <div class="row">
+                                                        <div class="col-md-offset-4 col-md-9">
+                                                            <button class="btn green uppercase" ng-click="encrypt_pwd()">加密</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!-- END FORM-->
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+
+{% endblock %}
