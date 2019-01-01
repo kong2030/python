@@ -28,5 +28,8 @@ urlpatterns = [
     url(r'^addOrder$', views.add_order, name='addOrder'),
     url(r'^saveOrder$', views.save_order, name='saveOrder'),
 
+    url(r'^changeOrderPage$', views.change_order_page, name='changeOrderPage'),
+    url(r'^changeOrder$', views.change_order, name='changeOrder'),
+
 
 ]

@@ -18,3 +18,11 @@ class Order(models.Model):
     deploy_args = models.CharField(max_length=128, null=True)  # 部署需要的一些参数
     creator = models.ForeignKey(User, on_delete=models.PROTECT)
     create_time = models.DateTimeField()
+
+    update_time = models.DateTimeField()  # 最新修改时间
+    current_env = models.IntegerField(default=0)  # 0:刚新建
+    env_1 = models.IntegerField(default=0)   # 环境间流转状态，0:没开始，1：待发布，2：已发布
+    env_2 = models.IntegerField(default=0)
+    env_3 = models.IntegerField(default=0)
+    env_4 = models.IntegerField(default=0)
+    env_5 = models.IntegerField(default=0)

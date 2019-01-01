@@ -170,7 +170,7 @@ class="nav-item  "
                                                             <span class="required"> * </span>
                                                         </label>
                                                         <div class="col-md-3">
-                                                            <select class="bs-select form-control" data-live-search="true" data-size="8" name="appSystem" ng-change="selectChange()" ng-model="app_name" required>
+                                                            <select class="bs-select form-control" data-live-search="true" data-size="8" name="appSystem" ng-change="appChange()" ng-model="app_name" required>
                                                                 <option value="">请选择</option>
 
                                                                 {% for obj in appSystems %}

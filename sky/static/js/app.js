@@ -56,7 +56,7 @@ app.controller('moduleCtrl', function($scope, $http, $compile) {
 app.controller('orderCtrl', function($scope, $http, $compile) {
 
     //新建发布单
-    $scope.selectChange = function(){
+    $scope.appChange = function(){
         result = {"app_name": $scope.app_name}
 
         $http({

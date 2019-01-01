@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.db.models import Q
 import os
 import datetime
 import random
@@ -42,6 +43,7 @@ def save_order(request):
     module = Module.objects.filter(module_name=module_name)[0]
     creator = request.user
     create_time = datetime.datetime.now()
+    update_time = create_time
 
     # 获取上传文件并保存
     update_file = request.FILES.get("updateFile")
@@ -55,8 +57,48 @@ def save_order(request):
             f.write(chunk)
 
     order = Order(order_code=order_code, app_system=app_system, module=module, type=1, creator=creator,
-                  create_time=create_time, deploy_args=upload_file)
+                  create_time=create_time, deploy_args=upload_file, update_time=update_time)
     order.save()
 
     return HttpResponseRedirect("/sky/deploy/listOrder")
+
+
+# 环境流转页
+@login_required
+def change_order_page(request):
+    orders = Order.objects.all().exclude(Q(env_1=1) | Q(env_2=1) | Q(env_3=1) | Q(env_4=1) | Q(env_5=1))
+    envs = Environment.objects.all()
+    return render(request, "deploy/order_status.html", {"orders": orders, "envs": envs})
+
+
+# 环境流转
+@login_required
+@csrf_exempt
+def change_order(request):
+    try:
+        env_id = int(request.POST["env_id"])
+        order_code = request.POST["order_code"]
+
+        order = Order.objects.filter(order_code=order_code)[0]
+        order.update_time = datetime.datetime.now()
+        order.current_env = env_id
+        # 获取对应的环境
+        if env_id == 1:
+            order.env_1 = 1
+        elif env_id == 2:
+            order.env_2 = 1
+        elif env_id == 3:
+            order.env_3 = 1
+        elif env_id == 4:
+            order.env_4 = 1
+        elif env_id == 5:
+            order.env_5 = 1
+        # 更新数据库
+        order.save()
+        return HttpResponse("success")
+    except Exception as e:
+        print e
+        return HttpResponse("error")
+
+
 
