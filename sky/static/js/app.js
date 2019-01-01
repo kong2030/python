@@ -70,5 +70,9 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         });
     }
 
+    $scope.deploy = function(){
+        alert("开始部署")
+    }
+
 
 });

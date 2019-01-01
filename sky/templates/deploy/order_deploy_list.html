@@ -57,11 +57,11 @@ class="selected"
 {% endblock %}
 
 {% block bsfb_hjlz_active_class %}
-class="nav-item active"
+class="nav-item "
 {% endblock %}
 
 {% block bsfb_ksfb_active_class %}
-class="nav-item "
+class="nav-item active"
 {% endblock %}
 
 {% block bsfb_fbls_active_class %}
@@ -122,7 +122,7 @@ class="nav-item  "
 {% block content %}
 
                 <!-- BEGIN CONTENT -->
-                <div class="page-content-wrapper">
+                <div class="page-content-wrapper" ng-controller="orderCtrl">
                     <!-- BEGIN CONTENT BODY -->
                     <div class="page-content">
                         <!-- BEGIN PAGE HEADER-->
@@ -134,14 +134,14 @@ class="nav-item  "
                                     <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <span>环境流转</span>
+                                    <span>开始发布</span>
                                 </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
                         <h1 class="page-title"> 发布单
-                            <small>环境流转</small>
+                            <small>开始发布</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -160,7 +160,8 @@ class="nav-item  "
                                                         <th> 应用系统 </th>
                                                         <th> 创建用户 </th>
                                                         <th> 修改时间 </th>
-                                                        <th> 环境流转 </th>
+                                                        <th> 环境状态 </th>
+                                                        <th> 开始发布 </th>
                                                     </tr>
                                                 </thead>
                                             <tbody>
@@ -171,13 +172,11 @@ class="nav-item  "
                                                     <td> {{ obj.app_system.chinese_name }} </td>
                                                     <td> {{ obj.creator.username }} </td>
                                                     <td> {{ obj.update_time | date:'Y-m-d H:i:s' }} </td>
+                                                    <td> {% if obj.deploy_status == 1 %} <span class="label label-primary">{{ obj.env_status }}</span> {% endif %}
+                                                         {% if obj.deploy_status == 2 %} <span class="label label-success">{{ obj.env_status }}</span> {% endif %}
+                                                    </td>
                                                     <td>
-                                                        <select class="env-name label label-success"  name="envName" id="{{ obj.order_code }}">
-                                                            <option value="0">请选择</option>
-                                                            {% for env in envs %}
-                                                            <option value="{{ env.env_id }}" {% if env.env_id == obj.current_env %} selected {% endif %} >{{ env.env_name }}</option>
-                                                            {% endfor %}
-                                                        </select>
+                                                        <span class="label label-primary" style="cursor:pointer;" ng-click="deploy()">程序部署</span>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}

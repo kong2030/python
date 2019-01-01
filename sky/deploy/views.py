@@ -101,4 +101,50 @@ def change_order(request):
         return HttpResponse("error")
 
 
+# 开始发布页
+@login_required
+@csrf_exempt
+def list_deploy_order(request):
+    # 过滤刚新建还没流转的发布单
+    orders = Order.objects.all().exclude(env_1=0, env_2=0, env_3=0, env_4=0, env_5=0)
+    for order in orders:
+        env_id = order.current_env
+        env_name = Environment.objects.filter(env_id=env_id)[0].env_name
+        # 获取对应的环境
+        if env_id == 1:
+            if order.env_1 == 1:
+                order.env_status = "测试环境 待发布"
+                order.deploy_status = 1
+            if order.env_1 == 2:
+                order.env_status = "测试环境 已发布"
+                order.deploy_status = 2
+        elif env_id == 2:
+            if order.env_2 == 1:
+                order.env_status = "预发环境 待发布"
+                order.deploy_status = 1
+            if order.env_2 == 2:
+                order.env_status = "预发环境 已发布"
+                order.deploy_status = 2
+        elif env_id == 3:
+            if order.env_3 == 1:
+                order.env_status = "生产环境 待发布"
+                order.deploy_status = 1
+            if order.env_3 == 2:
+                order.env_status = "生产环境 已发布"
+                order.deploy_status = 2
+        elif env_id == 4:
+            if order.env_4 == 1:
+                order.env_status = "同城灾备 待发布"
+                order.deploy_status = 1
+            if order.env_4 == 2:
+                order.env_status = "同城灾备 已发布"
+                order.deploy_status = 2
+        elif env_id == 5:
+            if order.env_5 == 1:
+                order.env_status = "异地灾备 待发布"
+                order.deploy_status = 1
+            if order.env_5 == 2:
+                order.env_status = "异地灾备 已发布"
+                order.deploy_status = 2
 
+    return render(request, "deploy/order_deploy_list.html", {"orders": orders})

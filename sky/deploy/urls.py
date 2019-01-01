@@ -23,13 +23,17 @@ from . import views
 
 urlpatterns = [
 
-    # 组件增删改查
+    # 发布单增删改查
     url(r'^listOrder$', views.list_order, name='listOrder'),
     url(r'^addOrder$', views.add_order, name='addOrder'),
     url(r'^saveOrder$', views.save_order, name='saveOrder'),
 
+    # 环境流转
     url(r'^changeOrderPage$', views.change_order_page, name='changeOrderPage'),
     url(r'^changeOrder$', views.change_order, name='changeOrder'),
+
+    # 部署发布
+    url(r'^listDeployOrder$', views.list_deploy_order, name='listDeployOrder'),
 
 
 ]
