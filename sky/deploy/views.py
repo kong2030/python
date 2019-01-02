@@ -82,17 +82,9 @@ def change_order(request):
         order = Order.objects.filter(order_code=order_code)[0]
         order.update_time = datetime.datetime.now()
         order.current_env = env_id
-        # 获取对应的环境
-        if env_id == 1:
-            order.env_1 = 1
-        elif env_id == 2:
-            order.env_2 = 1
-        elif env_id == 3:
-            order.env_3 = 1
-        elif env_id == 4:
-            order.env_4 = 1
-        elif env_id == 5:
-            order.env_5 = 1
+        # 获取对应的环境，使用反射功能
+        arg_name = "env_" + str(env_id)
+        setattr(order, arg_name, 1)
         # 更新数据库
         order.save()
         return HttpResponse("success")
@@ -110,41 +102,14 @@ def list_deploy_order(request):
     for order in orders:
         env_id = order.current_env
         env_name = Environment.objects.filter(env_id=env_id)[0].env_name
-        # 获取对应的环境
-        if env_id == 1:
-            if order.env_1 == 1:
-                order.env_status = "测试环境 待发布"
-                order.deploy_status = 1
-            if order.env_1 == 2:
-                order.env_status = "测试环境 已发布"
-                order.deploy_status = 2
-        elif env_id == 2:
-            if order.env_2 == 1:
-                order.env_status = "预发环境 待发布"
-                order.deploy_status = 1
-            if order.env_2 == 2:
-                order.env_status = "预发环境 已发布"
-                order.deploy_status = 2
-        elif env_id == 3:
-            if order.env_3 == 1:
-                order.env_status = "生产环境 待发布"
-                order.deploy_status = 1
-            if order.env_3 == 2:
-                order.env_status = "生产环境 已发布"
-                order.deploy_status = 2
-        elif env_id == 4:
-            if order.env_4 == 1:
-                order.env_status = "同城灾备 待发布"
-                order.deploy_status = 1
-            if order.env_4 == 2:
-                order.env_status = "同城灾备 已发布"
-                order.deploy_status = 2
-        elif env_id == 5:
-            if order.env_5 == 1:
-                order.env_status = "异地灾备 待发布"
-                order.deploy_status = 1
-            if order.env_5 == 2:
-                order.env_status = "异地灾备 已发布"
-                order.deploy_status = 2
-
+        # 获取对应的环境，使得反射技术
+        arg_name = "env_" + str(env_id)
+        arg_name_value = getattr(order, arg_name)
+        if arg_name_value == 1:
+            order.env_status = env_name + " 待发布"
+            order.deploy_status = 1
+        if arg_name_value == 2:
+            order.env_status = env_name + " 已发布"
+            order.deploy_status = 2
+        
     return render(request, "deploy/order_deploy_list.html", {"orders": orders})
