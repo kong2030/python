@@ -70,8 +70,9 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         });
     }
 
-    $scope.deploy = function(){
-        alert("开始部署")
+    // 开始发布
+    $scope.deploy = function(order_code){
+        window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
     }
 
 

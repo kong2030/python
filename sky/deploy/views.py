@@ -15,6 +15,9 @@ from models import *
 
 # Create your views here.
 
+# 全局变量定义
+global DEPLOY_FILE_PATH
+DEPLOY_FILE_PATH = r"D:\backup\deploy"
 
 # 发布单列表
 @login_required
@@ -47,7 +50,8 @@ def save_order(request):
 
     # 获取上传文件并保存
     update_file = request.FILES.get("updateFile")
-    upload_path = "/Users/yangwenren/Desktop/install/upload"
+    #upload_path = "/Users/yangwenren/Desktop/install/upload"
+    upload_path = DEPLOY_FILE_PATH
     if not os.path.exists(upload_path):
         os.mkdir(upload_path)
     file_name = order_code + "." + update_file.name.split(".")[1]
@@ -113,3 +117,27 @@ def list_deploy_order(request):
             order.deploy_status = 2
         
     return render(request, "deploy/order_deploy_list.html", {"orders": orders})
+
+
+# 开始发布
+@login_required
+@csrf_exempt
+def deploy_order(request):
+    order_code = request.GET["orderCode"]
+    order = Order.objects.filter(order_code=order_code)[0]
+    module = order.module
+    current_env = order.current_env
+    env = Environment.objects.filter(env_id=current_env)[0]
+    # ManyToMany取值
+    hosts = module.host_set.filter(environment=env)
+
+    class DeployModel:
+        pass
+
+    deploy_model_list = []
+    for host in hosts:
+        deploy_model = DeployModel()
+
+
+
+    return render(request, "deploy/order_deploy.html", {"hosts": hosts})
