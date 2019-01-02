@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 
@@ -56,5 +57,10 @@ def login_check(request):
 def logout_check(request):
     logout(request)
     return HttpResponseRedirect("/sky/login")
+
+def global_settings(request):
+    return {
+        'DEPLOY_FILE_PATH': settings.DEPLOY_FILE_PATH,
+    }
 
 

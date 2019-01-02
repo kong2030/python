@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'sky.views.global_settings',
             ],
         },
     },
@@ -134,3 +135,5 @@ STATICFILES_DIRS=(
 
 # login page
 LOGIN_URL = '/sky/login'
+
+DEPLOY_FILE_PATH = 'D:\\backup\\deploy'
