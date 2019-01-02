@@ -51,7 +51,12 @@ def save_order(request):
     # 获取上传文件并保存
     update_file = request.FILES.get("updateFile")
     #upload_path = "/Users/yangwenren/Desktop/install/upload"
+
     upload_path = DEPLOY_FILE_PATH
+
+    upload_path = request.DEPLOY_FILE_PATH
+    print upload_path
+
     if not os.path.exists(upload_path):
         os.mkdir(upload_path)
     file_name = order_code + "." + update_file.name.split(".")[1]
@@ -115,6 +120,7 @@ def list_deploy_order(request):
         if arg_name_value == 2:
             order.env_status = env_name + " 已发布"
             order.deploy_status = 2
+
         
     return render(request, "deploy/order_deploy_list.html", {"orders": orders})
 
@@ -141,3 +147,4 @@ def deploy_order(request):
 
 
     return render(request, "deploy/order_deploy.html", {"hosts": hosts})
+
