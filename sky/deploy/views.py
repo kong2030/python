@@ -14,6 +14,7 @@ import string
 
 from django.db import transaction
 from models import *
+import services
 
 # Create your views here.
 
@@ -123,7 +124,6 @@ def list_deploy_order(request):
             order.env_status = env_name + " 已发布"
             order.deploy_status = 2
 
-        
     return render(request, "deploy/order_deploy_list.html", {"orders": orders})
 
 
@@ -189,10 +189,19 @@ def save_deploy(request):
         order_code = request.POST["orderCode"]
         current_env = request.POST["currentEnv"]
         module_name = request.POST["moduleName"]
+        # 先取对应发布单
+        order = Order.objects.filter(order_code=order_code)[0]
 
         # 事务操作，一起更新数据库
         with transaction.atomic():
             for host_ip in deploy_checked:
+                # 对应主机
+                host = Host.objects.filter(ip=host_ip)[0]
+
+                # 发布函数
+                services.deploy(order, host)
+
+                # 数据库更新
                 order_host = OrderHost()
                 order_host.order_code = order_code
                 order_host.host_ip = host_ip
@@ -201,12 +210,11 @@ def save_deploy(request):
                 order_host.deploy_time = datetime.datetime.now()
                 order_host.deploy_log = "deploy success"
                 # 发布记录入库
-                order_host.save()
+                #order_host.save()
             # 发布单表状态更新
-            order = Order.objects.filter(order_code=order_code)[0]
             arg_name = "env_" + str(current_env)
             setattr(order, arg_name, 2)
-            order.save()
+            #order.save()
 
         return HttpResponse("success")
     except Exception as e:

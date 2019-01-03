@@ -220,12 +220,16 @@ class="nav-item  "
                     data: {"env_id":env_id, "order_code":order_code},
                     success: function(result,status){
                         if(result == "success"){
-                            alert("Yes! 流转成功")
+                            swal("Yes! change success.", "", "success").then((value) => {
+                                //刷新页面
+                                window.location.href="/sky/deploy/changeOrderPage";
+                            });
                         }else{
-                            alert("Sorry! 流转出错")
+                            swal("Sorry! change error.", "", "error").then((value) => {
+                                //刷新页面
+                                window.location.href="/sky/deploy/changeOrderPage";
+                            });
                         }
-                        //刷新页面
-                        window.location.href="/sky/deploy/changeOrderPage";
                     }
                 });
             })
