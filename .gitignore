@@ -1,4 +1,5 @@
 /ipoms/static/metronic/
+/sky/temp/
 *.zip
 *.tar.gz
 *.pyc
