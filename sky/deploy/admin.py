@@ -16,5 +16,15 @@ class OrderAdmin(admin.ModelAdmin):
     list_display_links = ('order_code',)
 
 
+# OrderHost admin model
+class OrderHostAdmin(admin.ModelAdmin):
+    # show the key info
+    list_display = ('order_code', 'host_ip', 'module_name', 'deploy_status', 'deploy_time')
+
+    # 设置哪些字段可以点击进入编辑界面
+    list_display_links = ('order_code',)
+
+
 # register the model
 admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderHost, OrderHostAdmin)

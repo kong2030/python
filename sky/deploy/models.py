@@ -26,3 +26,17 @@ class Order(models.Model):
     env_3 = models.IntegerField(default=0)
     env_4 = models.IntegerField(default=0)
     env_5 = models.IntegerField(default=0)
+
+
+# 发布单发布记录表 model
+class OrderHost(models.Model):
+    order_code = models.CharField(max_length=16)
+    host_ip = models.CharField(max_length=20)
+    module_name = models.CharField(max_length=50)
+    deploy_status = models.IntegerField()  # 0:发布失败；1：发布成功
+    deploy_time = models.DateTimeField()
+    deploy_log = models.TextField(default=" ")
+
+    # 附加参数
+    class Meta:
+        db_table = 'deploy_order_host'  # 指定数据库表名

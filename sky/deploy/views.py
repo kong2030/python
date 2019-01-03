@@ -6,11 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
+from django.utils.safestring import mark_safe
 import os
 import datetime
 import random
 import string
 
+from django.db import transaction
 from models import *
 
 # Create your views here.
@@ -133,18 +135,80 @@ def deploy_order(request):
     order = Order.objects.filter(order_code=order_code)[0]
     module = order.module
     current_env = order.current_env
+    env_name = Environment.objects.filter(env_id=current_env)[0].env_name
+    module_name = module.module_name
+    # 获取组件某个环境下包含的主机
     env = Environment.objects.filter(env_id=current_env)[0]
     # ManyToMany取值
     hosts = module.host_set.filter(environment=env)
 
-    class DeployModel:
+    # 发布页的页面封装类
+    class DeployModel(object):
         pass
 
     deploy_model_list = []
-    for host in hosts:
-        deploy_model = DeployModel()
+    # 使用反射获取对应环境
+    arg_name = "env_" + str(current_env)
+    order_status = getattr(order, arg_name)
+    # 1：表示此发布单还没发布过
+    if order_status == 1:
+        for host in hosts:
+            deploy_model = DeployModel()
+            deploy_model.host_ip = host.ip
+            deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
+            deploy_model_list.append(deploy_model)
+    # 2：表示此发布单发布过，但不一定是所有主机都有发布
+    if order_status == 2:
+        for host in hosts:
+            host_ip = host.ip
+            deploy_model = DeployModel()
+            deploy_model.host_ip = host_ip
+            # 取最新发布状态
+            order_host = OrderHost.objects.filter(order_code=order_code, host_ip=host_ip).order_by("-deploy_time")
+            if order_host is not None:
+                deploy_model.deploy_time = order_host[0].deploy_time
+                if order_host[0].deploy_status == 1:
+                    deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
+                else:
+                    deploy_model.deploy_status = mark_safe('<span class="label label-danger">部署失败</span>')
+            else:
+                deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
+            deploy_model_list.append(deploy_model)
+
+    return render(request, "deploy/order_deploy.html", {"deploy_model_list": deploy_model_list,
+                                                        "order_code":order_code, "module_name": module_name, "env_name":env_name, "current_env":current_env})
 
 
+# 开始发布
+@login_required
+@csrf_exempt
+def save_deploy(request):
+    try:
+        # 获取前端传过来的数组
+        deploy_checked = request.POST.getlist("deployChecked")
+        order_code = request.POST["orderCode"]
+        current_env = request.POST["currentEnv"]
+        module_name = request.POST["moduleName"]
 
-    return render(request, "deploy/order_deploy.html", {"hosts": hosts})
+        # 事务操作，一起更新数据库
+        with transaction.atomic():
+            for host_ip in deploy_checked:
+                order_host = OrderHost()
+                order_host.order_code = order_code
+                order_host.host_ip = host_ip
+                order_host.module_name = module_name
+                order_host.deploy_status = 1
+                order_host.deploy_time = datetime.datetime.now()
+                order_host.deploy_log = "deploy success"
+                # 发布记录入库
+                order_host.save()
+            # 发布单表状态更新
+            order = Order.objects.filter(order_code=order_code)[0]
+            arg_name = "env_" + str(current_env)
+            setattr(order, arg_name, 2)
+            order.save()
 
+        return HttpResponse("success")
+    except Exception as e:
+        print e
+        return HttpResponse("error")

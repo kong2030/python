@@ -70,10 +70,39 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         });
     }
 
-    // 开始发布
-    $scope.deploy = function(order_code){
+    // 开始发布页
+    $scope.deployPage = function(order_code){
         window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
     }
 
+    // 发布
+    $scope.deploy = function(order_code,current_env,module_name){
+        //首先获取所有被选中的产品，默认取第一个来编辑
+	    var deployChecked = []
+	    $("input[name='deploy-checkbox']:checked").each(function(i){
+	        deployChecked[i] = $(this).val()
+	    })
+        //如果都没选中，直接返回，什么也不做
+        if(deployChecked.length<1)return;
+
+	    //ajax请求到后端
+        $.ajax({
+            type: "POST",
+            url: "/sky/deploy/saveDeploy",
+            traditional:true,   //加上这项可以传递数组
+            data: {"deployChecked":deployChecked, "orderCode":order_code, "currentEnv":current_env, "moduleName":module_name},
+            success: function(result,status){
+                if(result == "success"){
+                    swal("Yes! deploy success.", "", "success").then((value) => {
+                        window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                    });
+                }else{
+                    swal("Sorry! deploy error.", "", "error").then((value) => {
+                        window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                    });
+                }
+            }
+        });
+    }
 
 });

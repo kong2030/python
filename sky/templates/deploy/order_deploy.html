@@ -122,7 +122,7 @@ class="nav-item  "
 {% block content %}
 
                 <!-- BEGIN CONTENT -->
-                <div class="page-content-wrapper">
+                <div class="page-content-wrapper" ng-controller="orderCtrl">
                     <!-- BEGIN CONTENT BODY -->
                     <div class="page-content">
                         <!-- BEGIN PAGE HEADER-->
@@ -141,7 +141,7 @@ class="nav-item  "
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
                         <h1 class="page-title"> 自动化部署
-                            <small>测试环境</small>
+                            <small>{{ env_name }}</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -169,19 +169,19 @@ class="nav-item  "
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for obj in hosts %}
+                                                {% for obj in deploy_model_list %}
                                                 <tr class="odd gradeX">
                                                     <td>
                                                         <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                                            <input type="checkbox" class="checkboxes" name="module-checkbox" value="{{ obj.ip }}" />
+                                                            <input type="checkbox" class="checkboxes" name="deploy-checkbox" value="{{ obj.host_ip }}" />
                                                             <span></span>
                                                         </label>
                                                     </td>
-                                                    <td> {{ obj.ip }} </td>
-                                                    <td> {{ obj.module.module_name }} </td>
-                                                    <td>  </td>
-                                                    <td>  </td>
-                                                    <td>  </td>
+                                                    <td> {{ obj.host_ip }} </td>
+                                                    <td> {{ module_name }} </td>
+                                                    <td> {{ order_code }} </td>
+                                                    <td> {{ obj.deploy_status }} </td>
+                                                    <td> {{ obj.deploy_time | date:'Y-m-d H:i:s' }} </td>
                                                     <td>  </td>
                                                 </tr>
                                                 {% endfor %}
@@ -194,7 +194,7 @@ class="nav-item  "
                         </div>
                         <!-- END MY -->
                         <div class="row">
-                            <button class="btn btn-primary" >程序部署</button>
+                            <button class="btn btn-primary" ng-click="deploy('{{ order_code }}','{{ current_env }}', '{{ module_name }}')">程序部署</button>
                         </div>
                     </div>
                     <!-- END CONTENT BODY -->

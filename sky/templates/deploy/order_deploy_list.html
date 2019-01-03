@@ -176,7 +176,7 @@ class="nav-item  "
                                                          {% if obj.deploy_status == 2 %} <span class="label label-success">{{ obj.env_status }}</span> {% endif %}
                                                     </td>
                                                     <td>
-                                                        <span class="label label-primary" style="cursor:pointer;" ng-click="deploy('{{ obj.order_code }}')">程序部署</span>
+                                                        <span class="label label-primary" style="cursor:pointer;" ng-click="deployPage('{{ obj.order_code }}')">程序部署</span>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}

@@ -35,6 +35,7 @@ urlpatterns = [
     # 部署发布
     url(r'^listDeployOrder$', views.list_deploy_order, name='listDeployOrder'),
     url(r'^deployOrder$', views.deploy_order, name='deployOrder'),
+    url(r'^saveDeploy$', views.save_deploy, name='saveDeploy'),
 
 
 ]
