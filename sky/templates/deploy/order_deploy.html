@@ -193,9 +193,57 @@ class="nav-item  "
                             </div>
                         </div>
                         <!-- END MY -->
-                        <div class="row">
+                        <div class="row col-md-12">
                             <button class="btn btn-primary" ng-click="deploy('{{ order_code }}','{{ current_env }}', '{{ module_name }}')">程序部署</button>
+                            <button class="btn btn-danger" ng-click="rollback('{{ order_code }}','{{ current_env }}', '{{ module_name }}')">程序回滚</button>
+                            <button class="btn btn-success" ng-click="md5check('{{ order_code }}')">md5校验</button>
                         </div>
+                        <!-- md5check table begin -->
+                        <br><br><br><br><br>
+
+                        <div class="row" id="md5-check" style="display:none">
+                            <div class="col-md-12">
+                                <div class="portlet light bordered">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class="icon-settings font-green"></i>
+                                                <span class="caption-subject font-green sbold uppercase">md5 校验</span>
+                                                <span class="label label-danger" ng-if="result_all==0">（检查有异常）</span>
+                                                <span class="label label-success" ng-if="result_all==1">（检查正常）</span>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div class="table-scrollable">
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> 序号 </th>
+                                                            <th> 本地升级文件 </th>
+                                                            <th> md5码 </th>
+                                                            <th> 远程升级文件 </th>
+                                                            <th> md5码 </th>
+                                                            <th> 校验结果</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody >
+                                                        <tr  ng-repeat="obj in md5_form_list">
+                                                            <td> {[ $index+1 ]} </td>
+                                                            <td> {[ obj.deploy_file ]}  </td>
+                                                            <td> {[ obj.md5_source ]} </td>
+                                                            <td> {[ obj.remote_file ]} </td>
+                                                            <td> {[ obj.md5_remote ]} </td>
+                                                            <td> <span class="label label-danger" ng-if="obj.check_result==0">error</span>
+                                                                 <span class="label label-success" ng-if="obj.check_result==1">success</span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- md5check table end -->
                     </div>
                     <!-- END CONTENT BODY -->
                 </div>

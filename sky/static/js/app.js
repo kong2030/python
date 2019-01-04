@@ -105,4 +105,33 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         });
     }
 
+    //回滚
+    $scope.rollback = function(order_code){
+        swal("rollback");
+    }
+
+    //md5校验
+    $scope.md5check = function(order_code){
+        //首先获取所有被选中的产品，默认取第一个来编辑
+	    var deployChecked = []
+	    $("input[name='deploy-checkbox']:checked").each(function(i){
+	        deployChecked[i] = $(this).val()
+	    })
+        //如果都没选中，直接返回，什么也不做
+        if(deployChecked.length<1)return;
+        //显示隐藏块
+        $("#md5-check").show()
+
+        //ajax请求到后端
+        $http({
+            method:'post',
+            url: "/sky/deploy/md5Check",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, //需要加上头
+			data:$.param({"hostIp":deployChecked[0], "orderCode":order_code})
+        }).success(function(response,status){
+            $scope.md5_form_list = response["md5_form_list"]
+            $scope.result_all = response["result_all"]
+        })
+    }
+
 });

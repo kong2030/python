@@ -13,6 +13,7 @@ import random
 import string
 
 from django.db import transaction
+import json
 from models import *
 import services
 
@@ -165,7 +166,7 @@ def deploy_order(request):
             deploy_model.host_ip = host_ip
             # 取最新发布状态
             order_host = OrderHost.objects.filter(order_code=order_code, host_ip=host_ip).order_by("-deploy_time")
-            if order_host is not None:
+            if order_host.exists():
                 deploy_model.deploy_time = order_host[0].deploy_time
                 if order_host[0].deploy_status == 1:
                     deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
@@ -210,13 +211,33 @@ def save_deploy(request):
                 order_host.deploy_time = datetime.datetime.now()
                 order_host.deploy_log = "deploy success"
                 # 发布记录入库
-                #order_host.save()
+                order_host.save()
             # 发布单表状态更新
             arg_name = "env_" + str(current_env)
             setattr(order, arg_name, 2)
-            #order.save()
+            order.save()
 
         return HttpResponse("success")
     except Exception as e:
         print e
         return HttpResponse("error")
+
+
+# md5校验
+@login_required
+@csrf_exempt
+def md5_check(request):
+    # 获取前端传过来的数据
+    host_ip = request.POST["hostIp"]
+    order_code = request.POST["orderCode"]
+
+    print host_ip,order_code
+
+    host = Host.objects.filter(ip=host_ip)[0]
+    order = Order.objects.filter(order_code=order_code)[0]
+
+    md5_form_list, result_all = services.md5_check(order, host)
+
+    result = {"md5_form_list": md5_form_list, "result_all": result_all}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
