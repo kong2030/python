@@ -158,12 +158,13 @@ def md5_check(order, host):
                 file_path = os.path.join(root, file_)
                 remote_file_dict[file_.upper()] = file_path
 
+        # 汇总检查结果，1：表示检查无不同
+        result_all = 1
         for root, dirs, files in os.walk(deploy_file_path):
             for file_ in files:
                 deploy_file = os.path.join(root, file_)
                 md5_form = {}
-                # 汇总检查结果
-                result_all = 1
+
                 md5_form["deploy_file"] = deploy_file.replace(DEPLOY_PATH + os.sep, "")
                 md5_form["md5_source"] = generate_file_md5value(deploy_file)
                 if file_.upper() in remote_file_dict.keys():

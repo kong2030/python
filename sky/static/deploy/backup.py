@@ -20,7 +20,7 @@ project_path = os.getcwd()
 app_name = "kcbp"
 
 # 拷贝目录
-source_path = r"\\172.24.180.223\d$\kcbp"
+source_path = os.path.join(r"\\172.24.180.223\d$", app_name)
 base_path = r"\\172.24.180.223\d$\backup\deploy-before"
 
 
