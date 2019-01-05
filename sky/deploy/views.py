@@ -23,6 +23,7 @@ import services
 global DEPLOY_FILE_PATH
 DEPLOY_FILE_PATH = r"D:\backup\deploy"
 
+
 # 发布单列表
 @login_required
 def list_order(request):
@@ -57,9 +58,6 @@ def save_order(request):
     #upload_path = "/Users/yangwenren/Desktop/install/upload"
 
     upload_path = DEPLOY_FILE_PATH
-
-    upload_path = request.DEPLOY_FILE_PATH
-    print upload_path
 
     if not os.path.exists(upload_path):
         os.mkdir(upload_path)
