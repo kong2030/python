@@ -156,19 +156,23 @@ def md5_check(order, host):
         for root, dirs, files in os.walk(remote_path):
             for file_ in files:
                 file_path = os.path.join(root, file_)
-                remote_file_dict[file_.upper()] = file_path
+                # 保证文件路径也是一样的，防止同名
+                key = file_path.replace(remote_path, "").upper()
+                remote_file_dict[key] = file_path
 
         # 汇总检查结果，1：表示检查无不同
         result_all = 1
         for root, dirs, files in os.walk(deploy_file_path):
             for file_ in files:
                 deploy_file = os.path.join(root, file_)
-                md5_form = {}
+                # 保证文件路径也是一样的，防止同名
+                key = deploy_file.replace(deploy_file_path, "").upper()
+                md5_form = dict()
 
                 md5_form["deploy_file"] = deploy_file.replace(DEPLOY_PATH + os.sep, "")
                 md5_form["md5_source"] = generate_file_md5value(deploy_file)
-                if file_.upper() in remote_file_dict.keys():
-                    remote_file = remote_file_dict[file_.upper()]
+                if key in remote_file_dict.keys():
+                    remote_file = remote_file_dict[key]
                     md5_form["remote_file"] = remote_file
                     md5_form["md5_remote"] = generate_file_md5value(remote_file)
                     if md5_form["md5_source"] == md5_form["md5_remote"]:
