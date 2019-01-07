@@ -166,6 +166,8 @@ def deploy_order(request):
             order_host = OrderHost.objects.filter(order_code=order_code, host_ip=host_ip).order_by("-deploy_time")
             if order_host.exists():
                 deploy_model.deploy_time = order_host[0].deploy_time
+                deploy_model.deploy_log = order_host[0].deploy_log
+                print order_host[0].deploy_log
                 if order_host[0].deploy_status == 1:
                     deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
                 else:
@@ -198,16 +200,19 @@ def save_deploy(request):
                 host = Host.objects.filter(ip=host_ip)[0]
 
                 # 发布函数
-                services.deploy(order, host)
+                flag, log_str = services.deploy(order, host)
 
                 # 数据库更新
                 order_host = OrderHost()
                 order_host.order_code = order_code
                 order_host.host_ip = host_ip
                 order_host.module_name = module_name
-                order_host.deploy_status = 1
+                if flag == 0:
+                    order_host.deploy_status = 1
+                else:
+                    order_host.deploy_status = 0
                 order_host.deploy_time = datetime.datetime.now()
-                order_host.deploy_log = "deploy success"
+                order_host.deploy_log = log_str
                 # 发布记录入库
                 order_host.save()
             # 发布单表状态更新
@@ -215,7 +220,10 @@ def save_deploy(request):
             setattr(order, arg_name, 2)
             order.save()
 
-        return HttpResponse("success")
+        if flag == 0:
+            return HttpResponse("success")
+        else:
+            return HttpResponse("error")
     except Exception as e:
         print e
         return HttpResponse("error")

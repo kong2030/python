@@ -17,6 +17,15 @@ class EnvironmentAdmin(admin.ModelAdmin):
     list_display_links = ('env_id', 'env_name')
 
 
+# OSystem admin model
+class OSystemAdmin(admin.ModelAdmin):
+    # show the key info
+    list_display = ('os_id', 'os_name')
+
+    # 设置哪些字段可以点击进入编辑界面
+    list_display_links = ('os_id', 'os_name')
+
+
 # AppSystem admin model
 class AppSystemAdmin(admin.ModelAdmin):
     # show the key info
@@ -46,6 +55,7 @@ class HostAdmin(admin.ModelAdmin):
 
 # register the model
 admin.site.register(Environment, EnvironmentAdmin)
+admin.site.register(OSystem, OSystemAdmin)
 admin.site.register(AppSystem, AppSystemAdmin)
 admin.site.register(Module, ModuleAdmin)
 admin.site.register(Host, HostAdmin)

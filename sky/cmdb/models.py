@@ -27,6 +27,19 @@ class AppSystem(models.Model):
         return self.chinese_name
 
 
+# 操作系统类型 model
+class OSystem(models.Model):
+    os_id = models.IntegerField(primary_key=True) # 1：windows，2：linux，
+    os_name = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.os_name
+
+    # 附加参数
+    class Meta:
+        db_table = 'cmdb_os'  # 指定数据库表名
+
+
 # 组件 model
 class Module(models.Model):
     module_name = models.CharField(max_length=50, unique=True)
@@ -45,6 +58,7 @@ class Host(models.Model):
     ip = models.CharField(max_length=20, unique=True)
     host_user = models.CharField(max_length=20)
     password = models.CharField(max_length=50)
+    os_type = models.ForeignKey(OSystem, on_delete=models.PROTECT, default=1)
     environment = models.ForeignKey(Environment, on_delete=models.PROTECT)
     module = models.ManyToManyField(Module)
 

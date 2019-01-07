@@ -34,7 +34,7 @@ def backup(source, dst):
 
 
 # 主函数
-if __name__ =="__main__":
+if __name__ == "__main__":
     order_code = sys.argv[1]
 
     des_path = os.path.join(base_path, order_code, app_name)

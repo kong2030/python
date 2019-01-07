@@ -7,43 +7,73 @@ import base64
 import hashlib
 import zipfile
 import shutil
+import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMP_PATH = os.path.join(BASE_DIR, "temp")
 DEPLOY_PATH = r"D:\backup\deploy"
-REMOTE_DEPLOY_PATH = r"d$\backup\deploy"
+
+
+# 首先建立连接
+def connect(host):
+    host_ip = host.ip
+    host_user = host.host_user
+    password = host.password
+
+    # 解密
+    decode_str = base64.decodestring(password)
+    password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
+
+    # 根据操作类型，升级文件的存放位置
+    os_id = host.os_type.os_id
+    if os_id == 1:
+        remote_path = r"\\" + host_ip + os.sep + "d$"
+    else:
+        remote_path = r"\\" + host_ip + os.sep + host_user
+
+    cmd = r"net use %s %s /user:%s" % (remote_path, password, host_user)
+
+    flag = os.system(cmd)
+    log_str = ""
+    if flag == 0:
+        print u"连接成功"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 连接成功" + "\n"
+    else:
+        print u"连接失败，请检查。。。"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 连接失败，请检查。。。" + "\n"
+
+    return flag, log_str
 
 
 # 部署时，把升级压缩包复制到对应机器
 def copy_deploy_file(order, host):
     host_ip = host.ip
     host_user = host.host_user
-    password = host.password
     order_code = order.order_code
 
-    # 解密
-    decode_str = base64.decodestring(password)
-    password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
+    # 根据操作类型，升级文件的存放位置
+    os_id = host.os_type.os_id
+    if os_id == 1:
+        remote_deploy_path = r"d$\backup\deploy"
+    else:
+        remote_deploy_path = os.path.join(host_user, "backup", "deploy")
 
-    remote_path = r"\\" + host_ip + os.sep + REMOTE_DEPLOY_PATH
+    remote_path = r"\\" + host_ip + os.sep + remote_deploy_path
     deploy_file = os.path.join(DEPLOY_PATH, order_code+".zip")
 
-    cmd_1 = r"@echo off"
-    cmd_2 = r"net use %s %s /user:%s" % (remote_path, password, host_user)
-    cmd_3 = r"xcopy %s %s /Y /F /E" % (deploy_file, remote_path)
-
-    bat_file = os.path.join(TEMP_PATH, "temp.bat")
-    with open(bat_file, "w") as f:
-        print >> f, cmd_1
-        print >> f, cmd_2
-        print >> f, cmd_3
+    cmd = r"xcopy %s %s /Y" % (deploy_file, remote_path)
 
     time.sleep(1)
-    flag = os.system(bat_file)
+    flag = os.system(cmd)
+    log_str = ""
     if flag == 0:
         print u"复制成功"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 复制成功" + "\n"
     else:
         print u"复制失败，请检查。。。"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 复制失败，请检查。。。" + "\n"
+
+    return flag, log_str
 
 
 # 发布前在原机器上备份
@@ -53,65 +83,46 @@ def deploy_backup(order, host):
     module_name = module.module_name
     script_path = module.script_path
     host_ip = host.ip
-    host_user = host.host_user
-    password = host.password
-
-    # 解密
-    decode_str = base64.decodestring(password)
-    password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
 
     remote_path = r"\\" + host_ip + os.sep + script_path
 
-    cmd_1 = r"@echo off"
-    cmd_2 = r"net use %s %s /user:%s" % (remote_path, password, host_user)
-    cmd_3 = os.path.join(remote_path, "backup.py") + " " + order_code
-
-    bat_file = os.path.join(TEMP_PATH, "temp.bat")
-    with open(bat_file, "w") as f:
-        print >> f, cmd_1
-        print >> f, cmd_2
-        print >> f, cmd_3
+    cmd = os.path.join(remote_path, "backup.py") + " " + order_code
 
     time.sleep(1)
-    flag = os.system(bat_file)
+    flag = os.system(cmd)
+    log_str = ""
     if flag == 0:
         print u"备份成功"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份成功" + "\n"
     else:
         print u"备份失败，请检查。。。"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份失败，请检查。。。" + "\n"
+
+    return flag, log_str
 
 
 # 开始部署
 def deploy_do(order, host):
     order_code = order.order_code
     module = order.module
-    module_name = module.module_name
     script_path = module.script_path
     host_ip = host.ip
-    host_user = host.host_user
-    password = host.password
-
-    # 解密
-    decode_str = base64.decodestring(password)
-    password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
 
     remote_path = r"\\" + host_ip + os.sep + script_path
 
-    cmd_1 = r"@echo off"
-    cmd_2 = r"net use %s %s /user:%s" % (remote_path, password, host_user)
-    cmd_3 = os.path.join(remote_path, "deploy.py") + " " + order_code
-
-    bat_file = os.path.join(TEMP_PATH, "temp.bat")
-    with open(bat_file, "w") as f:
-        print >> f, cmd_1
-        print >> f, cmd_2
-        print >> f, cmd_3
+    cmd = os.path.join(remote_path, "deploy.py") + " " + order_code
 
     time.sleep(1)
-    flag = os.system(bat_file)
+    flag = os.system(cmd)
+    log_str = ""
     if flag == 0:
         print u"发布成功"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布成功" + "\n"
     else:
         print u"发布失败，请检查。。。"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查。。。" + "\n"
+
+    return flag, log_str
 
 
 # 生成md5
@@ -130,12 +141,6 @@ def md5_check(order, host):
     module = order.module
     program_path = module.program_path
     host_ip = host.ip
-    host_user = host.host_user
-    password = host.password
-
-    # 解密
-    decode_str = base64.decodestring(password)
-    password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
 
     remote_path = r"\\" + host_ip + os.sep + program_path
     deploy_file_zip = os.path.join(DEPLOY_PATH, order_code + ".zip")
@@ -146,11 +151,11 @@ def md5_check(order, host):
     # 获取解压后根目录
     app_root_dir = file_unzip.namelist()[0][:-1]
     deploy_file_path = os.path.join(DEPLOY_PATH, app_root_dir)
-    # 先连接
-    cmd = r"net use %s %s /user:%s" % (remote_path, password, host_user)
+
+    # 先建立连接
+    flag, log_str = connect(host)
 
     md5_form_list = []
-    flag = os.system(cmd)
     if flag == 0:
         remote_file_dict = {}
         for root, dirs, files in os.walk(remote_path):
@@ -193,13 +198,29 @@ def md5_check(order, host):
 
 # 发布函数，对外接口
 def deploy(order, host):
-    copy_deploy_file(order, host)
-    deploy_backup(order, host)
-    deploy_do(order, host)
+    log_all = ""
+    # 先建立连接
+    flag, log_str = connect(host)
+    log_all = log_all + log_str
+    if flag == 0:
+        # 1：复制升级文件到对应机器
+        flag, log_str = copy_deploy_file(order, host)
+        log_all = log_all + log_str
+        if flag == 0:
+            # 2：全量备份程序
+            flag, log_str = deploy_backup(order, host)
+            log_all = log_all + log_str
+            if flag == 0:
+                # 3：开始部署
+                flag, log_str = deploy_do(order, host)
+                log_all = log_all + log_str
+
+    # 返回：标记和日志
+    return flag, log_all
 
 
 # 主函数，测试
-if __name__ =="__main__":
+if __name__ == "__main__":
     order_code = "20190102144558ES"
     ip = "172.24.180.223"
     copy_deploy_file(order_code, ip)
