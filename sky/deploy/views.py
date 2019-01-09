@@ -43,35 +43,37 @@ def add_order(request):
 @login_required
 @csrf_exempt
 def save_order(request):
-    now_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    order_code = (now_time + random.choice(string.ascii_letters) + random.choice(string.ascii_letters)).upper()
-    app_name = request.POST["appSystem"].replace(" ", "")
-    app_system = AppSystem.objects.filter(app_name=app_name)[0]
-    module_name = request.POST["module"].replace(" ", "")
-    module = Module.objects.filter(module_name=module_name)[0]
-    creator = request.user
-    create_time = datetime.datetime.now()
-    update_time = create_time
+    try:
+        now_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        order_code = (now_time + random.choice(string.ascii_letters) + random.choice(string.ascii_letters)).upper()
+        app_name = request.POST["appSystem"].replace(" ", "")
+        app_system = AppSystem.objects.filter(app_name=app_name)[0]
+        module_name = request.POST["module"].replace(" ", "")
+        module = Module.objects.filter(module_name=module_name)[0]
+        creator = request.user
+        create_time = datetime.datetime.now()
+        update_time = create_time
+        remark = request.POST["remark"]
 
-    # 获取上传文件并保存
-    update_file = request.FILES.get("updateFile")
-    #upload_path = "/Users/yangwenren/Desktop/install/upload"
+        # 获取上传文件并保存
+        update_file = request.FILES.get("updateFile")
+        upload_path = DEPLOY_FILE_PATH
+        if not os.path.exists(upload_path):
+            os.mkdir(upload_path)
+        file_name = order_code + "." + update_file.name.split(".")[1]
+        upload_file = os.path.join(upload_path, file_name)
+        with open(upload_file, "wb") as f:
+            for chunk in update_file.chunks():
+                f.write(chunk)
 
-    upload_path = DEPLOY_FILE_PATH
-
-    if not os.path.exists(upload_path):
-        os.mkdir(upload_path)
-    file_name = order_code + "." + update_file.name.split(".")[1]
-    upload_file = os.path.join(upload_path, file_name)
-    with open(upload_file, "wb") as f:
-        for chunk in update_file.chunks():
-            f.write(chunk)
-
-    order = Order(order_code=order_code, app_system=app_system, module=module, type=1, creator=creator,
-                  create_time=create_time, deploy_args=upload_file, update_time=update_time)
-    order.save()
-
-    return HttpResponseRedirect("/sky/deploy/listOrder")
+        order = Order(order_code=order_code, app_system=app_system, module=module, type=1, creator=creator,
+                      create_time=create_time, deploy_args=upload_file, update_time=update_time, remark=remark)
+        # 发布单入库保存
+        order.save()
+        return HttpResponse("success")
+    except Exception as e:
+        print e
+        return HttpResponse("error")
 
 
 # 环境流转页

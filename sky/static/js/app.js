@@ -55,7 +55,7 @@ app.controller('moduleCtrl', function($scope, $http, $compile) {
 // 发布单管理
 app.controller('orderCtrl', function($scope, $http, $compile) {
 
-    //新建发布单
+    //新建发布单页，关联系统
     $scope.appChange = function(){
         result = {"app_name": $scope.app_name}
 
