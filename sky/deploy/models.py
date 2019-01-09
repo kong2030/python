@@ -18,6 +18,7 @@ class Order(models.Model):
     deploy_args = models.CharField(max_length=128, null=True)  # 部署需要的一些参数
     creator = models.ForeignKey(User, on_delete=models.PROTECT)
     create_time = models.DateTimeField()
+    remark = models.CharField(max_length=256, null=True)  # 备注
 
     update_time = models.DateTimeField()  # 最新修改时间
     current_env = models.IntegerField(default=0)  # 0:刚新建
