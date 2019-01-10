@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import time
+import sys
 from cmdb.models import *
 from deploy.models import *
 import base64
@@ -8,6 +9,9 @@ import hashlib
 import zipfile
 import shutil
 import datetime
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMP_PATH = os.path.join(BASE_DIR, "temp")
@@ -217,6 +221,26 @@ def deploy(order, host):
 
     # 返回：标记和日志
     return flag, log_all
+
+
+# Sql发布
+def get_order_sql_files(order_code):
+    # 解压到当前目录
+    deploy_file_zip = os.path.join(DEPLOY_PATH, order_code + ".zip")
+    order_deploy_file_path = os.path.join(DEPLOY_PATH, str(order_code))
+    if not os.path.exists(order_deploy_file_path):
+        os.mkdir(order_deploy_file_path)
+    f = zipfile.ZipFile(deploy_file_zip, 'r')
+    for file in f.infolist():
+        f.extract(file, order_deploy_file_path)
+
+    file_list = []
+    for root,dirs,files in os.walk(order_deploy_file_path):
+        for file in files:
+            sql_file = os.path.join(order_deploy_file_path, file)
+            file_list.append(sql_file)
+    return file_list
+
 
 
 # 主函数，测试

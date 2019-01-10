@@ -33,11 +33,11 @@ class="nav-item "
 {% endblock %}
 
 {% block fbd_add_active_class %}
-class="nav-item active"
+class="nav-item "
 {% endblock %}
 
 {% block fbd_addsql_active_class %}
-class="nav-item  "
+class="nav-item active"
 {% endblock %}
 
 <!-- 发布单 模块 end -->
@@ -132,13 +132,13 @@ class="nav-item  "
                                     <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <span>新增发布单(上传)</span>
+                                    <span>新增发布单(SQL)</span>
                                 </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> 发布单
+                        <h1 class="page-title"> SQL发布单
                             <small>新增</small>
                         </h1>
                         <!-- END PAGE TITLE-->
@@ -191,7 +191,7 @@ class="nav-item  "
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-3">上传升级包
+                                                        <label class="control-label col-md-3">上传sql文件
                                                             <span class="required"> * </span>
                                                         </label>
                                                         <div class="col-md-3">
@@ -216,12 +216,13 @@ class="nav-item  "
                                                         </label>
                                                         <div class="col-md-3">
                                                             <label class="control-label">
-                                                                暂只支持上传zip包
+                                                                1. 暂只支持上传zip包；
+                                                                2. 务必保证数据库文件为.sql后缀
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <!-- 隐藏 发布单类型 -->
-                                                    <input type="hidden" id="orderType" name="orderType" value="1">
+                                                    <input type="hidden" id="orderType" name="orderType" value="2">
                                                 </div>
                                                 <br><br>
                                                 <div class="form-actions">

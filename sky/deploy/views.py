@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
 from django.utils.safestring import mark_safe
 import os
+import sys
 import datetime
 import random
 import string
@@ -16,6 +17,9 @@ from django.db import transaction
 import json
 from models import *
 import services
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 # Create your views here.
 
@@ -26,7 +30,7 @@ DEPLOY_FILE_PATH = r"D:\backup\deploy"
 
 # 发布单列表
 @login_required
-def list_order(request):
+def list_order_page(request):
     orders = Order.objects.all()
 
     return render(request, "deploy/order_list.html", {"orders": orders})
@@ -34,9 +38,16 @@ def list_order(request):
 
 # 发布单新增页面
 @login_required
-def add_order(request):
+def add_order_page(request):
     app_systems = AppSystem.objects.all()
     return render(request, "deploy/order_add.html", {"appSystems": app_systems})
+
+
+# 发布单新增页面 sql
+@login_required
+def add_order_sql_page(request):
+    app_systems = AppSystem.objects.all()
+    return render(request, "deploy/order_add_sql.html", {"appSystems": app_systems})
 
 
 # 发布单入库
@@ -50,6 +61,7 @@ def save_order(request):
         app_system = AppSystem.objects.filter(app_name=app_name)[0]
         module_name = request.POST["module"].replace(" ", "")
         module = Module.objects.filter(module_name=module_name)[0]
+        order_type = request.POST["orderType"].replace(" ", "")
         creator = request.user
         create_time = datetime.datetime.now()
         update_time = create_time
@@ -60,13 +72,14 @@ def save_order(request):
         upload_path = DEPLOY_FILE_PATH
         if not os.path.exists(upload_path):
             os.mkdir(upload_path)
-        file_name = order_code + "." + update_file.name.split(".")[1]
+        #file_name = order_code + "." + update_file.name.split(".")[1]
+        file_name = order_code + ".zip"
         upload_file = os.path.join(upload_path, file_name)
         with open(upload_file, "wb") as f:
             for chunk in update_file.chunks():
                 f.write(chunk)
 
-        order = Order(order_code=order_code, app_system=app_system, module=module, type=1, creator=creator,
+        order = Order(order_code=order_code, app_system=app_system, module=module, type=order_type, creator=creator,
                       create_time=create_time, deploy_args=upload_file, update_time=update_time, remark=remark)
         # 发布单入库保存
         order.save()
@@ -106,10 +119,10 @@ def change_order(request):
         return HttpResponse("error")
 
 
-# 开始发布页
+# 开始发布页列表
 @login_required
 @csrf_exempt
-def list_deploy_order(request):
+def list_deploy_order_page(request):
     # 过滤刚新建还没流转的发布单
     orders = Order.objects.all().exclude(env_1=0, env_2=0, env_3=0, env_4=0, env_5=0)
     for order in orders:
@@ -128,10 +141,10 @@ def list_deploy_order(request):
     return render(request, "deploy/order_deploy_list.html", {"orders": orders})
 
 
-# 开始发布
+# 开始发布页面
 @login_required
 @csrf_exempt
-def deploy_order(request):
+def deploy_order_page(request):
     order_code = request.GET["orderCode"]
     order = Order.objects.filter(order_code=order_code)[0]
     module = order.module
@@ -180,6 +193,65 @@ def deploy_order(request):
 
     return render(request, "deploy/order_deploy.html", {"deploy_model_list": deploy_model_list,
                                                         "order_code":order_code, "module_name": module_name, "env_name":env_name, "current_env":current_env})
+
+
+# sql发布页面
+@login_required
+@csrf_exempt
+def deploy_order_sql_page(request):
+    order_code = request.GET["orderCode"]
+
+    sql_file_list = services.get_order_sql_files(order_code)
+    print type(sql_file_list[0])
+
+    order = Order.objects.filter(order_code=order_code)[0]
+    module = order.module
+    current_env = order.current_env
+    env_name = Environment.objects.filter(env_id=current_env)[0].env_name
+    module_name = module.module_name
+    # 获取组件某个环境下包含的主机
+    env = Environment.objects.filter(env_id=current_env)[0]
+    # ManyToMany取值
+    hosts = module.host_set.filter(environment=env)
+
+    # 发布页的页面封装类
+    class DeployModel(object):
+        pass
+
+    deploy_model_list = []
+    # 使用反射获取对应环境
+    arg_name = "env_" + str(current_env)
+    order_status = getattr(order, arg_name)
+    # 1：表示此发布单还没发布过
+    if order_status == 1:
+        for host in hosts:
+            deploy_model = DeployModel()
+            deploy_model.host_ip = host.ip
+            deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
+            deploy_model_list.append(deploy_model)
+    # 2：表示此发布单发布过，但不一定是所有主机都有发布
+    if order_status == 2:
+        for host in hosts:
+            host_ip = host.ip
+            deploy_model = DeployModel()
+            deploy_model.host_ip = host_ip
+            # 取最新发布状态
+            order_host = OrderHost.objects.filter(order_code=order_code, host_ip=host_ip).order_by("-deploy_time")
+            if order_host.exists():
+                deploy_model.deploy_time = order_host[0].deploy_time
+                deploy_model.deploy_log = order_host[0].deploy_log
+                print order_host[0].deploy_log
+                if order_host[0].deploy_status == 1:
+                    deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
+                else:
+                    deploy_model.deploy_status = mark_safe('<span class="label label-danger">部署失败</span>')
+            else:
+                deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
+            deploy_model_list.append(deploy_model)
+
+    return render(request, "deploy/order_deploy_sql.html", {"deploy_model_list": deploy_model_list,
+                                                        "order_code": order_code, "module_name": module_name,
+                                                        "env_name": env_name, "current_env": current_env, "sql_file_list":sql_file_list})
 
 
 # 开始发布

@@ -49,7 +49,7 @@ def encrypt(request):
 
 # 组件列表
 @login_required
-def list_module(request):
+def list_module_page(request):
     modules = Module.objects.all()
 
     return render(request, "cmdb/module_list.html", {"modules": modules})
@@ -57,14 +57,14 @@ def list_module(request):
 
 # 组件新增页面
 @login_required
-def add_module(request):
+def add_module_page(request):
     app_systems = AppSystem.objects.all()
     return render(request, "cmdb/module_add.html", {"appSystems": app_systems})
 
 
 # 组件编辑页面
 @login_required
-def edit_module(request):
+def edit_module_page(request):
     module_name = request.GET["moduleName"]
     module = Module.objects.filter(module_name=module_name)[0]
 
@@ -106,12 +106,20 @@ def save_module(request):
 @csrf_exempt
 def get_modules_by_app(request):
     app_name = request.POST["app_name"]
+    order_type = request.POST["order_type"]
     app_system = AppSystem.objects.filter(app_name=app_name)
     modules = Module.objects.filter(app_system=app_system)
 
+    # 如果是Sql发布单，就只列出对应的组件供选择
     result = ""
     for obj in modules:
-        result = result + obj.module_name + ","
+        module_name = obj.module_name
+        if order_type == "1":
+            if not module_name.endswith("SQL"):
+                result = result + module_name + ","
+        elif order_type == "2":
+            if module_name.endswith("SQL"):
+                result = result + module_name + ","
 
     # 去除最后一个逗号
     result = result[:-1]

@@ -24,8 +24,9 @@ from . import views
 urlpatterns = [
 
     # 发布单增删改查
-    url(r'^listOrder$', views.list_order, name='listOrder'),
-    url(r'^addOrder$', views.add_order, name='addOrder'),
+    url(r'^listOrder$', views.list_order_page, name='listOrder'),
+    url(r'^addOrder$', views.add_order_page, name='addOrder'),
+    url(r'^addOrderSql$', views.add_order_sql_page, name='addOrderSql'),
     url(r'^saveOrder$', views.save_order, name='saveOrder'),
 
     # 环境流转
@@ -33,8 +34,9 @@ urlpatterns = [
     url(r'^changeOrder$', views.change_order, name='changeOrder'),
 
     # 部署发布
-    url(r'^listDeployOrder$', views.list_deploy_order, name='listDeployOrder'),
-    url(r'^deployOrder$', views.deploy_order, name='deployOrder'),
+    url(r'^listDeployOrder$', views.list_deploy_order_page, name='listDeployOrder'),
+    url(r'^deployOrder$', views.deploy_order_page, name='deployOrder'),
+    url(r'^deployOrderSql$', views.deploy_order_sql_page, name='deployOrderSql'),
     url(r'^saveDeploy$', views.save_deploy, name='saveDeploy'),
     url(r'^md5Check$', views.md5_check, name='md5Check'),
 

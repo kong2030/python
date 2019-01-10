@@ -59,6 +59,7 @@ var FormValidation = function () {
                     var formData = new FormData();
                     formData.append("appSystem", $("#appSystem").val());
                     formData.append("module", $("#module").val());
+                    formData.append("orderType", $("#orderType").val());
                     formData.append("updateFile", document.getElementById("updateFile").files[0]);  // get upload file ,dom object
                     formData.append("remark", $("#remark").val());
                     $.ajax({

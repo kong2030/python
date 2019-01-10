@@ -57,7 +57,8 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
 
     //新建发布单页，关联系统
     $scope.appChange = function(){
-        result = {"app_name": $scope.app_name}
+        order_type = $("#orderType").val();
+        result = {"app_name": $scope.app_name, "order_type": order_type};
 
         $http({
             method:'post',
@@ -71,8 +72,12 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
     }
 
     // 开始发布页
-    $scope.deployPage = function(order_code){
-        window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+    $scope.deployPage = function(order_code, order_type){
+        if(order_type == 1){
+            window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+        }else if(order_type == 2){
+            window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
+        }
     }
 
     // 发布

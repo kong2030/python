@@ -28,9 +28,9 @@ urlpatterns = [
     url(r'^encrypt$', views.encrypt, name='encrypt'),
 
     # 组件增删改查
-    url(r'^listModule$', views.list_module, name='listModule'),
-    url(r'^addModule$', views.add_module, name='addModule'),
-    url(r'^editModule$', views.edit_module, name='editModule'),
+    url(r'^listModule$', views.list_module_page, name='listModule'),
+    url(r'^addModule$', views.add_module_page, name='addModule'),
+    url(r'^editModule$', views.edit_module_page, name='editModule'),
     url(r'^saveModule$', views.save_module, name='saveModule'),
 
     # 通过系统名来查询组件
