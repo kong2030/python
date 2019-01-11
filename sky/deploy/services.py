@@ -10,6 +10,7 @@ import zipfile
 import shutil
 import datetime
 import chardet
+import traceback
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -52,30 +53,30 @@ def connect(host):
 
 # 部署时，把升级压缩包复制到对应机器
 def copy_deploy_file(order, host):
-    host_ip = host.ip
-    host_user = host.host_user
-    order_code = order.order_code
+    try:
+        host_ip = host.ip
+        host_user = host.host_user
+        order_code = order.order_code
+        module = order.module
+        program_path = module.program_path
 
-    # 根据操作类型，升级文件的存放位置
-    os_id = host.os_type.os_id
-    if os_id == 1:
-        remote_deploy_path = r"d$\backup\deploy"
-    else:
-        remote_deploy_path = os.path.join(host_user, "backup", "deploy")
+        # 根据操作类型，升级文件的存放位置
+        root_deploy_path = program_path.split("\\")[0]
+        remote_path = r"\\" + host_ip + "\\" + root_deploy_path + r"\backup\deploy"
+        if not os.path.exists(remote_path):
+            os.makedirs(remote_path)
+        deploy_file = os.path.join(DEPLOY_PATH, order_code+".zip")
 
-    remote_path = r"\\" + host_ip + os.sep + remote_deploy_path
-    deploy_file = os.path.join(DEPLOY_PATH, order_code+".zip")
+        shutil.copy(deploy_file, remote_path)
 
-    cmd = r"xcopy %s %s /Y" % (deploy_file, remote_path)
-
-    time.sleep(1)
-    flag = os.system(cmd)
-    log_str = ""
-    if flag == 0:
         print u"复制成功"
+        flag = 0
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 复制成功" + "\n"
-    else:
+
+    except Exception as e:
+        traceback.print_exc()
         print u"复制失败，请检查。。。"
+        flag = 1
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 复制失败，请检查。。。" + "\n"
 
     return flag, log_str
@@ -83,24 +84,28 @@ def copy_deploy_file(order, host):
 
 # 发布前在原机器上备份
 def deploy_backup(order, host):
-    order_code = order.order_code
-    module = order.module
-    module_name = module.module_name
-    script_path = module.script_path
-    host_ip = host.ip
+    try:
+        order_code = order.order_code
+        module = order.module
+        program_path = module.program_path
+        host_ip = host.ip
 
-    remote_path = r"\\" + host_ip + os.sep + script_path
+        source_remote_path = r"\\" + host_ip + "\\" + program_path
+        root_program_path = program_path.split("\\")[-1]
+        dst_remote_path = r"\\" + host_ip + r"\d$\backup\deploy-before" + "\\" + order_code + "\\" + root_program_path
+        if not os.path.exists(dst_remote_path):
+            # 可以忽略某些文件夹
+            shutil.copytree(source_remote_path, dst_remote_path, ignore=shutil.ignore_patterns('log'))
+        else:
+            print u"目录已经存在，请先整理。。。"
 
-    cmd = os.path.join(remote_path, "backup.py") + " " + order_code
-
-    time.sleep(1)
-    flag = os.system(cmd)
-    log_str = ""
-    if flag == 0:
         print u"备份成功"
+        flag = 0
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份成功" + "\n"
-    else:
+    except Exception as e:
+        traceback.print_exc()
         print u"备份失败，请检查。。。"
+        flag = 1
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份失败，请检查。。。" + "\n"
 
     return flag, log_str
@@ -108,23 +113,49 @@ def deploy_backup(order, host):
 
 # 开始部署
 def deploy_do(order, host):
-    order_code = order.order_code
-    module = order.module
-    script_path = module.script_path
-    host_ip = host.ip
+    try:
+        order_code = order.order_code
+        module = order.module
+        program_path = module.program_path
+        host_ip = host.ip
 
-    remote_path = r"\\" + host_ip + os.sep + script_path
+        root_deploy_path = program_path.split("\\")[0]
+        remote_deploy_path = r"\\" + host_ip + "\\" + root_deploy_path + r"\backup\deploy"
+        remote_program_path = r"\\" + host_ip + "\\" + program_path
 
-    cmd = os.path.join(remote_path, "deploy.py") + " " + order_code
+        # 解压到当前目录，要包含根目录
+        deploy_file_zip = os.path.join(remote_deploy_path, order_code + ".zip")
+        f = zipfile.ZipFile(deploy_file_zip, 'r')
+        # 获取解压后根目录
+        app_root_dir = f.namelist()[0][:-1]
+        # 保留原修改时间
+        for file_ in f.infolist():
+            d = file_.date_time
+            gettime = "%s/%s/%s %s:%s" % (d[0], d[1], d[2], d[3], d[4])
+            f.extract(file_, remote_deploy_path)
+            file_path = os.path.join(remote_deploy_path, file_.filename)
+            timearry = time.mktime(time.strptime(gettime, '%Y/%m/%d %H:%M'))
+            os.utime(file_path, (timearry, timearry))
 
-    time.sleep(1)
-    flag = os.system(cmd)
-    log_str = ""
-    if flag == 0:
+        # 开始部署
+        deploy_file_path = os.path.join(remote_deploy_path, app_root_dir)
+        cmd = r"xcopy %s %s /Y /F /E" % (deploy_file_path, remote_program_path)
+        # os.system(cmd)
+        result = os.popen(cmd).readlines()
+        with open(os.path.join(remote_deploy_path, order_code + ".log"), "w") as f:
+            for line in result:
+                print >> f, line
+        # 删除文件
+        shutil.rmtree(deploy_file_path)
+
         print u"发布成功"
+        flag = 0
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布成功" + "\n"
-    else:
+
+    except Exception as e:
+        traceback.print_exc()
         print u"发布失败，请检查。。。"
+        flag = 1
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查。。。" + "\n"
 
     return flag, log_str
@@ -147,7 +178,7 @@ def md5_check(order, host):
     program_path = module.program_path
     host_ip = host.ip
 
-    remote_path = r"\\" + host_ip + os.sep + program_path
+    remote_path = r"\\" + host_ip + "\\" + program_path
     deploy_file_zip = os.path.join(DEPLOY_PATH, order_code + ".zip")
 
     file_unzip = zipfile.ZipFile(deploy_file_zip, 'r')
@@ -191,7 +222,13 @@ def md5_check(order, host):
                         md5_form["check_result"] = 0
                         # 只要有一个不同就标识异常
                         result_all = 0
-                    md5_form_list.append(md5_form)
+                else:
+                    md5_form["remote_file"] = "can not find the file"
+                    md5_form["md5_remote"] = "has no md5"
+                    md5_form["check_result"] = 0
+                    # 只要有一个不同就标识异常
+                    result_all = 0
+                md5_form_list.append(md5_form)
 
     else:
         print u"连接失败，请检查。。。"
@@ -296,6 +333,4 @@ def get_order_sql_files(order_code):
 
 # 主函数，测试
 if __name__ == "__main__":
-    order_code = "20190102144558ES"
-    ip = "172.24.180.223"
-    copy_deploy_file(order_code, ip)
+    program_path = r"d$\kcbp"
