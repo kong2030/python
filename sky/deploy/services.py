@@ -9,6 +9,7 @@ import hashlib
 import zipfile
 import shutil
 import datetime
+import chardet
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -201,7 +202,7 @@ def md5_check(order, host):
 
 
 # 发布函数，对外接口
-def deploy(order, host):
+def deploy_zip(order, host):
     log_all = ""
     # 先建立连接
     flag, log_str = connect(host)
@@ -223,6 +224,44 @@ def deploy(order, host):
     return flag, log_all
 
 
+# 发布Sql
+def deploy_sql(order, host):
+    order_code = order.order_code
+    host_ip = host.ip
+    host_user = host.host_user
+    password = host.password
+
+    # 解密
+    decode_str = base64.decodestring(password)
+    password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
+
+    log_str = "deploy sql test"
+    flag = 0
+    order_deploy_file_path = os.path.join(DEPLOY_PATH, str(order_code))
+    for root, divs, files in os.walk(order_deploy_file_path):
+        for file_ in files:
+            if file_.endswith(".sql") or file_.endswith(".SQL"):
+                file_sql = os.path.join(root, file_.decode("gb2312"))
+                cmd = r"osql -S %s -U %s -P %s -i %s"%(host_ip, host_user, password, file_sql)
+                flag = os.system(cmd.encode("gb2312"))
+                #result = os.popen(cmd.encode("gb2312"))
+                #print result
+                print flag
+
+    return flag, log_str
+
+
+# 发布函数对外接口
+def deploy(order, host):
+    order_type = order.type
+    if order_type == 1:
+        flag, log_str = deploy_zip(order, host)
+    else:
+        flag, log_str = deploy_sql(order, host)
+
+    return flag, log_str
+
+
 # Sql发布
 def get_order_sql_files(order_code):
     # 解压到当前目录
@@ -230,16 +269,28 @@ def get_order_sql_files(order_code):
     order_deploy_file_path = os.path.join(DEPLOY_PATH, str(order_code))
     if not os.path.exists(order_deploy_file_path):
         os.mkdir(order_deploy_file_path)
-    f = zipfile.ZipFile(deploy_file_zip, 'r')
-    for file in f.infolist():
-        f.extract(file, order_deploy_file_path)
+    file_zip = zipfile.ZipFile(deploy_file_zip, 'r')
+    for file_ in file_zip.infolist():
+        file_zip.extract(file_, order_deploy_file_path)
 
-    file_list = []
-    for root,dirs,files in os.walk(order_deploy_file_path):
-        for file in files:
-            sql_file = os.path.join(order_deploy_file_path, file)
-            file_list.append(sql_file)
-    return file_list
+    sql_file_list = []
+    for root, dirs, files in os.walk(order_deploy_file_path):
+        for file_ in files:
+            sql_file = os.path.join(root, file_)
+            with open(sql_file, "r") as f:
+                # 先读取文件内容
+                sql_file_content = "".join(f.readlines())
+                #print file_,chardet.detect(file_)
+                #print chardet.detect(sql_file_content)
+                # 只要不是 utf-8编码，一率用 gb2312 解码
+                if chardet.detect(sql_file_content)["encoding"] != "utf-8" :
+                    sql_file_content = sql_file_content.decode("gb2312")
+
+                sql_file_dict = {"sql_file": file_.decode("gb2312"), "sql_file_content": sql_file_content}
+                sql_file_list.append(sql_file_dict)
+
+    # 直接把文件名与文件内容返回，免得再次解析
+    return sql_file_list
 
 
 

@@ -141,7 +141,7 @@ class="nav-item  "
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
                         <h1 class="page-title"> 自动化部署
-                            <small>{{ env_name }}</small>
+                            <small>{{ env_name }} <input type="hidden" id="current-env" value="{{ current_env }}"></small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -154,7 +154,7 @@ class="nav-item  "
                                         <table class="table table-bordered table-hover " id="sample_1">
                                             <thead>
                                                 <tr>
-                                                    <th> 服务器 </th>
+                                                    <th> 数据库服务器 </th>
                                                     <th> 组件 </th>
                                                     <th> 运行发布单 </th>
                                                     <th> 发布状态 </th>
@@ -165,9 +165,9 @@ class="nav-item  "
                                             <tbody>
                                                 {% for obj in deploy_model_list %}
                                                 <tr class="odd gradeX">
-                                                    <td> {{ obj.host_ip }} </td>
-                                                    <td> {{ module_name }} </td>
-                                                    <td> {{ order_code }} </td>
+                                                    <td> {{ obj.host_ip }} <input type="hidden" id="host-ip" value="{{ obj.host_ip }}"> </td>
+                                                    <td> {{ module_name }} <input type="hidden" id="module-name" value="{{ obj.module_name }}"> </td>
+                                                    <td> {{ order_code }}  <input type="hidden" id="order-code" value="{{ order_code }}"> </td>
                                                     <td> {{ obj.deploy_status }} </td>
                                                     <td> {{ obj.deploy_time | date:'Y-m-d H:i:s' }} </td>
                                                     <td>  </td>
@@ -181,32 +181,33 @@ class="nav-item  "
                             </div>
                         </div>
                         <!-- END MY -->
-                        <div class="row col-md-12">
-                            <button class="btn btn-primary" ng-click="deploy('{{ order_code }}','{{ current_env }}', '{{ module_name }}')">程序部署</button>
-                            <button class="btn btn-success" ng-click="md5check('{{ order_code }}')">md5校验</button>
-                        </div>
-                        <!-- md5check table begin -->
-                        <br><br><br><br><br>
 
+                        <!-- 核对要发布的Sql语句 -->
                         {% for obj in sql_file_list %}
-                        <div class="row" id="md5-check" >
+                        <div class="row" id="sql-file-check" >
                             <div class="col-md-12">
                                 <div class="portlet light bordered">
                                         <div class="portlet-title">
                                             <div class="caption">
                                                 <i class="icon-settings font-green"></i>
-                                                <span class="caption-subject font-green sbold uppercase">{{ obj }}</span>
+                                                <span class="caption-subject font-green sbold uppercase">{{ forloop.counter }}、 {{ obj.sql_file }}</span>
+                                                <span class="label label-warning" style="cursor:pointer;" ng-click="review('{{ forloop.counter }}')">必须先预览</span>
+                                                <input type="hidden" id="sql_file_{{ forloop.counter }}" value="{{ obj }}">
                                             </div>
                                         </div>
-                                        <div class="portlet-body">
-
+                                        <div class="portlet-body" id="sql_review_{{ forloop.counter }}" name="sql_review" hidden>
+                                            {{ obj.sql_file_content | linebreaksbr }}
                                         </div>
                                 </div>
                             </div>
-
                         </div>
                         {% endfor %}
                         <!-- md5check table end -->
+                        <div class="row ">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" ng-click="deploySql()">程序部署</button>
+                            </div>
+                        </div>
                     </div>
                     <!-- END CONTENT BODY -->
                 </div>

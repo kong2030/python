@@ -80,7 +80,7 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         }
     }
 
-    // 发布
+    // 发布，（手工上传升级包方式）
     $scope.deploy = function(order_code,current_env,module_name){
         //首先获取所有被选中的产品，默认取第一个来编辑
 	    var deployChecked = []
@@ -138,5 +138,33 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
             $scope.result_all = response["result_all"]
         })
     }
+
+    // 预览sql文件
+    $scope.review = function(index){
+        //alert($("div[name='sql_review']:hidden").length)
+        $("#sql_review_"+index).show()
+    }
+
+    // 发布sql
+    $scope.deploySql = function(){
+        count_hidden = $("div[name='sql_review']:hidden").length;
+        if(count_hidden == 0){
+            order_code = $("#order-code").val();
+            host_ip = $("#host-ip").val();
+            module_name = $("module-name").val();
+            current_env = $("current-env").val();
+            data = {"orderCode":order_code, "currentEnv":current_env, "moduleName":module_name, "hostIp":host_ip};
+
+            $http({
+                method:'post',
+                url:'/sky/deploy/saveDeploySql',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, //需要加上头
+                data:$.param(data),
+            }).success(function(response,status){
+                swal(response)
+            });
+        }
+    }
+
 
 });

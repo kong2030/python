@@ -12,14 +12,14 @@ import sys
 import datetime
 import random
 import string
+import traceback
 
 from django.db import transaction
 import json
 from models import *
 import services
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
 
 # Create your views here.
 
@@ -200,10 +200,7 @@ def deploy_order_page(request):
 @csrf_exempt
 def deploy_order_sql_page(request):
     order_code = request.GET["orderCode"]
-
     sql_file_list = services.get_order_sql_files(order_code)
-    print type(sql_file_list[0])
-
     order = Order.objects.filter(order_code=order_code)[0]
     module = order.module
     current_env = order.current_env
@@ -300,6 +297,54 @@ def save_deploy(request):
             return HttpResponse("error")
     except Exception as e:
         print e
+        return HttpResponse("error")
+
+
+# 开始发布sql
+@login_required
+@csrf_exempt
+def save_deploy_sql(request):
+    try:
+        order_code = request.POST["orderCode"]
+        host_ip = request.POST["hostIp"]
+        current_env = request.POST["currentEnv"]
+        module_name = request.POST["moduleName"]
+        # 先取对应发布单
+        order = Order.objects.filter(order_code=order_code)[0]
+
+        # 事务操作，一起更新数据库
+        with transaction.atomic():
+            # 对应主机
+            host = Host.objects.filter(ip=host_ip)[0]
+
+            # 发布函数
+            flag, log_str = services.deploy(order, host)
+
+            # 数据库更新
+            order_host = OrderHost()
+            order_host.order_code = order_code
+            order_host.host_ip = host_ip
+            order_host.module_name = module_name
+            if flag == 0:
+                order_host.deploy_status = 1
+            else:
+                order_host.deploy_status = 0
+            order_host.deploy_time = datetime.datetime.now()
+            order_host.deploy_log = log_str
+            # 发布记录入库
+            order_host.save()
+            # 发布单表状态更新
+        arg_name = "env_" + str(current_env)
+        setattr(order, arg_name, 2)
+        order.save()
+
+        if flag == 0:
+            return HttpResponse("success")
+        else:
+            return HttpResponse("error")
+
+    except Exception as e:
+        traceback.print_exc()
         return HttpResponse("error")
 
 
