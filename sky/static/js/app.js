@@ -80,6 +80,11 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         }
     }
 
+    // 查看日志
+    $scope.showLog = function(){
+        swal($("#deploy-log").val())
+    }
+
     // 发布，（手工上传升级包方式）
     $scope.deploy = function(order_code,current_env,module_name){
         //首先获取所有被选中的产品，默认取第一个来编辑
@@ -90,6 +95,9 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         //如果都没选中，直接返回，什么也不做
         if(deployChecked.length<1)return;
 
+        // 弹出模态框，防止乱动
+        $('#myModal').modal({backdrop:'static',keyboard:false});
+
 	    //ajax请求到后端
         $.ajax({
             type: "POST",
@@ -97,6 +105,8 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
             traditional:true,   //加上这项可以传递数组
             data: {"deployChecked":deployChecked, "orderCode":order_code, "currentEnv":current_env, "moduleName":module_name},
             success: function(result,status){
+                // 隐藏模态框
+                $('#myModal').modal('hide');
                 if(result == "success"){
                     swal("Yes! deploy success.", "", "success").then((value) => {
                         window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
@@ -151,17 +161,30 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         if(count_hidden == 0){
             order_code = $("#order-code").val();
             host_ip = $("#host-ip").val();
-            module_name = $("module-name").val();
-            current_env = $("current-env").val();
+            module_name = $("#module-name").val();
+            current_env = $("#current-env").val();
             data = {"orderCode":order_code, "currentEnv":current_env, "moduleName":module_name, "hostIp":host_ip};
+
+            // 弹出模态框，防止乱动
+            $('#myModal').modal({backdrop:'static',keyboard:false});
 
             $http({
                 method:'post',
                 url:'/sky/deploy/saveDeploySql',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, //需要加上头
                 data:$.param(data),
-            }).success(function(response,status){
-                swal(response)
+            }).success(function(result,status){
+                // 隐藏模态框
+                $('#myModal').modal('hide');
+                if(result == "success"){
+                    swal("Yes! deploy success.", "", "success").then((value) => {
+                        window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
+                    });
+                }else{
+                    swal("Sorry! deploy error.", "", "error").then((value) => {
+                        window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
+                    });
+                }
             });
         }
     }

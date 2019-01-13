@@ -225,6 +225,8 @@ def deploy_order_sql_page(request):
             deploy_model = DeployModel()
             deploy_model.host_ip = host.ip
             deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
+            # 还没发布过的，部署按键才可用
+            deploy_btn_status = 1
             deploy_model_list.append(deploy_model)
     # 2：表示此发布单发布过，但不一定是所有主机都有发布
     if order_status == 2:
@@ -237,7 +239,9 @@ def deploy_order_sql_page(request):
             if order_host.exists():
                 deploy_model.deploy_time = order_host[0].deploy_time
                 deploy_model.deploy_log = order_host[0].deploy_log
-                print order_host[0].deploy_log
+                # 还没发布过的，部署按键才可用
+                deploy_btn_status = 0
+                #print order_host[0].deploy_log
                 if order_host[0].deploy_status == 1:
                     deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
                 else:
@@ -247,7 +251,7 @@ def deploy_order_sql_page(request):
             deploy_model_list.append(deploy_model)
 
     return render(request, "deploy/order_deploy_sql.html", {"deploy_model_list": deploy_model_list,
-                                                        "order_code": order_code, "module_name": module_name,
+                                                        "order_code": order_code, "module_name": module_name,"deploy_btn_status": deploy_btn_status,
                                                         "env_name": env_name, "current_env": current_env, "sql_file_list":sql_file_list})
 
 

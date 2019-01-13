@@ -272,20 +272,25 @@ def deploy_sql(order, host):
     decode_str = base64.decodestring(password)
     password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
 
-    log_str = "deploy sql test"
+    log_str = ""
     flag = 0
     order_deploy_file_path = os.path.join(DEPLOY_PATH, str(order_code))
     for root, divs, files in os.walk(order_deploy_file_path):
         for file_ in files:
             if file_.endswith(".sql") or file_.endswith(".SQL"):
                 file_sql = os.path.join(root, file_.decode("gb2312"))
-                cmd = r"osql -S %s -U %s -P %s -i %s"%(host_ip, host_user, password, file_sql)
-                flag = os.system(cmd.encode("gb2312"))
-                #result = os.popen(cmd.encode("gb2312"))
-                #print result
-                print flag
+                cmd = r"sqlcmd -S %s -U %s -P %s -i %s"%(host_ip, host_user, password, file_sql)
+                result = ".".join(os.popen(cmd.encode("gb2312")).readlines())
+                if "错误".encode("gb2312") in result or "状态 1".encode("gb2312") in result:
+                    flag = 1
+                    log_str = log_str + datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + " " + file_ + "\n" + result
+                    print log_str
+                    break
+                else:
+                    log_str = log_str + datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + " " + file_ + "\n" + result
+                    print log_str
 
-    return flag, log_str
+    return flag, log_str.decode("gb2312")
 
 
 # 发布函数对外接口

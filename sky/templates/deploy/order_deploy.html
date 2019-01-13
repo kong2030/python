@@ -182,7 +182,8 @@ class="nav-item  "
                                                     <td> {{ order_code }} </td>
                                                     <td> {{ obj.deploy_status }} </td>
                                                     <td> {{ obj.deploy_time | date:'Y-m-d H:i:s' }} </td>
-                                                    <td>  </td>
+                                                    <td> <span class="label label-warning" style="cursor:pointer;" ng-click="showLog()">查看日志</span>
+                                                        <input type="hidden" id="deploy-log" value="{{ obj.deploy_log }}"> </td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -197,6 +198,17 @@ class="nav-item  "
                             <button class="btn btn-primary" ng-click="deploy('{{ order_code }}','{{ current_env }}', '{{ module_name }}')">程序部署</button>
                             <button class="btn btn-danger" ng-click="rollback('{{ order_code }}','{{ current_env }}', '{{ module_name }}')">程序回滚</button>
                             <button class="btn btn-success" ng-click="md5check('{{ order_code }}')">md5校验</button>
+                        </div>
+                        <div class="row">
+                            <div class="modal fade" id="myModal">
+                                <div class="col-md-offset-3 col-md-6" style="top:300px">
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            <span class="sr-only"> 100% Complete (success) </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- md5check table begin -->
                         <br><br><br><br><br>
