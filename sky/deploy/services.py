@@ -11,6 +11,7 @@ import shutil
 import datetime
 import chardet
 import traceback
+from stat import ST_ATIME, ST_CTIME, ST_MTIME
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -281,7 +282,7 @@ def deploy_sql(order, host):
                 file_sql = os.path.join(root, file_.decode("gb2312"))
                 cmd = r"sqlcmd -S %s -U %s -P %s -i %s"%(host_ip, host_user, password, file_sql)
                 result = ".".join(os.popen(cmd.encode("gb2312")).readlines())
-                if "错误".encode("gb2312") in result or "状态 1".encode("gb2312") in result:
+                if "错误".encode("gb2312") in result or "级别".encode("gb2312") in result:
                     flag = 1
                     log_str = log_str + datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + " " + file_ + "\n" + result
                     print log_str
@@ -302,6 +303,66 @@ def deploy(order, host):
         flag, log_str = deploy_sql(order, host)
 
     return flag, log_str
+
+
+# 回滚函数
+def rollback(order, host):
+    try:
+        log_all = ""
+        # 先建立连接
+        flag, log_str = connect(host)
+        log_all = log_all + log_str
+        # 连接成功，开始回滚
+        if flag == 0:
+            order_code = order.order_code
+            module = order.module
+            program_path = module.program_path
+            host_ip = host.ip
+
+            # program_path 一般为 d$\kcbp 的值
+            app_name = program_path.split("\\")[-1]
+            root_deploy_path = r"\\" + host_ip + "\\" + program_path.split("\\")[0] + r"\backup\deploy"
+            root_deploy_before_path = r"\\" + host_ip + "\\" + program_path.split("\\")[0] + r"\backup\deploy-before"
+            program_path_all = r"\\" + host_ip + "\\" + program_path
+            backup_file_order_path = os.path.join(root_deploy_before_path, order_code, app_name)
+            deploy_log_file = os.path.join(root_deploy_path, order_code + ".log")
+
+            deploy_dict = dict()
+            with open(deploy_log_file, "r") as f:
+                for line in f.readlines():
+                    if len(line.split("->")) > 1:
+                        deploy_file_has = line.split("->")[1].strip()
+                        deploy_file_has_key = deploy_file_has.replace(program_path_all, "")
+                        deploy_dict[deploy_file_has_key] = deploy_file_has
+
+            count = 0
+            for key, value in deploy_dict.items():
+                deploy_before_file = backup_file_order_path + key
+                deploy_file = value
+                if os.path.exists(deploy_before_file):
+                    # 回滚文件
+                    shutil.copy(deploy_before_file, deploy_file)
+                    # 关键步骤:保留修改时间,ST_MTIME:修改时间,ST_CTIME:文件访问时间,windows下
+                    file_stat = os.stat(deploy_before_file)
+                    os.utime(deploy_file, (file_stat[ST_CTIME], file_stat[ST_MTIME]))
+                    # 回滚日志
+                    log_all = log_all + deploy_before_file + " -> " + deploy_file + "\n"
+                    count = count + 1
+                else:
+                    # 如果是新增的文件，直接删除文件，不过新建的空目录会被保留（影响不大就不再优化）
+                    os.remove(deploy_file)
+                    log_all = log_all + " delete the file: " + deploy_file + "\n"
+                    count = count + 1
+
+            log_all = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + " all rollback files: " + str(count) + "\n" + log_all
+
+    except Exception as e:
+        traceback.print_exc()
+        print u"回滚失败，请检查。。。"
+        flag = 1
+        log_all = log_all + datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 回滚失败，请检查。。。" + "\n"
+
+    return flag, log_all
 
 
 # Sql发布
@@ -333,7 +394,6 @@ def get_order_sql_files(order_code):
 
     # 直接把文件名与文件内容返回，免得再次解析
     return sql_file_list
-
 
 
 # 主函数，测试

@@ -176,7 +176,7 @@ class="nav-item  "
                                                          {% if obj.deploy_status == 2 %} <span class="label label-success">{{ obj.env_status }}</span> {% endif %}
                                                     </td>
                                                     <td>
-                                                        <span class="label label-primary" style="cursor:pointer;" ng-click="deployPage('{{ obj.order_code }}',{{ obj.type }})">程序部署</span>
+                                                        <span class="label label-primary" style="cursor:pointer;" onclick="deployPage('{{ obj.order_code }}',{{ obj.type }})">程序部署</span>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -208,26 +208,15 @@ class="nav-item  "
         <script src="/static/js/table-datatables.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
 
-        <!-- 环境流转，angularjs实现不了，换用jquery -->
+        <!-- 程序部署，angularjs ng-click点击无效，需要重新编译html，因为功能简单所以换用最原始的 -->
         <script type="text/javascript">
-            $(".env-name").change(function(){
-                order_code = $(this).attr("id");
-                env_id = $("#"+order_code).val();
-                $.ajax({
-                    type: "POST",
-                    url: "/sky/deploy/changeOrder",
-                    data: {"env_id":env_id, "order_code":order_code},
-                    success: function(result,status){
-                        if(result == "success"){
-                            alert("Yes! 流转成功")
-                        }else{
-                            alert("Sorry! 流转出错")
-                        }
-                        //刷新页面
-                        window.location.href="/sky/deploy/changeOrderPage";
-                    }
-                });
-            })
+            function deployPage(order_code, order_type){
+                if(order_type == 1){
+                    window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                }else if(order_type == 2){
+                    window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
+                }
+            }
         </script>
 
 

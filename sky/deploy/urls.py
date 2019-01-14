@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^deployOrder$', views.deploy_order_page, name='deployOrder'),
     url(r'^deployOrderSql$', views.deploy_order_sql_page, name='deployOrderSql'),
     url(r'^saveDeploy$', views.save_deploy, name='saveDeploy'),
+    url(r'^saveRollback$', views.save_rollback, name='saveRollback'),
     url(r'^md5Check$', views.md5_check, name='md5Check'),
     url(r'^saveDeploySql$', views.save_deploy_sql, name='saveDeploySql'),
 

@@ -34,7 +34,7 @@ class OrderHost(models.Model):
     order_code = models.CharField(max_length=16)
     host_ip = models.CharField(max_length=20)
     module_name = models.CharField(max_length=50)
-    deploy_status = models.IntegerField()  # 0:发布失败；1：发布成功
+    deploy_status = models.IntegerField()  # 0:发布失败；1：发布成功；2：回滚失败；3：回滚成功
     deploy_time = models.DateTimeField()
     deploy_log = models.TextField(default=" ")
 

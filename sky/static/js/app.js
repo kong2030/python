@@ -71,18 +71,18 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
         });
     }
 
-    // 开始发布页
+    /* 开始发布页
     $scope.deployPage = function(order_code, order_type){
         if(order_type == 1){
             window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
         }else if(order_type == 2){
             window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
         }
-    }
+    }*/
 
     // 查看日志
-    $scope.showLog = function(){
-        swal($("#deploy-log").val())
+    $scope.showLog = function(index){
+        swal($("#deploy-log-"+index).val())
     }
 
     // 发布，（手工上传升级包方式）
@@ -121,8 +121,51 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
     }
 
     //回滚
-    $scope.rollback = function(order_code){
-        swal("rollback");
+    $scope.rollback = function(order_code,current_env,module_name){
+        swal({
+            title: "确定要回滚?",
+            //text: "Once rollback, you will not be able to recover this imaginary file!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willRollback) => {
+            if (willRollback) {
+                //首先获取所有被选中的产品，默认取第一个来编辑
+                var deployChecked = []
+                $("input[name='deploy-checkbox']:checked").each(function(i){
+                    deployChecked[i] = $(this).val()
+                })
+                //如果都没选中，直接返回，什么也不做
+                if(deployChecked.length<1)return;
+
+                // 弹出模态框，防止乱动
+                $('#myModal').modal({backdrop:'static',keyboard:false});
+
+                //ajax请求到后端
+                $.ajax({
+                    type: "POST",
+                    url: "/sky/deploy/saveRollback",
+                    traditional:true,   //加上这项可以传递数组
+                    data: {"deployChecked":deployChecked, "orderCode":order_code, "currentEnv":current_env, "moduleName":module_name},
+                    success: function(result,status){
+                        // 隐藏模态框
+                        $('#myModal').modal('hide');
+                        if(result == "success"){
+                            swal("Yes! rollback success.", "", "success").then((value) => {
+                                window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                            });
+                        }else{
+                            swal("Sorry! rollback error.", "", "error").then((value) => {
+                                window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                            });
+                        }
+                    }
+                });
+            } else {
+                swal("放弃回滚!");
+            }
+        });
     }
 
     //md5校验

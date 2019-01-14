@@ -20,7 +20,6 @@ from models import *
 import services
 
 
-
 # Create your views here.
 
 # 全局变量定义
@@ -72,7 +71,7 @@ def save_order(request):
         upload_path = DEPLOY_FILE_PATH
         if not os.path.exists(upload_path):
             os.mkdir(upload_path)
-        #file_name = order_code + "." + update_file.name.split(".")[1]
+        # file_name = order_code + "." + update_file.name.split(".")[-1]
         file_name = order_code + ".zip"
         upload_file = os.path.join(upload_path, file_name)
         with open(upload_file, "wb") as f:
@@ -182,11 +181,15 @@ def deploy_order_page(request):
             if order_host.exists():
                 deploy_model.deploy_time = order_host[0].deploy_time
                 deploy_model.deploy_log = order_host[0].deploy_log
-                print order_host[0].deploy_log
-                if order_host[0].deploy_status == 1:
-                    deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
-                else:
+                if order_host[0].deploy_status == 0:
                     deploy_model.deploy_status = mark_safe('<span class="label label-danger">部署失败</span>')
+                elif order_host[0].deploy_status == 1:
+                    deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
+                elif order_host[0].deploy_status == 2:
+                    deploy_model.deploy_status = mark_safe('<span class="label label-danger">回滚失败</span>')
+                else:
+                    deploy_model.deploy_status = mark_safe('<span class="label label-info">回滚成功</span>')
+
             else:
                 deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
             deploy_model_list.append(deploy_model)
@@ -241,7 +244,6 @@ def deploy_order_sql_page(request):
                 deploy_model.deploy_log = order_host[0].deploy_log
                 # 还没发布过的，部署按键才可用
                 deploy_btn_status = 0
-                #print order_host[0].deploy_log
                 if order_host[0].deploy_status == 1:
                     deploy_model.deploy_status = mark_safe('<span class="label label-success">部署成功</span>')
                 else:
@@ -349,6 +351,51 @@ def save_deploy_sql(request):
 
     except Exception as e:
         traceback.print_exc()
+        return HttpResponse("error")
+
+
+# 回滚入库
+@login_required
+@csrf_exempt
+def save_rollback(request):
+    try:
+        # 获取前端传过来的数组
+        deploy_checked = request.POST.getlist("deployChecked")
+        order_code = request.POST["orderCode"]
+        current_env = request.POST["currentEnv"]
+        module_name = request.POST["moduleName"]
+        # 先取对应发布单
+        order = Order.objects.filter(order_code=order_code)[0]
+
+        # 事务操作，一起更新数据库
+        with transaction.atomic():
+            for host_ip in deploy_checked:
+                # 对应主机
+                host = Host.objects.filter(ip=host_ip)[0]
+
+                # 回滚函数
+                flag, log_str = services.rollback(order, host)
+
+                # 数据库更新
+                order_host = OrderHost()
+                order_host.order_code = order_code
+                order_host.host_ip = host_ip
+                order_host.module_name = module_name
+                if flag == 0:
+                    order_host.deploy_status = 3
+                else:
+                    order_host.deploy_status = 2
+                order_host.deploy_time = datetime.datetime.now()
+                order_host.deploy_log = log_str
+                # 发布记录入库
+                order_host.save()
+
+        if flag == 0:
+            return HttpResponse("success")
+        else:
+            return HttpResponse("error")
+    except Exception as e:
+        print e
         return HttpResponse("error")
 
 
