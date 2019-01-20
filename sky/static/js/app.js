@@ -87,35 +87,48 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
 
     // 发布，（手工上传升级包方式）
     $scope.deploy = function(order_code,current_env,module_name){
-        //首先获取所有被选中的产品，默认取第一个来编辑
-	    var deployChecked = []
-	    $("input[name='deploy-checkbox']:checked").each(function(i){
-	        deployChecked[i] = $(this).val()
-	    })
-        //如果都没选中，直接返回，什么也不做
-        if(deployChecked.length<1)return;
+        swal({
+            title: "确定要发布?",
+            //text: "Once rollback, you will not be able to recover this imaginary file!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDeploy) => {
+            if(willDeploy){
+                //首先获取所有被选中的产品，默认取第一个来编辑
+                var deployChecked = []
+                $("input[name='deploy-checkbox']:checked").each(function(i){
+                    deployChecked[i] = $(this).val()
+                })
+                //如果都没选中，直接返回，什么也不做
+                if(deployChecked.length<1)return;
 
-        // 弹出模态框，防止乱动
-        $('#myModal').modal({backdrop:'static',keyboard:false});
+                // 弹出模态框，防止乱动
+                $('#myModal').modal({backdrop:'static',keyboard:false});
 
-	    //ajax请求到后端
-        $.ajax({
-            type: "POST",
-            url: "/sky/deploy/saveDeploy",
-            traditional:true,   //加上这项可以传递数组
-            data: {"deployChecked":deployChecked, "orderCode":order_code, "currentEnv":current_env, "moduleName":module_name},
-            success: function(result,status){
-                // 隐藏模态框
-                $('#myModal').modal('hide');
-                if(result == "success"){
-                    swal("Yes! deploy success.", "", "success").then((value) => {
-                        window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
-                    });
-                }else{
-                    swal("Sorry! deploy error.", "", "error").then((value) => {
-                        window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
-                    });
-                }
+                //ajax请求到后端
+                $.ajax({
+                    type: "POST",
+                    url: "/sky/deploy/saveDeploy",
+                    traditional:true,   //加上这项可以传递数组
+                    data: {"deployChecked":deployChecked, "orderCode":order_code, "currentEnv":current_env, "moduleName":module_name},
+                    success: function(result,status){
+                        // 隐藏模态框
+                        $('#myModal').modal('hide');
+                        if(result == "success"){
+                            swal("Yes! deploy success.", "", "success").then((value) => {
+                                window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                            });
+                        }else{
+                            swal("Sorry! deploy error.", "", "error").then((value) => {
+                                window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                            });
+                        }
+                    }
+                });
+            }else{
+                swal("放弃发布！")
             }
         });
     }
@@ -200,36 +213,51 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
 
     // 发布sql
     $scope.deploySql = function(){
-        count_hidden = $("div[name='sql_review']:hidden").length;
-        if(count_hidden == 0){
-            order_code = $("#order-code").val();
-            host_ip = $("#host-ip").val();
-            module_name = $("#module-name").val();
-            current_env = $("#current-env").val();
-            data = {"orderCode":order_code, "currentEnv":current_env, "moduleName":module_name, "hostIp":host_ip};
+        swal({
+            title: "确定要发布?",
+            //text: "Once rollback, you will not be able to recover this imaginary file!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDeploy) => {
+            if(willDeploy){
+                count_hidden = $("div[name='sql_review']:hidden").length;
+                if(count_hidden == 0){
+                    order_code = $("#order-code").val();
+                    host_ip = $("#host-ip").val();
+                    module_name = $("#module-name").val();
+                    current_env = $("#current-env").val();
+                    data = {"orderCode":order_code, "currentEnv":current_env, "moduleName":module_name, "hostIp":host_ip};
 
-            // 弹出模态框，防止乱动
-            $('#myModal').modal({backdrop:'static',keyboard:false});
+                    // 弹出模态框，防止乱动
+                    $('#myModal').modal({backdrop:'static',keyboard:false});
 
-            $http({
-                method:'post',
-                url:'/sky/deploy/saveDeploySql',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, //需要加上头
-                data:$.param(data),
-            }).success(function(result,status){
-                // 隐藏模态框
-                $('#myModal').modal('hide');
-                if(result == "success"){
-                    swal("Yes! deploy success.", "", "success").then((value) => {
-                        window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
-                    });
-                }else{
-                    swal("Sorry! deploy error.", "", "error").then((value) => {
-                        window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
+                    $http({
+                        method:'post',
+                        url:'/sky/deploy/saveDeploySql',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, //需要加上头
+                        data:$.param(data),
+                    }).success(function(result,status){
+                        // 隐藏模态框
+                        $('#myModal').modal('hide');
+                        if(result == "success"){
+                            swal("Yes! deploy success.", "", "success").then((value) => {
+                                window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
+                            });
+                        }else{
+                            swal("Sorry! deploy error.", "", "error").then((value) => {
+                                window.location.href="/sky/deploy/deployOrderSql?orderCode=" + order_code;
+                            });
+                        }
                     });
                 }
-            });
-        }
+            }else{
+                swal("放弃发布！")
+            }
+        });
+
+
     }
 
 

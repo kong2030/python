@@ -13,6 +13,7 @@ import datetime
 import random
 import string
 import traceback
+import logging
 
 from django.db import transaction
 import json
@@ -303,6 +304,7 @@ def save_deploy(request):
             return HttpResponse("error")
     except Exception as e:
         print e
+        logging.exception("EXCEPTION")
         return HttpResponse("error")
 
 
@@ -351,6 +353,7 @@ def save_deploy_sql(request):
 
     except Exception as e:
         traceback.print_exc()
+        logging.exception("EXCEPTION")
         return HttpResponse("error")
 
 
