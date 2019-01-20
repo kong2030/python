@@ -136,8 +136,11 @@ def deploy_do(order, host):
         remote_deploy_path = r"\\" + host_ip + "\\" + root_deploy_path + r"\backup\deploy"
         remote_program_path = r"\\" + host_ip + "\\" + program_path
 
-        # 解压到当前目录，要包含根目录
+        # 解压到临时目录，要包含根目录
         deploy_file_zip = os.path.join(remote_deploy_path, order_code + ".zip")
+        remote_deploy_path_temp = os.path.join(remote_deploy_path, str(order_code))
+        if not os.path.exists(remote_deploy_path_temp):
+            os.makedirs(remote_deploy_path_temp)
         f = zipfile.ZipFile(deploy_file_zip, 'r')
         # 获取解压后根目录
         app_root_dir = f.namelist()[0][:-1]
@@ -145,13 +148,13 @@ def deploy_do(order, host):
         for file_ in f.infolist():
             d = file_.date_time
             gettime = "%s/%s/%s %s:%s" % (d[0], d[1], d[2], d[3], d[4])
-            f.extract(file_, remote_deploy_path)
-            file_path = os.path.join(remote_deploy_path, file_.filename)
+            f.extract(file_, remote_deploy_path_temp)
+            file_path = os.path.join(remote_deploy_path_temp, file_.filename)
             timearry = time.mktime(time.strptime(gettime, '%Y/%m/%d %H:%M'))
             os.utime(file_path, (timearry, timearry))
 
         # 开始部署
-        deploy_file_path = os.path.join(remote_deploy_path, app_root_dir)
+        deploy_file_path = os.path.join(remote_deploy_path_temp, app_root_dir)
         cmd = r"xcopy %s %s /Y /F /E" % (deploy_file_path, remote_program_path)
         # os.system(cmd)
         result = os.popen(cmd).readlines()
@@ -159,7 +162,7 @@ def deploy_do(order, host):
             for line in result:
                 print >> f, line
         # 删除文件
-        shutil.rmtree(deploy_file_path)
+        shutil.rmtree(remote_deploy_path_temp)
 
         if "复制了".encode("gb2312") in "".join(result):
             print u"发布成功"
@@ -202,13 +205,14 @@ def md5_check(order, host):
 
         remote_path = r"\\" + host_ip + "\\" + program_path
         deploy_file_zip = os.path.join(DEPLOY_PATH, order_code + ".zip")
+        deploy_file_zip_temp = os.path.join(DEPLOY_PATH, str(order_code))
 
         file_unzip = zipfile.ZipFile(deploy_file_zip, 'r')
         for file_ in file_unzip.namelist():
-            file_unzip.extract(file_, DEPLOY_PATH)
+            file_unzip.extract(file_, deploy_file_zip_temp)
         # 获取解压后根目录
         app_root_dir = file_unzip.namelist()[0][:-1]
-        deploy_file_path = os.path.join(DEPLOY_PATH, app_root_dir)
+        deploy_file_path = os.path.join(deploy_file_zip_temp, app_root_dir)
 
         # 先建立连接
         flag, log_str = connect(host)
@@ -232,7 +236,7 @@ def md5_check(order, host):
                     key = deploy_file.replace(deploy_file_path, "").upper()
                     md5_form = dict()
 
-                    md5_form["deploy_file"] = deploy_file.replace(DEPLOY_PATH + os.sep, "")
+                    md5_form["deploy_file"] = deploy_file.replace(deploy_file_zip_temp + os.sep, "")
                     md5_form["md5_source"] = generate_file_md5value(deploy_file)
                     if key in remote_file_dict.keys():
                         remote_file = remote_file_dict[key]
@@ -256,7 +260,7 @@ def md5_check(order, host):
             print u"连接失败，请检查。。。"
 
         # 删除文件
-        shutil.rmtree(deploy_file_path)
+        shutil.rmtree(deploy_file_zip_temp)
     except Exception as e:
         traceback.print_exc()
         logging.error("md5 check has an error:")
