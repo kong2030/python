@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """ipoms URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -13,28 +15,16 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url,include
-from django.contrib import admin
+from django.conf.urls import url
+
 
 
 from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
 
-    # login and index page url
-    url(r'^sky/login$', views.login_page, name='login'),
-    url(r'^sky/index$', views.index_page, name='index'),
-    url(r'^sky/$', views.index_page),
-    url(r'^sky/loginCheck$', views.login_check),
-    url(r'^sky/logout$', views.logout_check, name='logout'),
+    # 修改密码
+    url(r'^pwdPage$', views.pwd_change_page, name='pwdPage'),
+    url(r'^savePwd$', views.save_password, name='savePwd'),
 
-    # sub module url
-    url(r'^sky/config/',include('config.urls', namespace='config')),
-
-    # sub module url
-    url(r'^sky/cmdb/',include('cmdb.urls', namespace='cmdb')),
-
-    # sub module url
-    url(r'^sky/deploy/',include('deploy.urls', namespace='deploy')),
 ]

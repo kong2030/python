@@ -6,6 +6,35 @@ app.config(function($interpolateProvider) {
     $interpolateProvider.endSymbol(']}');
 });
 
+// 修改密码
+app.controller('headerCtrl', function($scope, $http, $modal) {
+	//产品新建或编辑 弹出模态框
+	$scope.pwdChange = function() {
+	    var modalInstance = $modal.open({
+            backdrop:false, //点击空白不隐藏
+            templateUrl : '/sky/config/pwdPage',// script标签中定义的id
+            controller : 'pwdChangeCtrl',// modal对应的Controller
+            size : 'md',
+            resolve : {
+                data : function() {// data作为modal的controller传入的参数
+
+                    return "success";// 用于传递数据
+                }
+            }
+		})
+	}
+});
+
+// 修改密码弹出模态框
+app.controller('pwdChangeCtrl', function($scope, $modalInstance, data) {
+      // 在这里处理要进行的操作
+      $scope.ok = function() {
+          $modalInstance.close();
+      };
+      $scope.cancel = function() {
+          $modalInstance.dismiss('cancel');
+      }
+});
 
 // 加密异步返回
 app.controller('encryptCtrl', function($scope, $http,$compile) {
