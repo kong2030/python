@@ -28,10 +28,12 @@ def save_password(request):
         if user.check_password(old_password):
             user.set_password(new_password)
             user.save()
-        return HttpResponse("success")
+            return HttpResponse("success")
+        else:
+            return HttpResponse("old password is not right!")
     except Exception as e:
         traceback.print_exc()
         logging.error("save password has an error!")
         logging.exception("EXCEPTION")
-        return HttpResponse("error")
+        return HttpResponse("Sorry! save error.")
 

@@ -61,7 +61,7 @@ var FormValidation = function () {
                                 if(result == "success"){
                                     swal("Yes! save success.", "", "success")
                                 }else{
-                                    swal("Sorry! save error.", "", "error")
+                                    swal(result, "", "error")
                                 }
                             }
                         });
