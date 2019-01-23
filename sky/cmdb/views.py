@@ -65,8 +65,8 @@ def add_module_page(request):
 # 组件编辑页面
 @login_required
 def edit_module_page(request):
-    module_name = request.GET["moduleName"]
-    module = Module.objects.filter(module_name=module_name)[0]
+    module_id = request.GET["moduleId"]
+    module = Module.objects.filter(id=module_id)[0]
 
     app_systems = AppSystem.objects.all()
 
@@ -82,6 +82,7 @@ def edit_module_page(request):
 def save_module(request):
     try:
         # 先获取参数
+        module_id = request.POST["moduleId"]
         module_name = request.POST["moduleName"].upper().replace(" ", "")
         chinese_name = request.POST["chineseName"].replace(" ", "")
         program_path = request.POST["programPath"].replace(" ", "")
@@ -92,7 +93,7 @@ def save_module(request):
         # 更新数据库
         update_field = {"module_name": module_name, "chinese_name": chinese_name, "program_path": program_path,\
                         "script_path": script_path, "app_system": app_system}
-        Module.objects.update_or_create(module_name=module_name, defaults=update_field)
+        Module.objects.update_or_create(id=module_id, defaults=update_field)
 
     except Exception as e:
         print e

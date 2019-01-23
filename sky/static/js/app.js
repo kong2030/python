@@ -74,7 +74,7 @@ app.controller('moduleCtrl', function($scope, $http, $compile) {
         //如果都没选中，直接返回，什么也不做
         if(moduleChecked.length<1)return;
 
-        window.location.href="/sky/cmdb/editModule?moduleName="+moduleChecked[0];
+        window.location.href="/sky/cmdb/editModule?moduleId="+moduleChecked[0];
 
     }
 
