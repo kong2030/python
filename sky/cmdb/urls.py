@@ -33,6 +33,9 @@ urlpatterns = [
     url(r'^editModule$', views.edit_module_page, name='editModule'),
     url(r'^saveModule$', views.save_module, name='saveModule'),
 
+    # 用户-系统增删改查
+    url(r'^listAppUser$', views.list_app_user_page, name='listAppUser'),
+
     # 通过系统名来查询组件
     url(r'^getModulesByApp$', views.get_modules_by_app, name='getModulesByApp'),
 

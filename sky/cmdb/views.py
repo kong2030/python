@@ -125,3 +125,8 @@ def get_modules_by_app(request):
     # 去除最后一个逗号
     result = result[:-1]
     return HttpResponse(result)
+
+
+# 用户-系统列表
+def list_app_user_page(request):
+    return render(request, "cmdb/app_user_list.html")

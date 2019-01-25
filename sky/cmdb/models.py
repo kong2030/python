@@ -64,3 +64,16 @@ class Host(models.Model):
 
     def __unicode__(self):
         return self.ip
+
+
+# 用户-系统 model （用户有权限管理的系统）
+class UserApp(models.Model):
+    user_id = models.IntegerField()
+    user_code = models.CharField(max_length=5)
+    user_name = models.CharField(max_length=50)
+    app_id = models.IntegerField()
+    app_name = models.CharField(max_length=50)
+
+    # 附加参数
+    class Meta:
+        db_table = 'cmdb_app_user'  # 指定数据库表名
