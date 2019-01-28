@@ -11,6 +11,7 @@ import base64
 import json
 
 from models import *
+from config.models import *
 
 
 reload(sys)
@@ -128,5 +129,73 @@ def get_modules_by_app(request):
 
 
 # 用户-系统列表
+@login_required
+@csrf_exempt
 def list_app_user_page(request):
-    return render(request, "cmdb/app_user_list.html")
+    # 先把已经有记录的用户查出来
+    app_users = list(UserApp.objects.all())
+
+    #app_user_ids= UserApp.objects.values("user_id")
+    app_user_ids = UserApp.objects.values_list("user_id")
+    # 再把还没有记录的用户合并进来
+    users = User.objects.filter(is_superuser=0).exclude(id__in=app_user_ids)
+    for user in users:
+        app_user = UserApp()
+        app_user.user_id = user.id
+        app_user.user_name = user.username
+        app_user.user_code = user.userinfo.user_code
+        app_users.append(app_user)
+
+    return render(request, "cmdb/app_user_list.html",{"appUsers": app_users})
+
+
+# 增加 用户-系统
+@login_required
+@csrf_exempt
+def add_app_user_page(request):
+    user_id = request.GET["id"]
+    user = User.objects.filter(id=user_id)[0]
+    app_systems = AppSystem.objects.all()
+
+    app_users = UserApp.objects.filter(user_id=user_id)
+    # 已选择与未选择
+    app_selected = []
+    app_unselected = []
+    if app_users:
+        app_user = app_users[0]
+        app_ids = app_user.app_id
+        app_id_selected_list = app_ids.split(",")
+        for app_system in app_systems:
+            if str(app_system.id) in app_id_selected_list:
+                app_selected.append(app_system)
+            else:
+                app_unselected.append(app_system)
+    else:
+        app_unselected = app_systems
+    return render(request, "cmdb/app_user_add.html", {"user": user, "appSelected": app_selected, "appUnselected": app_unselected})
+
+
+# 用户-系统 入库
+@login_required
+@csrf_exempt
+def save_app_user(request):
+    user_id = request.POST["userId"]
+    user_name = request.POST["userName"]
+    user_code = request.POST["userCode"]
+    app_select_list = request.POST.getlist("app_multi_selects")
+
+    app_id = ""
+    app_name = ""
+    for app_select in app_select_list:
+        app_system = AppSystem.objects.filter(id=app_select)[0]
+        app_id = app_id + "," + app_select
+        app_name = app_name + "," + app_system.chinese_name
+    # 去掉第一个 ","
+    app_id = app_id[1:]
+    app_name = app_name[1:]
+
+    update_field = {"user_id": user_id, "user_code": user_code, "user_name": user_name, "app_id":app_id, "app_name":app_name}
+
+    UserApp.objects.update_or_create(user_id=user_id, defaults=update_field)
+
+    return HttpResponseRedirect("/sky/cmdb/listAppUser")

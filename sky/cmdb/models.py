@@ -71,8 +71,8 @@ class UserApp(models.Model):
     user_id = models.IntegerField()
     user_code = models.CharField(max_length=5)
     user_name = models.CharField(max_length=50)
-    app_id = models.IntegerField()
-    app_name = models.CharField(max_length=50)
+    app_id = models.CharField(max_length=256)
+    app_name = models.TextField()
 
     # 附加参数
     class Meta:

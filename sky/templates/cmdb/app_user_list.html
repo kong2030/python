@@ -164,11 +164,11 @@ class="nav-item active"
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for obj in orders %}
+                                                {% for obj in appUsers %}
                                                 <tr class="odd gradeX">
-                                                    <td> {{ obj.order_code }} </td>
-                                                    <td> {{ obj.module.module_name }} </td>
-                                                    <td> {{ obj.app_system.chinese_name }} </td>
+                                                    <td> <a href="/sky/cmdb/addAppUser?id={{ obj.user_id }}">{{ obj.user_name }}</a> </td>
+                                                    <td> {{ obj.user_code }} </td>
+                                                    <td> {{ obj.app_name }} </td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>

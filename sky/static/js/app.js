@@ -7,7 +7,7 @@ app.config(function($interpolateProvider) {
 });
 
 // 修改密码
-app.controller('headerCtrl', function($scope, $http, $modal) {
+app.controller('configCtrl', function($scope, $http, $modal) {
 	//产品新建或编辑 弹出模态框
 	$scope.pwdChange = function() {
 	    var modalInstance = $modal.open({
@@ -56,8 +56,8 @@ app.controller('encryptCtrl', function($scope, $http,$compile) {
 });
 
 
-// 组件管理
-app.controller('moduleCtrl', function($scope, $http, $compile) {
+// cmdb管理
+app.controller('cmdbCtrl', function($scope, $http, $compile) {
 
     //新增组件
     $scope.moduleAdd = function(){
@@ -75,7 +75,6 @@ app.controller('moduleCtrl', function($scope, $http, $compile) {
         if(moduleChecked.length<1)return;
 
         window.location.href="/sky/cmdb/editModule?moduleId="+moduleChecked[0];
-
     }
 
 });
