@@ -19,6 +19,7 @@ from django.db import transaction
 import json
 from models import *
 import services
+import cmdb.services
 
 
 # Create your views here.
@@ -31,7 +32,11 @@ DEPLOY_FILE_PATH = r"D:\backup\deploy"
 # 发布单列表
 @login_required
 def list_order_page(request):
-    orders = Order.objects.all()
+    #orders = Order.objects.all()
+    app_systems = cmdb.services.get_apps_by_user(request.user)
+    orders = None
+    if app_systems is not None:
+        orders = Order.objects.filter(app_system__in=app_systems)
 
     return render(request, "deploy/order_list.html", {"orders": orders})
 
@@ -39,14 +44,16 @@ def list_order_page(request):
 # 发布单新增页面
 @login_required
 def add_order_page(request):
-    app_systems = AppSystem.objects.all()
+    #app_systems = AppSystem.objects.all()
+    app_systems = cmdb.services.get_apps_by_user(request.user)
     return render(request, "deploy/order_add.html", {"appSystems": app_systems})
 
 
 # 发布单新增页面 sql
 @login_required
 def add_order_sql_page(request):
-    app_systems = AppSystem.objects.all()
+    #app_systems = AppSystem.objects.all()
+    app_systems = cmdb.services.get_apps_by_user(request.user)
     return render(request, "deploy/order_add_sql.html", {"appSystems": app_systems})
 
 
@@ -92,7 +99,11 @@ def save_order(request):
 # 环境流转页
 @login_required
 def change_order_page(request):
-    orders = Order.objects.all().exclude(Q(env_1=1) | Q(env_2=1) | Q(env_3=1) | Q(env_4=1) | Q(env_5=1))
+    #orders = Order.objects.all().exclude(Q(env_1=1) | Q(env_2=1) | Q(env_3=1) | Q(env_4=1) | Q(env_5=1))
+    app_systems = cmdb.services.get_apps_by_user(request.user)
+    orders = None
+    if app_systems is not None:
+        orders = Order.objects.filter(app_system__in=app_systems).exclude(Q(env_1=1) | Q(env_2=1) | Q(env_3=1) | Q(env_4=1) | Q(env_5=1))
     envs = Environment.objects.all()
     return render(request, "deploy/order_status.html", {"orders": orders, "envs": envs})
 
@@ -124,19 +135,23 @@ def change_order(request):
 @csrf_exempt
 def list_deploy_order_page(request):
     # 过滤刚新建还没流转的发布单
-    orders = Order.objects.all().exclude(env_1=0, env_2=0, env_3=0, env_4=0, env_5=0)
-    for order in orders:
-        env_id = order.current_env
-        env_name = Environment.objects.filter(env_id=env_id)[0].env_name
-        # 获取对应的环境，使得反射技术
-        arg_name = "env_" + str(env_id)
-        arg_name_value = getattr(order, arg_name)
-        if arg_name_value == 1:
-            order.env_status = env_name + " 待发布"
-            order.deploy_status = 1
-        if arg_name_value == 2:
-            order.env_status = env_name + " 已发布"
-            order.deploy_status = 2
+    #orders = Order.objects.all().exclude(env_1=0, env_2=0, env_3=0, env_4=0, env_5=0)
+    app_systems = cmdb.services.get_apps_by_user(request.user)
+    orders = None
+    if app_systems is not None:
+        orders = Order.objects.filter(app_system__in=app_systems).exclude(env_1=0, env_2=0, env_3=0, env_4=0, env_5=0)
+        for order in orders:
+            env_id = order.current_env
+            env_name = Environment.objects.filter(env_id=env_id)[0].env_name
+            # 获取对应的环境，使得反射技术
+            arg_name = "env_" + str(env_id)
+            arg_name_value = getattr(order, arg_name)
+            if arg_name_value == 1:
+                order.env_status = env_name + " 待发布"
+                order.deploy_status = 1
+            if arg_name_value == 2:
+                order.env_status = env_name + " 已发布"
+                order.deploy_status = 2
 
     return render(request, "deploy/order_deploy_list.html", {"orders": orders})
 
@@ -409,8 +424,6 @@ def md5_check(request):
     # 获取前端传过来的数据
     host_ip = request.POST["hostIp"]
     order_code = request.POST["orderCode"]
-
-    print host_ip,order_code
 
     host = Host.objects.filter(ip=host_ip)[0]
     order = Order.objects.filter(order_code=order_code)[0]
