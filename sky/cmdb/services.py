@@ -8,7 +8,8 @@ from models import *
 
 # 获取用户所管系统
 def get_apps_by_user(user):
-    app_systems = None
+    # 默认是无结果，只不过需要保持这种数据结构
+    app_systems = AppSystem.objects.filter(id=-1)
 
     if user.is_superuser:
         # 如果是管理员，那就返回所有系统

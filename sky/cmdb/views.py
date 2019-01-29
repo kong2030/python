@@ -12,6 +12,7 @@ import json
 
 from models import *
 from config.models import *
+import services
 
 
 reload(sys)
@@ -51,15 +52,17 @@ def encrypt(request):
 # 组件列表
 @login_required
 def list_module_page(request):
-    modules = Module.objects.all()
-
+    #modules = Module.objects.all()
+    app_systems = services.get_apps_by_user(request.user)
+    modules = Module.objects.filter(app_system__in=app_systems)
     return render(request, "cmdb/module_list.html", {"modules": modules})
 
 
 # 组件新增页面
 @login_required
 def add_module_page(request):
-    app_systems = AppSystem.objects.all()
+    #app_systems = AppSystem.objects.all()
+    app_systems = services.get_apps_by_user(request.user)
     return render(request, "cmdb/module_add.html", {"appSystems": app_systems})
 
 
@@ -69,7 +72,8 @@ def edit_module_page(request):
     module_id = request.GET["moduleId"]
     module = Module.objects.filter(id=module_id)[0]
 
-    app_systems = AppSystem.objects.all()
+    #app_systems = AppSystem.objects.all()
+    app_systems = services.get_apps_by_user(request.user)
 
     # ManyToMany取值
     hosts = module.host_set.all()
