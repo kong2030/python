@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper" ng-controller="encryptCtrl">
+                    <!-- BEGIN CONTENT BODY -->
+                    <div class="page-content">
+                        <!-- BEGIN PAGE HEADER-->
+                        <!-- BEGIN PAGE BAR -->
+                        <div class="page-bar">
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <span>日常维护</span>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li>
+                                    <span>密码工具</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END PAGE BAR -->
+                        <!-- BEGIN PAGE TITLE-->
+                        <h1 class="page-title"> 密码加密
+                            <small>加密工具</small>
+                        </h1>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                    <!-- BEGIN SAMPLE FORM PORTLET-->
+                                    <div class="portlet light bordered">
+                                        <div class="portlet-body">
+                                            <!-- BEGIN FORM-->
+                                            <form class="form-horizontal">
+                                                <div class="form-body" >
+                                                    <div class="form-group  margin-top-10">
+                                                        <label class="control-label col-md-3">明文密码
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <div class="input-icon right">
+                                                                <i class="fa"></i>
+                                                                <input type="password" class="form-control" ng-model="password" name="password" value=""/> </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  margin-top-10" >
+                                                        <label class="control-label col-md-3">加密密码
+                                                            <span > : </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <label class="control-label" style="background-color:yellow;">{[ encrypt_str ]}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  margin-top-10">
+                                                        <label class="control-label col-md-3">原始密码
+                                                            <span > : </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <label class="control-label ">{[ password_ ]}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-actions">
+                                                    <div class="row">
+                                                        <div class="col-md-offset-4 col-md-9">
+                                                            <button class="btn green uppercase" ng-click="encrypt_pwd()">加密</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!-- END FORM-->
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+
+{% endblock %}
