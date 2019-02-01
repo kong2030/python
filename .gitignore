@@ -1,5 +1,6 @@
 /ipoms/static/metronic/
 /sky/temp/
+/ocean/static/metronic/
 *.log
 *.zip
 *.tar.gz
