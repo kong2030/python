@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper">
+                    <!-- BEGIN CONTENT BODY -->
+                    <div class="page-content">
+                        <!-- BEGIN PAGE HEADER-->
+                        <!-- BEGIN PAGE BAR -->
+                        <div class="page-bar">
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <span>知识库</span>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li>
+                                    <span>知识列表</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END PAGE BAR -->
+                        <!-- BEGIN PAGE TITLE-->
+                        <h1 class="page-title"> 知识列表
+                            <small>知识管理</small>
+                        </h1>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+                        <!-- BEGIN MY -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                                <div class="portlet light bordered">
+
+                                    <div class="portlet-body">
+                                        <div class="table-toolbar">
+
+                                        </div>
+                                        <table class="table table-striped table-bordered table-hover table-checkable order-column" id="table_article_list">
+                                            <thead>
+                                                <tr>
+                                                    <th> 故障标题 </th>
+                                                    <th> 关键字 </th>
+                                                    <th> 所属系统 </th>
+                                                    <th> 责任编辑 </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for obj in articles %}
+                                                <tr class="odd gradeX">
+                                                    <td> <a href="{% url 'article:viewArticle' obj.id %}" target="_blank">{{ obj.title }}</a>  </td>
+                                                    <td> {{ obj.keyword }} </td>
+                                                    <td> {{ obj.app_system }} </td>
+                                                    <td> </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- END EXAMPLE TABLE PORTLET-->
+                            </div>
+                        </div>
+                        <!-- END MY -->
+                    </div>
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+
+{% endblock %}
+
+
+<!-- BEGIN EXTRA SCRIPTS -->
+{% block script %}
+
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/static/metronic/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        <script src="/static/js/table-datatables.js" type="text/javascript"></script>
+        <!-- END PAGE LEVEL SCRIPTS -->
+
+{% endblock %}
+<!-- END EXTRA SCRIPTS -->

@@ -16,6 +16,9 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from django.views.static import serve
+from . import settings
+
 import views
 
 urlpatterns = [
@@ -29,6 +32,11 @@ urlpatterns = [
     url(r'^ocean/logout$', views.logout_check, name='logout'),
 
     # sub module url
-    url(r'^ocean/config/',include('config.urls', namespace='config')),
-    url(r'^ocean/cmdb/',include('cmdb.urls', namespace='cmdb')),
+    url(r'^ocean/config/', include('config.urls', namespace='config')),
+    url(r'^ocean/cmdb/', include('cmdb.urls', namespace='cmdb')),
+    url(r'^ocean/article/', include('article.urls', namespace='article')),
+
+    # ckeditor upload image
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
 ]

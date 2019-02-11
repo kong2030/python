@@ -1,8 +1,8 @@
 var TableDatatablesManaged = function () {
-    // 表格1：发布单列表
+    // 表格1：知识列表
     var initTable1 = function () {
 
-        var table = $('#table_order_list');
+        var table = $('#table_article_list');
 
         // begin first table
         table.dataTable({

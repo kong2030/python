@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+{{article.title}}
+<br>
+{{article.keyword}}
+<br>
+{{article.app_system}}
+<br>
+{{article.content | safe}}
+<br><br><br>
+<p><a href="/admin/article/article/{{article.id}}/change/">编辑</a></p>
+</body>
+</html>
