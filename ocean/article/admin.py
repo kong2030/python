@@ -15,6 +15,12 @@ class ArticleAdmin(admin.ModelAdmin):
     # 设置哪些字段可以点击进入编辑界面
     list_display_links = ('title',)
 
+    def save_model(self, request, obj, form, change):
+        obj.author = request.user
+        obj.save()
+
+    readonly_fields = ("author", "page_view")
+
 
 # register the model
 admin.site.register(Article, ArticleAdmin)

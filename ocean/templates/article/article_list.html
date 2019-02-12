@@ -44,6 +44,7 @@
                                                     <th> 关键字 </th>
                                                     <th> 所属系统 </th>
                                                     <th> 责任编辑 </th>
+                                                    <th> 点击量 </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -52,7 +53,8 @@
                                                     <td> <a href="{% url 'article:viewArticle' obj.id %}">{{ obj.title }}</a>  </td>
                                                     <td> {{ obj.keyword }} </td>
                                                     <td> {{ obj.app_system }} </td>
-                                                    <td> </td>
+                                                    <td> {{ obj.author.username }}</td>
+                                                    <td> {{ obj.page_view }}</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>

@@ -31,5 +31,8 @@ def view_article(request, id):
     sub_menu = "zsk_zslb"
 
     article = Article.objects.filter(id=id)[0]
+    # 更新点击量
+    article.page_view = article.page_view + 1
+    article.save()
 
     return render(request, "article/article_detail.html", {"main_memu":main_memu, "sub_menu": sub_menu,"article": article})

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 
@@ -16,6 +17,8 @@ class Article(models.Model):
     #content = RichTextField()
     content = RichTextUploadingField()
     app_system = models.ForeignKey(AppSystem, on_delete=models.PROTECT)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    page_view = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.title
