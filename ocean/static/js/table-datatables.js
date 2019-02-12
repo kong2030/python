@@ -158,10 +158,10 @@ var TableDatatablesManaged = function () {
         });
     }
 
-    // 表格3：环境流转表格
+    // 表格3：用户-系统表格
     var initTable3 = function () {
 
-        var table = $('#table_order_status');
+        var table = $('#table_app_user_list');
 
         // begin first table
         table.dataTable({

@@ -1,19 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+{% extends "base.html" %}
 
-</head>
-<body>
-{{article.title}}
-<br>
-{{article.keyword}}
-<br>
-{{article.app_system}}
-<br>
-{{article.content | safe}}
-<br><br><br>
-<p><a href="/admin/article/article/{{article.id}}/change/">编辑</a></p>
-</body>
-</html>
+
+{% block content %}
+
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper">
+                    <!-- BEGIN CONTENT BODY -->
+                    <div class="page-content">
+                        <!-- BEGIN PAGE HEADER-->
+                        <!-- BEGIN PAGE BAR -->
+                        <div class="page-bar">
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <span>知识库</span>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li>
+                                    <span>知识列表</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END PAGE BAR -->
+                        <!-- BEGIN PAGE TITLE-->
+                        <h1 class="page-title"> 知识
+                            <small>详情</small>
+                        </h1>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <!-- BEGIN Portlet PORTLET-->
+                                <div class="portlet box blue-hoki">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-gift"></i>{{article.title}}</div>
+                                        <div class="actions">
+                                            <a href="/admin/article/article/{{article.id}}/change/" class="btn btn-default btn-sm" target="_blank">
+                                                <i class="fa fa-pencil"></i> 编辑 </a>
+                                            <a href="{% url 'article:listArticle' %}" class="btn btn-default btn-sm">
+                                                <i class="fa fa-reply"></i> 返回 </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="scroller"  data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
+                                            {{article.content | safe}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END Portlet PORTLET-->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+
+{% endblock %}
+
+<!-- BEGIN EXTRA SCRIPTS -->
+{% block script %}
+
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/static/metronic/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="/static/metronic/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+        <script src="/static/js/plugins/bootstrap-datetimepicker.zh-CN.js"></script>
+        <script src="/static/metronic/assets/pages/scripts/form-validation.min.js" type="text/javascript"></script>
+        <!-- END PAGE LEVEL SCRIPTS -->
+
+
+{% endblock %}
+<!-- END EXTRA SCRIPTS -->

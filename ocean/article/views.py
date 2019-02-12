@@ -26,6 +26,10 @@ def list_article_page(request):
 # 查看知识库文章
 @login_required
 def view_article(request, id):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "zsk"
+    sub_menu = "zsk_zslb"
+
     article = Article.objects.filter(id=id)[0]
 
-    return render(request, "article/article_detail.html", {"article": article})
+    return render(request, "article/article_detail.html", {"main_memu":main_memu, "sub_menu": sub_menu,"article": article})
