@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
+import datetime
 
 from models import *
 
@@ -27,10 +28,17 @@ class UserAdmin(BaseUserAdmin):
 # Module admin model
 class WebsiteAdmin(admin.ModelAdmin):
     # show the key info
-    list_display = ('description', 'url')
+    list_display = ('description', 'url', 'update_time')
 
     # 设置哪些字段可以点击进入编辑界面
     list_display_links = ('description',)
+
+    # 在保存时，自动填充更新时间
+    def save_model(self, request, obj, form, change):
+        obj.update_time = datetime.datetime.now()
+        obj.save()
+
+    readonly_fields = ("update_time",)
 
 
 # Re-register UserAdmin

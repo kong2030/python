@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from models import *
 
+import datetime
+
 # Register your models here.
 
 
@@ -17,9 +19,10 @@ class ArticleAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
+        obj.update_time = datetime.datetime.now()
         obj.save()
 
-    readonly_fields = ("author", "page_view")
+    readonly_fields = ("author", "update_time", "page_view")
 
 
 # register the model

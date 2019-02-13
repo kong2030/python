@@ -16,14 +16,14 @@
                                     <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <span>组件配置</span>
+                                    <span>网址管理</span>
                                 </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> 组件管理
-                            <small>新建组件</small>
+                        <h1 class="page-title"> 网址管理
+                            <small>网址</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -33,45 +33,30 @@
                                     <div class="portlet light bordered">
                                         <div class="portlet-body">
                                             <!-- BEGIN FORM-->
-                                            <form action="{% url 'cmdb:saveModule' %}" id="form_sample_2" class="form-horizontal" method="post">
+                                            <form action="{% url 'config:saveWebsite' %}" id="form_sample_2" class="form-horizontal" method="post">
                                                 <div class="form-body">
                                                     <div class="alert alert-danger display-hide">
                                                         <button class="close" data-close="alert"></button> You have some form errors. Please check below. </div>
                                                     <div class="alert alert-success display-hide">
                                                         <button class="close" data-close="alert"></button> Your form validation is successful! </div>
                                                     <div class="form-group  margin-top-10">
-                                                        <label class="control-label col-md-3">组件名称
+                                                        <label class="control-label col-md-3">网址名称
                                                             <span class="required"> * </span>
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-icon right">
                                                                 <i class="fa"></i>
-                                                                <input type="text" class="form-control" name="moduleName" placeholder="例如：QQ-WEB" value="" required/> </div>
-                                                                <input type="hidden" class="form-control" name="moduleId"  value="-1"/> </div>
+                                                                <input type="text" class="form-control" name="description" placeholder="例如：星空系统" value="" required/> </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-3">中文名称
+                                                        <label class="control-label col-md-3">网址链接
                                                             <span class="required"> * </span>
                                                         </label>
                                                         <div class="col-md-3">
                                                             <div class="input-icon right">
                                                                 <i class="fa"></i>
-                                                                <input type="text" class="form-control" name="chineseName" placeholder="中文名称" value="" required/> </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-3">所属系统
-                                                            <span class="required"> * </span>
-                                                        </label>
-                                                        <div class="col-md-3">
-                                                            <select class="bs-select form-control" data-live-search="true" data-size="8" name="appSystem" required>
-                                                                <option value="">请选择</option>
-
-                                                                {% for obj in appSystems %}
-                                                                <option value="{{ obj.app_name }}">{{ obj.chinese_name }}</option>
-                                                                {% endfor %}
-                                                            </select>
+                                                                <input type="text" class="form-control" name="url" placeholder="例如：http://www.baidu.com" value="" required/> </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -80,7 +65,7 @@
                                                     <div class="row">
                                                         <div class="col-md-offset-3 col-md-9">
                                                             <button type="submit" class="btn green">提交</button>
-                                                            <button type="button" class="btn default"><a href="{% url 'cmdb:listModule' %}" style="text-decoration:none;color:#666">取消</a></button>
+                                                            <button type="button" class="btn default"><a href="{% url 'config:listWebsite' %}" style="text-decoration:none;color:#666">取消</a></button>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -4,7 +4,7 @@
 {% block content %}
 
                 <!-- BEGIN CONTENT -->
-                <div class="page-content-wrapper">
+                <div class="page-content-wrapper" ng-controller="websiteCtrl">
                     <!-- BEGIN CONTENT BODY -->
                     <div class="page-content">
                         <!-- BEGIN PAGE HEADER-->
@@ -12,18 +12,18 @@
                         <div class="page-bar">
                             <ul class="page-breadcrumb">
                                 <li>
-                                    <span>知识库</span>
+                                    <span>日常维护</span>
                                     <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <span>知识列表</span>
+                                    <span>网址管理</span>
                                 </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> 知识列表
-                            <small>知识管理</small>
+                        <h1 class="page-title"> 网址列表
+                            <small>网址</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -35,28 +35,47 @@
 
                                     <div class="portlet-body">
                                         <div class="table-toolbar">
-
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="btn-group">
+                                                        <button id="add_website" class="btn sbold green" ng-click="websiteAdd()"> 新增
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="btn-group">
+                                                        <button id="edit_website" class="btn sbold green" ng-click="websiteEdit()"> 编辑
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <table class="table table-striped table-bordered table-hover table-checkable order-column" id="table_article_list">
+                                        <table class="table table-striped table-bordered table-hover table-checkable order-column" id="table_module_list">
                                             <thead>
                                                 <tr>
-                                                    <th class="col-md-2"> 标题 </th>
-                                                    <th> 关键字 </th>
-                                                    <th> 所属系统 </th>
-                                                    <th> 责任编辑 </th>
+                                                    <th>
+                                                        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                            <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" />
+                                                            <span></span>
+                                                        </label>
+                                                    </th>
+                                                    <th> 网址名称 </th>
+                                                    <th> 网址链接 </th>
                                                     <th> 编辑时间 </th>
-                                                    <th> 点击量 </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for obj in articles %}
+                                                {% for obj in websites %}
                                                 <tr class="odd gradeX">
-                                                    <td> <a href="{% url 'article:viewArticle' obj.id %}">{{ obj.title }}</a>  </td>
-                                                    <td> {{ obj.keyword }} </td>
-                                                    <td> {{ obj.app_system }} </td>
-                                                    <td> {{ obj.author.username }}</td>
-                                                    <td> {{ obj.update_time | date:'Y-m-d H:i:s' }}</td>
-                                                    <td> {{ obj.page_view }}</td>
+                                                    <td>
+                                                        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                            <input type="checkbox" class="checkboxes" name="website-checkbox" value="{{ obj.id }}" />
+                                                            <span></span>
+                                                        </label>
+                                                    </td>
+                                                    <td> {{ obj.description }} </td>
+                                                    <td> {{ obj.url }} </td>
+                                                    <td> {{ obj.update_time | date:'Y-m-d H:i:s' }} </td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>

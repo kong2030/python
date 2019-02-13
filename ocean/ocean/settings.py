@@ -135,6 +135,11 @@ STATICFILES_DIRS = (
 # login page
 LOGIN_URL = '/ocean/login'
 
+# rich editor
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+CKEDITOR_UPLOAD_PATH = "upload"
+
 # log
 BASE_LOG_DIR = os.path.join(BASE_DIR, "log")
 LOGGING = {
@@ -206,8 +211,3 @@ LOGGING = {
         }
     },
 }
-
-# rich editor
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-CKEDITOR_UPLOAD_PATH = "upload"

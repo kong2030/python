@@ -27,4 +27,10 @@ urlpatterns = [
     url(r'^pwdPage$', views.pwd_change_page, name='pwdPage'),
     url(r'^savePwd$', views.save_password, name='savePwd'),
 
+    # 常用网址管理
+    url(r'^listWebsite$', views.list_website_page, name='listWebsite'),
+    url(r'^addWebsite$', views.add_website_page, name='addWebsite'),
+    url(r'^editWebsite$', views.edit_website_page, name='editWebsite'),
+    url(r'^saveWebsite$', views.save_website, name='saveWebsite'),
+
 ]

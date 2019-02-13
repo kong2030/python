@@ -78,3 +78,27 @@ app.controller('cmdbCtrl', function($scope, $http, $compile) {
     }
 
 });
+
+
+// website管理
+app.controller('websiteCtrl', function($scope, $http, $compile) {
+
+    //新增网址
+    $scope.websiteAdd = function(){
+        window.location.href="/ocean/config/addWebsite";
+    }
+
+    //编辑网址
+    $scope.websiteEdit = function(){
+        //首先获取所有被选中的，默认取第一个来编辑
+	    var websiteChecked = []
+	    $("input[name='website-checkbox']:checked").each(function(i){
+	        websiteChecked[i] = $(this).val()
+	    })
+        //如果都没选中，直接返回，什么也不做
+        if(websiteChecked.length<1)return;
+
+        window.location.href="/ocean/config/editWebsite?websiteId="+websiteChecked[0];
+    }
+
+});

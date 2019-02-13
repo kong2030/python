@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
+from config.models import *
 
 # Create your views here.
 
@@ -16,7 +17,9 @@ def index_page(request):
     # 初始化菜单css，表示选中哪个主菜单、子菜单
     main_memu = "index"
     sub_menu = ""
-    return render(request, 'index.html', {"main_memu":main_memu, "sub_menu": sub_menu})
+
+    websites = Website.objects.all()
+    return render(request, 'index.html', {"main_memu":main_memu, "sub_menu": sub_menu, "websites": websites})
 
 
 # 加载登录页面

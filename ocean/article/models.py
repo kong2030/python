@@ -18,6 +18,7 @@ class Article(models.Model):
     content = RichTextUploadingField()
     app_system = models.ForeignKey(AppSystem, on_delete=models.PROTECT)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    update_time = models.DateTimeField(null=True)
     page_view = models.IntegerField(default=0)
 
     def __unicode__(self):

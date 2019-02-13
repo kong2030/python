@@ -19,3 +19,4 @@ class UserInfo(models.Model):
 class Website(models.Model):
     description = models.CharField(max_length=128)
     url = models.CharField(max_length=128)
+    update_time = models.DateTimeField()
