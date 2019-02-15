@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'cmdb',
     'article',
     'ckeditor',
+    'monitor',
+    'djcelery'
 ]
 
 MIDDLEWARE = [
@@ -115,13 +117,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+#TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+#USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -129,10 +132,10 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-'''STATICFILES_DIRS = (
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
-)'''
+)
 
 # login page
 LOGIN_URL = '/ocean/login'
@@ -213,3 +216,21 @@ LOGGING = {
         }
     },
 }
+
+# redis celery
+# CELERY STUFF
+import djcelery
+djcelery.setup_loader()
+#BROKER_URL = 'redis://172.24.152.103:6379'
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+CELERY_ENABLE_UTC = False
+CELERYD_CONCURRENCY = 10
+CELERYD_MAX_TASKS_PER_CHILD = 1
+
