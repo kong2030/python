@@ -1,0 +1,64 @@
+1、django-admin startproject myblog
+
+2、django-admin startapp model
+
+3、python manage.py runserver 127.0.0.1:8000
+
+4、wsgi.py：python web server gateway interface，网关接口，不需要动
+
+5、urls.py：配置访问路径
+
+6、settings.py：关键配置文件
+
+7、migrations：数据移植模块
+
+8、每个请求都由一个函数处理
+
+9、from django.http import HttpResponse
+
+10、pycharm 中import报错但可以运行，右击项目名称->mark directory as -> sources root
+
+11、urls文件嵌套：
+    url(r'^blog/',include('blog.urls')),
+    url(r'^index$',views.index),
+    访问路径：http://localhost:8000/blog/index
+
+12、Templates: HTML文件  使用了django模板语言
+
+13、步骤：a. 在根目录创建Templates文件夹
+          b. 在其中创建html文件
+          c. 在views.py 中用render返回，render(request,'index.html',data),data为字典类型
+
+14、Django查找Template顺序：
+    按照INSTALLED_APPS中的添加顺序查找Templates
+    不同APP下Templates目录中的同名html文件会造成冲突
+    解决方法：在APP的Templates目录下创建以APP名为名称的目录，并把html文件放入其中，
+    记得修改映射路径 render(request,'blog/index.html',data),blog表示子目录
+
+15、数据库映射：
+    a. 在models.py中创建类
+    b. python manage.py makemigrations app名
+    c. python manage.py migrate
+    d. python manage.py sqlmigrate blog 0001  查看sql语句
+
+16、获取数据
+    a. views.py中import models
+    b. article = models.Article.objects.get(pk=1)
+
+17、超链接
+    template中可以用" {% url 'app_name:url_name' param %} "
+    其中app_name和url_name都在url中配置
+    根urls，写在include()的第二个参数位置，namespace='blog'
+    应用下，则写在url()的第三个参数位置,name='article'
+
+18、密码:admin1234
+
+19、django admin模块：http://localhost:8000/admin/
+   先创建超级用户：python manage.py createsuperuser
+
+20、在新建model时 null=True 表示数据库此字段可以为空；blank=True 表示admin表单编辑可以为空
+
+21、启动 Celery Beat 进程，定时将任务发送到 Broker，在项目根目录下执行下面命令：celery beat -A ocean
+    启动 Celery Worker 进程，在项目的根目录下执行下面命令：celery -A ocean worker --loglevel=info -f celery.log
+
+
