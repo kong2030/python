@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^editTask$', views.edit_task_page, name='editTask'),
     url(r'^saveTask$', views.save_task, name='saveTask'),
 
+    url(r'^viewMonitor/(?P<id>(\d+))$', views.view_monitor, name='viewMonitor'),
+
 ]
