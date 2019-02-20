@@ -11,6 +11,7 @@ from django.utils.safestring import mark_safe
 import datetime
 
 from models import *
+from article.models import *
 # Create your views here.
 
 
@@ -86,18 +87,41 @@ def view_monitor(request, id):
     sub_menu = "ywjk_jkzt"
 
     task = PeriodicTask.objects.filter(id=id)[0]
+    task_kwargs = json.loads(task.kwargs)
+    task_form = dict()
+    task_form["name"] = task.name
+    if task_kwargs.has_key("datasource"):
+        task_form["datasource"] = task_kwargs["datasource"]
+    if task_kwargs.has_key("sql"):
+        task_form["sql"] = task_kwargs["sql"]
+    if task_kwargs.has_key("operator"):
+        if task_kwargs["operator"] == "==":
+            task_form["operator"] = "查询结果不变"
+        elif task_kwargs["operator"] == ">=":
+            task_form["operator"] = "符合记录数达到阈值"
+        elif task_kwargs["operator"] == "<":
+            task_form["operator"] = "符合记录数小于阈值"
+    if task_kwargs.has_key("threshold"):
+        task_form["threshold"] = task_kwargs["threshold"]
+    if task_kwargs.has_key("article"):
+        articles = Article.objects.filter(id=task_kwargs["article"])
+        if articles.exists():
+            article = articles[0]
+            task_form["article_title"] = article.title
+            task_form["article_id"] = article.id
 
     #today_str = datetime.datetime.today().strftime("%Y-%m-%d")
-    today_str =(datetime.datetime.today() + datetime.timedelta(days=-1)).strftime("%Y-%m-%d")
+    today_str =(datetime.datetime.today() + datetime.timedelta(days=-2)).strftime("%Y-%m-%d")
     tomorrow_str = (datetime.datetime.today() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
     time_1 = datetime.datetime.strptime(today_str, '%Y-%m-%d')
     time_2 = datetime.datetime.strptime(tomorrow_str, '%Y-%m-%d')
-    print time_1
 
     task_monitor_graph_data = dict()
     x_data_list_time = list(TaskResult.objects.filter(task_id=id,last_run_time__gt=time_1,last_run_time__lt=time_2).values_list('last_run_time', flat=True).order_by('last_run_time'))
     task_monitor_graph_data["x_data"] = [obj.strftime("%H:%M") for obj in x_data_list_time]
     task_monitor_graph_data["y_data"] = list(TaskResult.objects.filter(task_id=id,last_run_time__gt=time_1,last_run_time__lt=time_2).values_list('monitor_result', flat=True).order_by('last_run_time'))
 
+
+
     return render(request, "monitor/task_monitor_detail.html",
-                  {"main_memu": main_memu, "sub_menu": sub_menu, "task":task, "task_monitor_graph_data":task_monitor_graph_data})
+                  {"main_memu": main_memu, "sub_menu": sub_menu, "task": task_form, "task_monitor_graph_data":task_monitor_graph_data})
