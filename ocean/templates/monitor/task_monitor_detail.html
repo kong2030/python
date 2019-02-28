@@ -143,6 +143,12 @@
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
 
+
+        function refresh() {
+            window.location.reload();
+        }
+        setTimeout('refresh()', 300000); //指定300秒刷新一次
+
         </script>
 
 

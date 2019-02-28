@@ -102,3 +102,27 @@ app.controller('websiteCtrl', function($scope, $http, $compile) {
     }
 
 });
+
+
+// task管理
+app.controller('monitorCtrl', function($scope, $http, $compile) {
+
+    //新增task
+    $scope.taskAdd = function(){
+        window.location.href="/ocean/monitor/addTask";
+    }
+
+    //编辑task
+    $scope.taskEdit = function(){
+        //首先获取所有被选中的，默认取第一个来编辑
+	    var taskChecked = []
+	    $("input[name='module-checkbox']:checked").each(function(i){
+	        taskChecked[i] = $(this).val()
+	    })
+        //如果都没选中，直接返回，什么也不做
+        if(taskChecked.length<1)return;
+
+        window.location.href="/ocean/monitor/editTask?taskId="+taskChecked[0];
+    }
+
+});

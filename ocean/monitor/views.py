@@ -15,6 +15,7 @@ from article.models import *
 # Create your views here.
 
 
+# 监控状态页面
 @login_required
 def task_status_page(request):
     # 初始化菜单css，表示选中哪个主菜单、子菜单
@@ -57,19 +58,51 @@ def task_status_page(request):
 
     return render(request, "monitor/task_status.html",{"main_memu": main_memu, "sub_menu": sub_menu, "tasks": task_state_form_list})
 
+
+# 监控配置页面
 @login_required
 def list_task_page(request):
     # 初始化菜单css，表示选中哪个主菜单、子菜单
     main_memu = "ywjk"
-    sub_menu = "ywjk_jkzt"
+    sub_menu = "ywjk_jkpz"
 
     tasks = PeriodicTask.objects.all()
+    task_state_form_list = []
+    for task in tasks:
+        task_state_form = dict()
+        task_state_form["id"] = task.id
+        task_state_form["name"] = task.name
+        task_state_form["crontab"] = task.crontab
+        task_kwargs = json.loads(task.kwargs)
+        if task_kwargs.has_key("datasource"):
+            datasource = task_kwargs["datasource"]
+            database_infos = DataBaseInfo.objects.filter(name=datasource)
+            if database_infos.exists():
+                task_state_form["app_system"] = database_infos[0].app_system.chinese_name
+        if task.enabled == 1:
+            task_state_form["enabled"] = mark_safe('<span class="label label-success">启用</span>')
+        else:
+            task_state_form["enabled"] = mark_safe('<span class="label label-primary">禁用</span>')
+        task_results = TaskResult.objects.filter(task_id=task.id)
+        if task_results.exists():
+            task_result = task_results.latest('last_run_time')
+            task_state_form["last_run_time"] = task_result.last_run_time
+        else:
+            task_state_form["last_run_time"] = task.last_run_at
 
-    return render(request, "monitor/task_list.html",{"main_memu": main_memu, "sub_menu": sub_menu, "tasks": tasks})
+        task_state_form_list.append(task_state_form)
+
+    return render(request, "monitor/task_list.html",{"main_memu": main_memu, "sub_menu": sub_menu, "tasks": task_state_form_list})
 
 
+# 新增监控页面
+@login_required
 def add_task_page(request):
-    pass
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "ywjk"
+    sub_menu = "ywjk_jkpz"
+
+    return render(request, "monitor/task_add.html",{"main_memu": main_memu, "sub_menu": sub_menu, })
 
 
 def edit_task_page(request):

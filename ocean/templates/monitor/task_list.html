@@ -4,7 +4,7 @@
 {% block content %}
 
                 <!-- BEGIN CONTENT -->
-                <div class="page-content-wrapper" ng-controller="cmdbCtrl">
+                <div class="page-content-wrapper" ng-controller="monitorCtrl">
                     <!-- BEGIN CONTENT BODY -->
                     <div class="page-content">
                         <!-- BEGIN PAGE HEADER-->
@@ -16,7 +16,7 @@
                                     <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <span>监控状态</span>
+                                    <span>监控配置</span>
                                 </li>
                             </ul>
                         </div>
@@ -38,12 +38,12 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="btn-group">
-                                                        <button id="add_module" class="btn sbold green" ng-click="moduleAdd()"> 新增
+                                                        <button id="add_module" class="btn sbold green" ng-click="taskAdd()"> 新增
                                                             <i class="fa fa-plus"></i>
                                                         </button>
                                                     </div>
                                                     <div class="btn-group">
-                                                        <button id="edit_module" class="btn sbold green" ng-click="moduleEdit()"> 编辑
+                                                        <button id="edit_module" class="btn sbold green" ng-click="taskEdit()"> 编辑
                                                             <i class="fa fa-edit"></i>
                                                         </button>
                                                     </div>
@@ -62,9 +62,8 @@
                                                     <th> 监控名称 </th>
                                                     <th> 执行时间 </th>
                                                     <th> 所属系统 </th>
-                                                    <th> 启用 </th>
+                                                    <th> 启用 | 禁用 </th>
                                                     <th> 最后一次运行时间 </th>
-                                                    <th> 监控结果 </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -76,12 +75,11 @@
                                                             <span></span>
                                                         </label>
                                                     </td>
-                                                    <td> {{ obj.module_name }} </td>
-                                                    <td> {{ obj.chinese_name }} </td>
+                                                    <td> {{ obj.name }} </td>
+                                                    <td> {{ obj.crontab }} </td>
                                                     <td> {{ obj.app_system }} </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td> {{ obj.enabled }}</td>
+                                                    <td> {{ obj.last_run_time | date:'Y-m-d H:i:s' }}</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
