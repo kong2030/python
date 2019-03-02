@@ -70,14 +70,21 @@ var FormValidation = function () {
             });
     }
 
-    // validation using icons
-    var handleValidation2 = function() {
+    // 新增task 页面验证
+    var taskValidation = function() {
         // for more info visit the official plugin documentation: 
             // http://docs.jquery.com/Plugins/Validation
 
-            var form2 = $('#form_order_add');
+            var form2 = $('#form_task_add');
             var error2 = $('.alert-danger', form2);
             var success2 = $('.alert-success', form2);
+
+            // sql验证
+            jQuery.validator.addMethod("sql", function(value, element){
+	            var reg = /^select count/;
+	            return this.optional(element)||(reg.test(value));
+	        }, "只能是select语句");
+ 
 
             form2.validate({
                 errorElement: 'span', //default input error message container
@@ -101,7 +108,7 @@ var FormValidation = function () {
                         required: true,
                         url: true
                     },
-                    number: {
+                    threshold: {
                         required: true,
                         number: true
                     },
@@ -112,6 +119,10 @@ var FormValidation = function () {
                     creditcard: {
                         required: true,
                         creditcard: true
+                    },
+                    sql: {
+                        required: true,
+                        sql: true
                     },
                 },
 
@@ -159,7 +170,7 @@ var FormValidation = function () {
         init: function () {
 
             pwdValidation();
-            handleValidation2();
+            taskValidation();
 
 
         }

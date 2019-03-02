@@ -350,7 +350,7 @@ var TableDatatablesManaged = function () {
                 }
             ],
             "order": [
-                [1, "asc"]
+                [0, "asc"]
             ] // set first column as a default sort by asc
         });
     }

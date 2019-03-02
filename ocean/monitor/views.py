@@ -102,15 +102,102 @@ def add_task_page(request):
     main_memu = "ywjk"
     sub_menu = "ywjk_jkpz"
 
-    return render(request, "monitor/task_add.html",{"main_memu": main_memu, "sub_menu": sub_menu, })
+    datasources = DataBaseInfo.objects.all()
+    crontabs = CrontabSchedule.objects.all()
+    return render(request, "monitor/task_add.html",{"main_memu": main_memu, "sub_menu": sub_menu, 'crontabs':crontabs, 'datasources':datasources })
 
 
+# 编辑监控页面
+@login_required
+@csrf_exempt
 def edit_task_page(request):
-    pass
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "ywjk"
+    sub_menu = "ywjk_jkpz"
+
+    # 获取任务参数
+    task_id = request.GET["taskId"]
+    task = PeriodicTask.objects.filter(id=task_id)[0]
+    task_kwargs = None
+    articles = None
+    if task.kwargs != "{}":
+        task_kwargs = eval(task.kwargs)
+        task_kwargs["crontab_id"] = task.crontab_id
+        task_kwargs["enabled"] = task.enabled
+        task_kwargs["id"] = task_id
+
+        # 获取所有文章列表
+        datasource = task_kwargs["datasource"]
+        database_infos = DataBaseInfo.objects.filter(name=datasource)
+        if database_infos.exists():
+            app_system = database_infos[0].app_system
+            articles = Article.objects.filter(app_system=app_system)
+    else:
+        task_kwargs = dict()
+        task_kwargs["crontab_id"] = task.crontab_id
+        task_kwargs["enabled"] = task.enabled
+        task_kwargs["id"] = task_id
+        task_kwargs["name"] = task.name
 
 
+    # 获取数据源列表
+    datasources = DataBaseInfo.objects.all()
+    # 获取 执行时间 列表
+    crontabs = CrontabSchedule.objects.all()
+    return render(request, "monitor/task_edit.html",{"main_memu": main_memu, "sub_menu": sub_menu,"task":task_kwargs, 'crontabs': crontabs, 'datasources': datasources, "articles":articles})
+
+
+# 保存监控任务
+@login_required
+@csrf_exempt
 def save_task(request):
-    pass
+    try:
+        # 先获取参数
+        task_name = request.POST["taskName"].replace(" ", "")
+        crontab_id = request.POST["crontab"]
+        datasource = request.POST["datasource"]
+        sql = request.POST["sql"]
+        operator = request.POST["operator"]
+        threshold = request.POST["threshold"]
+
+        # 任务模板，默认先取这个
+        monitor_task = "monitor.tasks.monitor_sql"
+
+        kwargs = dict()
+        kwargs["name"] = task_name
+        kwargs["datasource"] = datasource
+        kwargs["sql"] = sql
+        kwargs["operator"] = operator
+        kwargs["threshold"] = int(threshold)
+
+        # 编辑页面 还可以关联文章
+        if request.POST.has_key("article"):
+            article = request.POST["article"]
+            if article != "" and article is not None:
+                kwargs["article"] = int(article)
+
+        json_str = json.dumps(kwargs, ensure_ascii=False)
+
+        periodic_task = PeriodicTask(name=task_name, task=monitor_task, kwargs=json_str, crontab_id=crontab_id)
+
+        # 如果是编辑就加上id,
+        if request.POST.has_key("taskId"):
+            task_id = request.POST["taskId"]
+            periodic_task.id = task_id
+            if request.POST.has_key("enabled"):
+                enabled = request.POST["enabled"]
+                periodic_task.enabled = enabled
+            else:
+                periodic_task.enabled = 0
+
+        # 更新数据库
+        periodic_task.save()
+
+    except Exception as e:
+        print e
+
+    finally:
+        return HttpResponseRedirect("/ocean/monitor/listTask")
 
 
 @login_required

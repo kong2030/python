@@ -40,10 +40,12 @@ def monitor_sql(*args, **kwargs):
             if operator == ">=":
                 if sql_result >= threshold:
                     monitor_result = 1  # 异常
+
             # 小于设定阈值
             elif operator == "<":
                 if sql_result < threshold:
                     monitor_result = 1  # 异常
+
             # 查询记录不变
             elif operator == "==":
                 task_results = TaskResult.objects.filter(task_id=task.id)

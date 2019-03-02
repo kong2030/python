@@ -99,15 +99,20 @@ def edit_module_page(request):
 def save_module(request):
     try:
         # 先获取参数
-        module_id = request.POST["moduleId"]
         module_name = request.POST["moduleName"].upper().replace(" ", "")
         chinese_name = request.POST["chineseName"].replace(" ", "")
         app_name = request.POST["appSystem"].replace(" ", "")
         app_system = AppSystem.objects.filter(app_name=app_name)[0]
 
+        module = Module(module_name=module_name,chinese_name=chinese_name, app_system=app_system)
+
+        # 如果是编辑就加上id,
+        if request.POST.has_key("moduleId"):
+            module_id = request.POST["moduleId"]
+            module.id = module_id
+
         # 更新数据库
-        update_field = {"module_name": module_name, "chinese_name": chinese_name, "app_system": app_system}
-        Module.objects.update_or_create(id=module_id, defaults=update_field)
+        module.save()
 
     except Exception as e:
         print e

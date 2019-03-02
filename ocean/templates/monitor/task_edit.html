@@ -23,7 +23,7 @@
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
                         <h1 class="page-title"> 监控管理
-                            <small>新建任务</small>
+                            <small>编辑任务</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -46,7 +46,8 @@
                                                         <div class="col-md-3">
                                                             <div class="input-icon right">
                                                                 <i class="fa"></i>
-                                                                <input type="text" class="form-control" name="taskName" placeholder="例如：期权行情刷新异常" value="" required/> </div>
+                                                                <input type="text" class="form-control" name="taskName" value="{{ task.name }}" required/> </div>
+                                                                <input type="hidden" class="form-control" name="taskId"  value="{{task.id}}"/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -58,7 +59,7 @@
                                                                 <option value="">请选择</option>
 
                                                                 {% for obj in crontabs %}
-                                                                <option value="{{ obj.id }}">{{ obj }}</option>
+                                                                <option value="{{ obj.id }}" {% if task.crontab_id == obj.id %} selected {% endif %}>{{ obj }}</option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
@@ -72,7 +73,7 @@
                                                                 <option value="">请选择</option>
 
                                                                 {% for obj in datasources %}
-                                                                <option value="{{ obj }}">{{ obj }}</option>
+                                                                <option value="{{ obj.name }}" {% if task.datasource == obj.name %} selected {% endif %}>{{ obj.name }}</option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
@@ -84,7 +85,7 @@
                                                         <div class="col-md-3">
                                                             <div class="input-icon right">
                                                                 <i class="fa"></i>
-                                                                <textarea class="form-control" rows="5" name="sql" placeholder="注：只能 select count(*)" required></textarea>
+                                                                <textarea class="form-control" rows="5" name="sql" required>{{ task.sql }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -94,9 +95,9 @@
                                                         </label>
                                                         <div class="col-md-3">
                                                             <select class="bs-select form-control" data-live-search="true" data-size="8" id="operator" name="operator" required>
-                                                                <option value=">=" selected>查询结果达到</option>
-                                                                <option value="<">查询结果低于</option>
-                                                                <option value="==">查询结果不变</option>
+                                                                <option value=">=" {% if task.operator == '>=' %} selected {% endif %}>查询结果达到</option>
+                                                                <option  value="<" {% if task.operator == '<' %} selected {% endif %}>查询结果低于</option>
+                                                                <option value="==" {% if task.operator == '==' %} selected {% endif %}>查询结果不变</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -107,7 +108,29 @@
                                                         <div class="col-md-3">
                                                             <div class="input-icon right">
                                                                 <i class="fa"></i>
-                                                                <input type="text" class="form-control" id="threshold" name="threshold" placeholder="例如：10" value="" required/> </div>
+                                                                <input type="text" class="form-control" id="threshold" name="threshold"  value="{{ task.threshold }}" required/> </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">异常处理方法
+
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <select class="bs-select form-control" data-live-search="true" data-size="8" name="article">
+                                                                <option value="">请关联文章</option>
+
+                                                                {% for obj in articles %}
+                                                                <option value="{{ obj.id }}" {% if task.article == obj.id %} selected {% endif %}>{{ obj.title }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">启用
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-9">
+                                                            <input type="checkbox" class="make-switch" name="enabled" value="1" data-on-color="success" data-off-color="warning" {% if task.enabled %} checked {% endif %}>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -147,6 +170,10 @@
 
         <script type="text/javascript">
             jQuery(document).ready(function() {
+                if ($("#operator").val() == "=="){
+                    $("#threshold").attr("readonly",true);
+                }
+
                 $("#operator").change(function(){
                     if ($("#operator").val() == "=="){
                         $("#threshold").val(1);
