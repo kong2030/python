@@ -58,3 +58,7 @@
 
 20、在新建model时 null=True 表示数据库此字段可以为空；blank=True 表示admin表单编辑可以为空
 
+21、启动 Celery Beat 进程，定时将任务发送到 Broker，在项目根目录下执行下面命令：celery beat -A ocean
+    启动 Celery Worker 进程，在项目的根目录下执行下面命令：celery -A ocean worker --loglevel=info
+
+
