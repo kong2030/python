@@ -82,7 +82,8 @@ var FormValidation = function () {
             // sql验证
             jQuery.validator.addMethod("sql", function(value, element){
 	            var reg = /^select count/;
-	            return this.optional(element)||(reg.test(value));
+	            var reg_2 = /;|insert|update|delete|drop|truncate/;
+	            return this.optional(element)||(reg.test(value)&&!reg_2.test(value));
 	        }, "只能是select语句");
  
 
