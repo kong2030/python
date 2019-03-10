@@ -33,4 +33,8 @@ urlpatterns = [
     url(r'^editWebsite$', views.edit_website_page, name='editWebsite'),
     url(r'^saveWebsite$', views.save_website, name='saveWebsite'),
 
+    # 常用工具
+    url(r'^searchLog$', views.search_log_page, name='searchLog'),
+    url(r'^getLog$', views.get_log, name='getLog'),
+
 ]
