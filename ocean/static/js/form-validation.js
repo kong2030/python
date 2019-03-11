@@ -220,7 +220,7 @@ var FormValidation = function () {
                     $.ajax({
                         type: "POST",
                         url: "/ocean/config/getLog",
-                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        //contentType: "application/x-www-form-urlencoded; charset=utf-8",
                         data: {"logPath":logPath, "outputPath":outputPath,"logType":logType,"searchType":searchType,"timeBegin":timeBegin,"interval":interval,"keyword":keyword},
                         success: function(result,status){
                             $("#logPreview").html(result);
