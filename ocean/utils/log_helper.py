@@ -11,7 +11,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 # 初始化日志实例，使用默认
-#logging = logging.getLogger()
+logging = logging.getLogger()
 
 
 # 大日志切割，按时间
@@ -56,7 +56,7 @@ def cut_log_qq_kcbp(log_file, time_str, interval, output_path=r"C:\Users\guosen\
         # traceback.print_exc()
         logging.error(e)
         #logging.exception(Exception)
-        return e
+        return str(e)
 
 
 # 大日志搜索，按关键字，qq_kcbp
@@ -113,7 +113,7 @@ def search_log_qq_kcbp(log_file, keyword, output_path=r"C:\Users\guosen\Desktop\
         #traceback.print_exc()
         logging.error(e)
         #logging.exception(Exception)
-        return e
+        return str(e)
 
 
 # 大日志搜索，按关键字，qq_bpu
@@ -172,7 +172,7 @@ def search_log_qq_bpu(log_file, keyword, output_path=r"C:\Users\guosen\Desktop\o
         #traceback.print_exc()
         logging.error(e)
         #logging.exception(Exception)
-        return e
+        return str(e)
 
 
 # 切割日志，对外
