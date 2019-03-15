@@ -31,3 +31,13 @@ def load_data(request):
     result = collect_data_qq(datasource, sql)
 
     return HttpResponse(result)
+
+
+# 采集主机资源使用率数据
+@login_required
+@csrf_exempt
+def collect_data(request):
+    collect_path = r"D:\backup\collect_cpu"
+    result = collect_data_host(collect_path)
+
+    return HttpResponse(result)

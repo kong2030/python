@@ -29,6 +29,12 @@ class OptOrder(models.Model):
     channel = models.CharField(max_length=1)
 
 
+# 资源使用表,借用zabbix的命名
+class History(models.Model):
+    host_ip = models.CharField(max_length=16)
+    clock = models.DateTimeField()
+    item = models.CharField(max_length=50)
+    value = models.FloatField()
 
 
 

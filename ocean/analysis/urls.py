@@ -26,5 +26,5 @@ urlpatterns = [
     #
     url(r'^analysisPage$', views.analysis_page, name='analysisPage'),
     url(r'^loadData$', views.load_data, name='loadData'),
-
+    url(r'^collectData$', views.collect_data, name='collectData'),
 ]

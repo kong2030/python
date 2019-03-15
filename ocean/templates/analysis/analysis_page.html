@@ -36,7 +36,27 @@
                                                 <div class="form-actions">
                                                     <div class="row">
                                                         <div class="col-md-offset-3 col-md-9">
-                                                            <button type="submit" class="btn green">提交</button>
+                                                            <button type="submit" class="btn green">导入委托</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!-- END FORM-->
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                    <!-- BEGIN SAMPLE FORM PORTLET-->
+                                    <div class="portlet light bordered">
+                                        <div class="portlet-body">
+                                            <form action="{% url 'analysis:collectData' %}" method="post" target="_blank">
+                                                <div class="form-actions">
+                                                    <div class="row">
+                                                        <div class="col-md-offset-3 col-md-9">
+                                                            <button type="submit" class="btn green">采集CPU</button>
                                                         </div>
                                                     </div>
                                                 </div>

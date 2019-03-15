@@ -15,7 +15,7 @@ logging = logging.getLogger()
 
 
 # 大日志切割，按时间
-def cut_log_qq_kcbp(log_file, time_str, interval, output_path=r"C:\Users\guosen\Desktop\output"):
+def cut_log_qq_kcbp(log_file, time_str, interval, output_path=r"D:\backup\log_search\output"):
     try:
         date_str = "2019-03-08"
         datetime_str = date_str + " " + time_str
@@ -60,7 +60,7 @@ def cut_log_qq_kcbp(log_file, time_str, interval, output_path=r"C:\Users\guosen\
 
 
 # 大日志搜索，按关键字，qq_kcbp
-def search_log_qq_kcbp(log_file, keyword, output_path=r"C:\Users\guosen\Desktop\output"):
+def search_log_qq_kcbp(log_file, keyword, output_path=r"D:\backup\log_search\output"):
     try:
         file_name = os.path.basename(log_file)
         output_file_name = "search_" + file_name
