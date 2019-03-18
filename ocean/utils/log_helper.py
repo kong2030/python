@@ -20,7 +20,7 @@ def cut_log_qq_kcbp(log_file, time_str, interval, output_path=r"D:\backup\log_se
         date_str = "2019-03-08"
         datetime_str = date_str + " " + time_str
         datetime_begin = datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-        datetime_end = datetime_begin + datetime.timedelta(minutes=interval)
+        datetime_end = datetime_begin + datetime.timedelta(seconds=interval)
         datetime_begin_str = datetime_begin.strftime("%Y%m%d%H%M%S")[8:]
         datetime_end_str = datetime_end.strftime("%Y%m%d%H%M%S")[8:]
 
@@ -37,7 +37,7 @@ def cut_log_qq_kcbp(log_file, time_str, interval, output_path=r"D:\backup\log_se
                 if line.startswith("["):
                     if log_time_str > datetime_end_str:
                         break
-                    elif log_time_str > datetime_begin_str:
+                    elif log_time_str >= datetime_begin_str:
                         count = count + 1
                         if count <= 100:
                             log_1000 = log_1000 + line + "<br>"
