@@ -219,7 +219,7 @@ var FormValidation = function () {
                     //ajax请求到后端
                     $.ajax({
                         type: "POST",
-                        url: "/ocean/config/getLog",
+                        url: "/ocean/plugin/getLogLocal",
                         //contentType: "application/x-www-form-urlencoded; charset=utf-8",
                         data: {"logPath":logPath, "outputPath":outputPath,"logType":logType,"searchType":searchType,"timeBegin":timeBegin,"interval":interval,"keyword":keyword},
                         success: function(result,status){

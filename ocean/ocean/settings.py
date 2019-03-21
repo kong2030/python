@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'monitor',
     'analysis',
+    'plugin',
     'djcelery'
 ]
 

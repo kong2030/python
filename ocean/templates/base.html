@@ -152,7 +152,7 @@
                             </li>
                             <li class="nav-item " id="tjfx">
                                 <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-diamond"></i>
+                                    <i class="icon-bar-chart"></i>
                                     <span class="title">统计分析</span>
                                     <span class="arrow " id="tjfx_1"></span>
                                     <span id="tjfx_2"></span>
@@ -165,7 +165,7 @@
                                     </li>
                                     <li class="nav-item " id="tjfx_granfana">
                                         <a href="http://localhost:3000/" class="nav-link " target="_blank">
-                                            <span class="title">granfana</span>
+                                            <span class="title">grafana</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -198,14 +198,19 @@
                                     <span id="cygj_2"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item " id="cygj_rzss">
-                                        <a href="{% url 'config:searchLog' %}" class="nav-link ">
-                                            <span class="title">日志搜索</span>
+                                    <li class="nav-item " id="cygj_rzss_local">
+                                        <a href="{% url 'plugin:searchLogLocal' %}" class="nav-link ">
+                                            <span class="title">日志搜索（本地）</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item " >
-                                        <a href="#" class="nav-link ">
-                                            <span class="title">清算辅助</span>
+                                    <li class="nav-item " id="cygj_rzss_remote">
+                                        <a href="{% url 'plugin:searchLogRemote' %}" class="nav-link ">
+                                            <span class="title">日志搜索（远程）</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item " id="cygj_rzkb">
+                                        <a href="{% url 'plugin:copyLogRemote' %}" class="nav-link ">
+                                            <span class="title">日志拷贝</span>
                                         </a>
                                     </li>
                                 </ul>

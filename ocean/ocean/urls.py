@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^ocean/article/', include('article.urls', namespace='article')),
     url(r'^ocean/monitor/', include('monitor.urls', namespace='monitor')),
     url(r'^ocean/analysis/', include('analysis.urls', namespace='analysis')),
+    url(r'^ocean/plugin/', include('plugin.urls', namespace='plugin')),
 
     # ckeditor upload image
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),

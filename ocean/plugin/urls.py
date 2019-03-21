@@ -23,14 +23,10 @@ from . import views
 
 urlpatterns = [
 
-    # 修改密码
-    url(r'^pwdPage$', views.pwd_change_page, name='pwdPage'),
-    url(r'^savePwd$', views.save_password, name='savePwd'),
-
-    # 常用网址管理
-    url(r'^listWebsite$', views.list_website_page, name='listWebsite'),
-    url(r'^addWebsite$', views.add_website_page, name='addWebsite'),
-    url(r'^editWebsite$', views.edit_website_page, name='editWebsite'),
-    url(r'^saveWebsite$', views.save_website, name='saveWebsite'),
-
+    # 常用工具
+    url(r'^searchLogLocal$', views.search_log_local_page, name='searchLogLocal'),
+    url(r'^searchLogRemote$', views.search_log_remote_page, name='searchLogRemote'),
+    url(r'^copyLogRemote$', views.copy_log_remote_page, name='copyLogRemote'),
+    url(r'^getLogLocal$', views.get_log_local, name='getLogLocal'),
+    url(r'^getLogRemote$', views.get_log_remote, name='getLogRemote'),
 ]

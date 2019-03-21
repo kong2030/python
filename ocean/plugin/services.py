@@ -40,7 +40,7 @@ def cut_log_qq_kcbp(log_file, time_str, interval, output_path=r"D:\backup\log_se
                     elif log_time_str >= datetime_begin_str:
                         count = count + 1
                         if count <= 100:
-                            log_1000 = log_1000 + line + "<br>"
+                            log_1000 = log_1000 + line
 
                         print >> output_file, line,
 
@@ -101,7 +101,7 @@ def search_log_qq_kcbp(log_file, keyword, output_path=r"D:\backup\log_search\out
                 if line[:50] in header_key_set:
                     count = count + 1
                     if count <= 100:
-                        log_1000 = log_1000 + line + "<br>"
+                        log_1000 = log_1000 + line
                     print >> output_file, line,
 
         if count == 0:
@@ -117,7 +117,7 @@ def search_log_qq_kcbp(log_file, keyword, output_path=r"D:\backup\log_search\out
 
 
 # 大日志搜索，按关键字，qq_bpu
-def search_log_qq_bpu(log_file, keyword, output_path=r"C:\Users\guosen\Desktop\output"):
+def search_log_qq_bpu(log_file, keyword, output_path=r"D:\backup\log_search\output"):
     try:
         file_name = os.path.basename(log_file)
         output_file_name = "search_" + file_name
@@ -160,7 +160,7 @@ def search_log_qq_bpu(log_file, keyword, output_path=r"C:\Users\guosen\Desktop\o
                 if line[:header_length] in header_key_set:
                     count = count + 1
                     if count <= 100:
-                        log_1000 = log_1000 + line + "<br>"
+                        log_1000 = log_1000 + line
                     print >> output_file, line,
 
         if count == 0:
