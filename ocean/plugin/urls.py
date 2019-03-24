@@ -24,9 +24,8 @@ from . import views
 urlpatterns = [
 
     # 常用工具
-    url(r'^searchLogLocal$', views.search_log_local_page, name='searchLogLocal'),
-    url(r'^searchLogRemote$', views.search_log_remote_page, name='searchLogRemote'),
-    url(r'^copyLogRemote$', views.copy_log_remote_page, name='copyLogRemote'),
+    url(r'^searchLog$', views.search_log_page, name='searchLog'),
+    url(r'^copyLog$', views.copy_log_page, name='copyLog'),
     url(r'^getLogLocal$', views.get_log_local, name='getLogLocal'),
     url(r'^getLogRemote$', views.get_log_remote, name='getLogRemote'),
 ]

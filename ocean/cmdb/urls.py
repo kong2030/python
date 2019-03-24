@@ -41,4 +41,7 @@ urlpatterns = [
     # 通过系统名来查询组件
     url(r'^getModulesByApp$', views.get_modules_by_app, name='getModulesByApp'),
 
+    # 通过组件名来查询主机
+    url(r'^getHostsByModule$', views.get_hosts_by_module, name='getHostsByModule'),
+
 ]

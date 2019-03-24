@@ -126,20 +126,33 @@ def save_module(request):
 @csrf_exempt
 def get_modules_by_app(request):
     app_name = request.POST["app_name"]
-    order_type = request.POST["order_type"]
     app_system = AppSystem.objects.filter(app_name=app_name)
     modules = Module.objects.filter(app_system=app_system)
 
-    # 如果是Sql发布单，就只列出对应的组件供选择
     result = ""
     for obj in modules:
         module_name = obj.module_name
-        if order_type == "1":
-            if not module_name.endswith("SQL"):
-                result = result + module_name + ","
-        elif order_type == "2":
-            if module_name.endswith("SQL"):
-                result = result + module_name + ","
+        result = result + module_name + ","
+
+    # 去除最后一个逗号
+    result = result[:-1]
+    return HttpResponse(result)
+
+
+# 通过组件名来查询主机
+@login_required
+@csrf_exempt
+def get_hosts_by_module(request):
+    module_name = request.POST["module_name"]
+    module = Module.objects.filter(module_name=module_name)[0]
+
+    # ManyToMany取值
+    hosts = module.host_set.all()
+
+    result = ""
+    for obj in hosts:
+        host_ip = obj.ip
+        result = result + host_ip + ","
 
     # 去除最后一个逗号
     result = result[:-1]

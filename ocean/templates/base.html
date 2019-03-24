@@ -24,7 +24,7 @@
         <link href="/static/metronic/assets/global/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" type="text/css" />
         <link href="/static/metronic/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="/static/metronic/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
-        <link href="/static/metronic/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="/static/metronic/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -198,18 +198,13 @@
                                     <span id="cygj_2"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item " id="cygj_rzss_local">
-                                        <a href="{% url 'plugin:searchLogLocal' %}" class="nav-link ">
-                                            <span class="title">日志搜索（本地）</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item " id="cygj_rzss_remote">
-                                        <a href="{% url 'plugin:searchLogRemote' %}" class="nav-link ">
-                                            <span class="title">日志搜索（远程）</span>
+                                    <li class="nav-item " id="cygj_rzss">
+                                        <a href="{% url 'plugin:searchLog' %}" class="nav-link ">
+                                            <span class="title">日志搜索</span>
                                         </a>
                                     </li>
                                     <li class="nav-item " id="cygj_rzkb">
-                                        <a href="{% url 'plugin:copyLogRemote' %}" class="nav-link ">
+                                        <a href="{% url 'plugin:copyLog' %}" class="nav-link ">
                                             <span class="title">日志拷贝</span>
                                         </a>
                                     </li>

@@ -126,3 +126,38 @@ app.controller('monitorCtrl', function($scope, $http, $compile) {
     }
 
 });
+
+
+// 常用工具管理
+app.controller('pluginCtrl', function($scope, $http, $compile) {
+
+    //日志搜索，关联系统
+    $scope.appChange = function(){
+        result = {"app_name": $scope.app_name};
+
+        $http({
+            method:'post',
+            url:'/ocean/cmdb/getModulesByApp',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, //需要加上头
+			data:$.param(result),
+        }).success(function(response,status){
+            modules = response.split(",")
+            $scope.modules = modules
+        });
+    }
+
+    //日志搜索，关联主机
+    $scope.moduleChange = function(){
+        result = {"module_name": $scope.module_name};
+
+        $http({
+            method:'post',
+            url:'/ocean/cmdb/getHostsByModule',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, //需要加上头
+			data:$.param(result),
+        }).success(function(response,status){
+            $scope.hosts = response
+        });
+    }
+
+});

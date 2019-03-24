@@ -45,6 +45,7 @@ class Module(models.Model):
     module_name = models.CharField(max_length=50, unique=True)
     chinese_name = models.CharField(max_length=50)
     app_system = models.ForeignKey(AppSystem, on_delete=models.PROTECT)
+    kwargs = models.TextField(null=True, blank=True, default="{}")
 
     def __unicode__(self):
         return self.module_name
