@@ -32,27 +32,39 @@ DEPLOY_FILE_PATH = r"D:\backup\deploy"
 # 发布单列表
 @login_required
 def list_order_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "fbd"
+    sub_menu = "fbd_lb"
+
     #orders = Order.objects.all()
     app_systems = cmdb.services.get_apps_by_user(request.user)
     orders = Order.objects.filter(app_system__in=app_systems)
 
-    return render(request, "deploy/order_list.html", {"orders": orders})
+    return render(request, "deploy/order_list.html", {"main_memu": main_memu, "sub_menu": sub_menu, "orders": orders})
 
 
 # 发布单新增页面
 @login_required
 def add_order_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "fbd"
+    sub_menu = "fbd_xjfbd"
+
     #app_systems = AppSystem.objects.all()
     app_systems = cmdb.services.get_apps_by_user(request.user)
-    return render(request, "deploy/order_add.html", {"appSystems": app_systems})
+    return render(request, "deploy/order_add.html", {"main_memu": main_memu, "sub_menu": sub_menu, "appSystems": app_systems})
 
 
 # 发布单新增页面 sql
 @login_required
 def add_order_sql_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "fbd"
+    sub_menu = "fbd_xjfbd_sql"
+
     #app_systems = AppSystem.objects.all()
     app_systems = cmdb.services.get_apps_by_user(request.user)
-    return render(request, "deploy/order_add_sql.html", {"appSystems": app_systems})
+    return render(request, "deploy/order_add_sql.html", {"main_memu": main_memu, "sub_menu": sub_menu, "appSystems": app_systems})
 
 
 # 发布单入库
@@ -97,11 +109,15 @@ def save_order(request):
 # 环境流转页
 @login_required
 def change_order_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "bsfb"
+    sub_menu = "bsfb_hjlz"
+
     #orders = Order.objects.all().exclude(Q(env_1=1) | Q(env_2=1) | Q(env_3=1) | Q(env_4=1) | Q(env_5=1))
     app_systems = cmdb.services.get_apps_by_user(request.user)
     orders = Order.objects.filter(app_system__in=app_systems).exclude(Q(env_1=1) | Q(env_2=1) | Q(env_3=1) | Q(env_4=1) | Q(env_5=1))
     envs = Environment.objects.all()
-    return render(request, "deploy/order_status.html", {"orders": orders, "envs": envs})
+    return render(request, "deploy/order_status.html", {"main_memu": main_memu, "sub_menu": sub_menu, "orders": orders, "envs": envs})
 
 
 # 环境流转
@@ -130,6 +146,10 @@ def change_order(request):
 @login_required
 @csrf_exempt
 def list_deploy_order_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "bsfb"
+    sub_menu = "bsfb_ksfb"
+
     # 过滤刚新建还没流转的发布单
     #orders = Order.objects.all().exclude(env_1=0, env_2=0, env_3=0, env_4=0, env_5=0)
     app_systems = cmdb.services.get_apps_by_user(request.user)
@@ -147,13 +167,17 @@ def list_deploy_order_page(request):
             order.env_status = env_name + " 已发布"
             order.deploy_status = 2
 
-    return render(request, "deploy/order_deploy_list.html", {"orders": orders})
+    return render(request, "deploy/order_deploy_list.html", {"main_memu": main_memu, "sub_menu": sub_menu, "orders": orders})
 
 
 # 开始发布页面
 @login_required
 @csrf_exempt
 def deploy_order_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "bsfb"
+    sub_menu = "bsfb_ksfb"
+
     order_code = request.GET["orderCode"]
     order = Order.objects.filter(order_code=order_code)[0]
     module = order.module
@@ -204,7 +228,7 @@ def deploy_order_page(request):
                 deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
             deploy_model_list.append(deploy_model)
 
-    return render(request, "deploy/order_deploy.html", {"deploy_model_list": deploy_model_list,
+    return render(request, "deploy/order_deploy.html", {"main_memu": main_memu, "sub_menu": sub_menu, "deploy_model_list": deploy_model_list,
                                                         "order_code":order_code, "module_name": module_name, "env_name":env_name, "current_env":current_env})
 
 
@@ -212,6 +236,10 @@ def deploy_order_page(request):
 @login_required
 @csrf_exempt
 def deploy_order_sql_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "bsfb"
+    sub_menu = "bsfb_ksfb"
+
     order_code = request.GET["orderCode"]
     sql_file_list = services.get_order_sql_files(order_code)
     order = Order.objects.filter(order_code=order_code)[0]
@@ -262,7 +290,7 @@ def deploy_order_sql_page(request):
                 deploy_model.deploy_status = mark_safe('<span class="label label-primary">未发布</span>')
             deploy_model_list.append(deploy_model)
 
-    return render(request, "deploy/order_deploy_sql.html", {"deploy_model_list": deploy_model_list,
+    return render(request, "deploy/order_deploy_sql.html", {"main_memu": main_memu, "sub_menu": sub_menu, "deploy_model_list": deploy_model_list,
                                                         "order_code": order_code, "module_name": module_name,"deploy_btn_status": deploy_btn_status,
                                                         "env_name": env_name, "current_env": current_env, "sql_file_list":sql_file_list})
 

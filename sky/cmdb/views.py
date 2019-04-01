@@ -25,7 +25,11 @@ sys.setdefaultencoding('utf-8')
 # 加密工具页面
 @login_required
 def encrypt_page(request):
-    return render(request, 'cmdb/encrypt.html')
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "rcwh"
+    sub_menu = "rcwh_mmgj"
+
+    return render(request, 'cmdb/encrypt.html', {"main_memu": main_memu, "sub_menu": sub_menu,})
 
 
 # 返回加密后的密码串，再保存数据库
@@ -52,23 +56,35 @@ def encrypt(request):
 # 组件列表
 @login_required
 def list_module_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "rcwh"
+    sub_menu = "rcwh_zjpz"
+
     #modules = Module.objects.all()
     app_systems = services.get_apps_by_user(request.user)
     modules = Module.objects.filter(app_system__in=app_systems)
-    return render(request, "cmdb/module_list.html", {"modules": modules})
+    return render(request, "cmdb/module_list.html", {"main_memu": main_memu, "sub_menu": sub_menu, "modules": modules})
 
 
 # 组件新增页面
 @login_required
 def add_module_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "rcwh"
+    sub_menu = "rcwh_zjpz"
+
     #app_systems = AppSystem.objects.all()
     app_systems = services.get_apps_by_user(request.user)
-    return render(request, "cmdb/module_add.html", {"appSystems": app_systems})
+    return render(request, "cmdb/module_add.html", {"main_memu": main_memu, "sub_menu": sub_menu, "appSystems": app_systems})
 
 
 # 组件编辑页面
 @login_required
 def edit_module_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "rcwh"
+    sub_menu = "rcwh_zjpz"
+
     module_id = request.GET["moduleId"]
     module = Module.objects.filter(id=module_id)[0]
 
@@ -78,7 +94,7 @@ def edit_module_page(request):
     # ManyToMany取值
     hosts = module.host_set.all()
 
-    return render(request, "cmdb/module_edit.html", {"module": module, "appSystems": app_systems, "hosts": hosts})
+    return render(request, "cmdb/module_edit.html", {"main_memu": main_memu, "sub_menu": sub_menu, "module": module, "appSystems": app_systems, "hosts": hosts})
 
 
 # 组件信息入库
@@ -136,6 +152,10 @@ def get_modules_by_app(request):
 @login_required
 @csrf_exempt
 def list_app_user_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "xtgl"
+    sub_menu = "xtgl_qxgl"
+
     # 先把已经有记录的用户查出来
     app_users = list(UserApp.objects.all())
 
@@ -150,13 +170,17 @@ def list_app_user_page(request):
         app_user.user_code = user.userinfo.user_code
         app_users.append(app_user)
 
-    return render(request, "cmdb/app_user_list.html",{"appUsers": app_users})
+    return render(request, "cmdb/app_user_list.html",{"main_memu": main_memu, "sub_menu": sub_menu, "appUsers": app_users})
 
 
 # 增加 用户-系统
 @login_required
 @csrf_exempt
 def add_app_user_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "xtgl"
+    sub_menu = "xtgl_qxgl"
+
     user_id = request.GET["id"]
     user = User.objects.filter(id=user_id)[0]
     app_systems = AppSystem.objects.all()
@@ -176,7 +200,7 @@ def add_app_user_page(request):
                 app_unselected.append(app_system)
     else:
         app_unselected = app_systems
-    return render(request, "cmdb/app_user_add.html", {"user": user, "appSelected": app_selected, "appUnselected": app_unselected})
+    return render(request, "cmdb/app_user_add.html", {"main_memu": main_memu, "sub_menu": sub_menu, "user": user, "appSelected": app_selected, "appUnselected": app_unselected})
 
 
 # 用户-系统 入库

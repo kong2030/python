@@ -17,11 +17,15 @@ from deploy.models import *
 # 加载首页
 @login_required
 def index_page(request):
+    # 初始化菜单css，表示选中哪个主菜单、子菜单
+    main_memu = "index"
+    sub_menu = ""
+
     app_count = AppSystem.objects.count()
     module_count = Module.objects.count()
     host_count = Host.objects.count()
     order_count = Order.objects.count()
-    return render(request, 'index.html', {"app_count": app_count, "module_count": module_count,
+    return render(request, 'index.html', {"main_memu":main_memu, "sub_menu": sub_menu, "app_count": app_count, "module_count": module_count,
                                           "host_count": host_count, "order_count": order_count})
 
 

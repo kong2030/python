@@ -123,102 +123,102 @@
                                 </div>
                             </li>
                             <!-- END SIDEBAR TOGGLER BUTTON -->
-                            <li {% block index_start_class %}{% endblock %}>
+                            <li class="nav-item " id="index">
                                 <a href="{% url 'index' %}" class="nav-link">
                                     <i class="icon-home"></i>
                                     <span class="title">首页</span>
-                                    <span {% block index_selected_class %}{% endblock %}></span>
+                                    <span id="index_1"></span>
                                 </a>
                             </li>
-                            <li  {% block fbd_start_class %}{% endblock %}>
+                            <li  class="nav-item " id="fbd">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-diamond"></i>
                                     <span class="title">发布单</span>
-                                    <span {% block fbd_open_class %}{% endblock %}></span>
-                                    <span {% block fbd_selected_class %}{% endblock %}></span>
+                                    <span class="arrow " id="fbd_1"></span>
+                                    <span id="fbd_2"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li {% block fbd_list_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="fbd_lb">
                                         <a href="{% url 'deploy:listOrder' %}" class="nav-link ">
                                             <span class="title">列表</span>
                                         </a>
                                     </li>
-                                    <li {% block fbd_add_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="fbd_xjfbd">
                                         <a href="{% url 'deploy:addOrder' %}" class="nav-link ">
                                             <span class="title">新建发布单（上传）</span>
                                         </a>
                                     </li>
-                                    <li {% block fbd_addsql_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="fbd_xjfbd_sql">
                                         <a href="{% url 'deploy:addOrderSql' %}" class="nav-link ">
                                             <span class="title">新建发布单（SQL）</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                            <li {% block bsfb_start_class %}{% endblock %}>
+                            <li class="nav-item " id="bsfb">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-puzzle"></i>
                                     <span class="title">部署发布</span>
-                                    <span {% block bsfb_open_class %}{% endblock %}></span>
-                                    <span {% block bsfb_selected_class %}{% endblock %}></span>
+                                    <span class="arrow " id="bsfb_1"></span>
+                                    <span id="bsfb_2"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li {% block bsfb_hjlz_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="bsfb_hjlz">
                                         <a href="{% url 'deploy:changeOrderPage' %}" class="nav-link ">
                                             <span class="title">环境流转</span>
                                         </a>
                                     </li>
-                                    <li {% block bsfb_ksfb_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="bsfb_ksfb">
                                         <a href="{% url 'deploy:listDeployOrder' %}" class="nav-link ">
                                             <span class="title">开始发布</span>
                                         </a>
                                     </li>
-                                    <li {% block bsfb_fbls_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="bsfb_fbls">
                                         <a href="#" class="nav-link ">
                                             <span class="title">发布历史</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                            <li {% block rcwh_start_class %}{% endblock %}>
+                            <li class="nav-item " id="rcwh">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="fa fa-gears"></i>
                                     <span class="title">日常维护</span>
-                                    <span {% block rcwh_open_class %}{% endblock %}></span>
-                                    <span {% block rcwh_selected_class %}{% endblock %}></span>
+                                    <span class="arrow " id="rcwh_1"></span>
+                                    <span id="rcwh_2"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li {% block rcwh_xzzj_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="rcwh_zjpz">
                                         <a href="{% url 'cmdb:listModule' %}" class="nav-link ">
                                             <span class="title">组件配置</span>
                                         </a>
                                     </li>
-                                    <li {% block rcwh_dbpz_active_class %}{% endblock %}>
-                                        <a href="#" class="nav-link ">
-                                            <span class="title">数据库配置</span>
+                                    <li class="nav-item " id="rcwh_jqpz">
+                                        <a href="{% url 'cmdb:listModule' %}" class="nav-link ">
+                                            <span class="title">主机配置</span>
                                         </a>
                                     </li>
-                                    <li {% block rcwh_mmgj_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="rcwh_mmgj">
                                         <a href="{% url 'cmdb:encryptPage' %}" class="nav-link ">
                                             <span class="title">密码工具</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                            <li {% block sysconfig_start_class %}{% endblock %}>
+                            <li class="nav-item " id="xtgl">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-settings"></i>
                                     <span class="title">系统管理</span>
-                                    <span {% block sysconfig_open_class %}{% endblock %}></span>
-                                    <span {% block sysconfig_selected_class %}{% endblock %}></span>
+                                    <span class="arrow " id="xtgl_1"></span>
+                                    <span id="xtgl_2"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li {% block admin_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="xtgl_yhgl">
                                         <a href="/admin" class="nav-link " target="_blank">
                                             <span class="title">用户管理</span>
                                         </a>
                                     </li>
-                                    <li {% block sysconfig_qxgl_active_class %}{% endblock %}>
+                                    <li class="nav-item " id="xtgl_qxgl">
                                         <a href="{% url 'cmdb:listAppUser' %}" class="nav-link ">
                                             <span class="title">权限管理</span>
                                         </a>
@@ -297,7 +297,26 @@
         <script src="/static/js/plugins/ui-bootstrap-tpls.min.js"></script>
         <script src="/static/js/app.js"></script>
 
-        <!-- BEGIN MY SCRIPTS -->
+        <script type="text/javascript">
+            //初始化菜单的css
+            $(document).ready(function(){
+                //所选主菜单、子菜单
+                mainMenu = "{{main_memu}}";
+                subMenu = "{{sub_menu}}";
+                if(mainMenu=="index"){
+                    $("#"+mainMenu).addClass("start active open");
+                    $("#"+mainMenu+"_1").addClass("selected");
+                }else{
+                    $("#"+mainMenu).addClass("start active open");
+                    $("#"+mainMenu+"_1").addClass("open");
+                    $("#"+mainMenu+"_2").addClass("selected");
+                    $("#"+subMenu).addClass("active");
+                }
+            });
+
+        </script>
+
+        <!-- END MY SCRIPTS -->
     </body>
 
 </html>
