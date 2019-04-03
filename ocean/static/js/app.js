@@ -148,7 +148,8 @@ app.controller('pluginCtrl', function($scope, $http, $compile) {
 
     //日志搜索，关联主机
     $scope.moduleChange = function(){
-        result = {"module_name": $scope.module_name};
+        env_id = $("#envId").val();
+        result = {"module_name": $scope.module_name, "env_id":env_id};
 
         $http({
             method:'post',

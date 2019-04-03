@@ -45,6 +45,7 @@ class Module(models.Model):
     module_name = models.CharField(max_length=50, unique=True)
     chinese_name = models.CharField(max_length=50)
     app_system = models.ForeignKey(AppSystem, on_delete=models.PROTECT)
+    program_path = models.CharField(max_length=128, null=True)  # 程序安装路径
     kwargs = models.TextField(null=True, blank=True, default="{}")
 
     def __unicode__(self):

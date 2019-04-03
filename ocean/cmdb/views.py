@@ -144,10 +144,11 @@ def get_modules_by_app(request):
 @csrf_exempt
 def get_hosts_by_module(request):
     module_name = request.POST["module_name"]
+    env_id = request.POST["env_id"]
     module = Module.objects.filter(module_name=module_name)[0]
 
     # ManyToMany取值
-    hosts = module.host_set.all()
+    hosts = module.host_set.filter(environment=env_id)
 
     result = ""
     for obj in hosts:

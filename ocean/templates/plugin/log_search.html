@@ -150,6 +150,29 @@
                                             <!-- BEGIN FORM-->
                                             <form class="form-horizontal" action="{% url 'plugin:getLogRemote' %}" method="post" target="_blank">
                                                 <div class="form-body" >
+                                                    <div class="form-group ">
+                                                        <label class="control-label col-md-2">环境
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <select class="form-control" data-live-search="true" data-size="8" id="envId" name="envId">
+                                                                <option value="1">测试环境</option>
+                                                                <option value="2">预发环境</option>
+                                                                <option value="3" selected>生产环境</option>
+                                                                <option value="4">同城灾备</option>
+                                                                <option value="5">异地灾备</option>
+                                                            </select>
+                                                        </div>
+                                                        <label class="control-label col-md-2">主机
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <div class="input-icon right">
+                                                                <i class="fa"></i>
+                                                                <input type="text" class="form-control"  id="hosts" name="hosts" value="{[ hosts ]}" readonly/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="form-group">
                                                         <label class="control-label col-md-2">应用系统
                                                             <span class="required"> * </span>
@@ -168,29 +191,9 @@
                                                         </label>
                                                         <div class="col-md-3">
                                                             <select class="form-control" data-live-search="true" data-size="8" id="module" name="module" ng-change="moduleChange()" ng-model="module_name"  >
-                                                                <option value="">请选择</option>
+
                                                                 <option value="{[ module_name ]}" ng-repeat="module_name in modules">{[ module_name ]}</option>
                                                             </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group ">
-                                                        <label class="control-label col-md-2">主机
-                                                            <span class="required"> * </span>
-                                                        </label>
-                                                        <div class="col-md-3">
-                                                            <div class="input-icon right">
-                                                                <i class="fa"></i>
-                                                                <input type="text" class="form-control"  name="hosts" value="{[ hosts ]}" readonly/>
-                                                            </div>
-                                                        </div>
-                                                        <label class="control-label col-md-2">输出目录
-                                                            <span class="required"> * </span>
-                                                        </label>
-                                                        <div class="col-md-3">
-                                                            <div class="input-icon right">
-                                                                <i class="fa"></i>
-                                                                <input type="text" class="form-control"  name="outputPath" value="D:\backup\log_search\output" required/>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -203,6 +206,17 @@
                                                                 <option value="qq_bpu">期权日志-bpu</option>
                                                             </select>
                                                         </div>
+                                                        <label class="control-label col-md-2">输出目录
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <div class="input-icon right">
+                                                                <i class="fa"></i>
+                                                                <input type="text" class="form-control"  name="outputPath" value="D:\backup\log_search\output" required/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group ">
                                                         <label class="control-label col-md-2">搜索方式
                                                             <span class="required"> * </span>
                                                         </label>

@@ -99,6 +99,7 @@ def get_log_local(request):
 def get_log_remote(request):
     try:
         module_name = request.POST["module"]
+        env_id = request.POST["envId"]
         output_path = request.POST["outputPath"]
         log_type = request.POST["logType"]
         search_type = request.POST["searchType"]
@@ -113,7 +114,7 @@ def get_log_remote(request):
         module_kwargs = json.loads(module.kwargs)
         log_path = module_kwargs["log_path"]
         # ManyToMany取值
-        hosts = module.host_set.all()
+        hosts = module.host_set.filter(environment=env_id)
 
         log_preview_all = ""
         for host in hosts:
