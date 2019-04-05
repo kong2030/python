@@ -133,9 +133,33 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
                 if(deployChecked.length<1)return;
 
                 // 弹出模态框，防止乱动
-                $('#myModal .progress-bar').css('width','50%')
+                width_init = 100/(deployChecked.length);
+                width = 1;
+                //$('#myModal .progress-bar').css('width',width+'%');
                 $('#myModal').modal({backdrop:'static',keyboard:false});
 
+                //ajax请求到后端
+                for(i=0;i<deployChecked.length;i++){
+                    var checked = [];
+                    checked[0] = deployChecked[i];
+                    $.ajax({
+                        type: "POST",
+                        url: "/sky/deploy/saveDeploy",
+                        traditional:true,   //加上这项可以传递数组
+                        data: {"deployChecked":checked, "orderCode":order_code, "currentEnv":current_env, "moduleName":module_name},
+                        success: function(result,status){
+                            width = width + width_init;
+                            $('#myModal .progress-bar').css('width',width+'%');
+                            if(width>=100){
+                                // 隐藏模态框
+                                $('#myModal').modal('hide');
+                                window.location.href="/sky/deploy/deployOrder?orderCode=" + order_code;
+                            }
+                        }
+                    });
+                }
+
+                /*
                 //ajax请求到后端
                 $.ajax({
                     type: "POST",
@@ -155,7 +179,7 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
                             });
                         }
                     }
-                });
+                });*/
             }else{
                 swal("放弃发布！")
             }

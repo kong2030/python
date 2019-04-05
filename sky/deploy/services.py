@@ -177,6 +177,20 @@ def deploy_do(order, host):
         with open(os.path.join(remote_deploy_path, order_code + ".log"), "w") as f:
             for line in result:
                 print >> f, line
+
+        # md5校验
+        for root,dirs,files in os.walk(deploy_file_path):
+            for file_ in files:
+                file_path_src = os.path.join(root, file_)
+                md5_src = generate_file_md5value(file_path_src)
+                file_path_dst = file_path_src.replace(deploy_file_path, remote_program_path)
+                if os.path.exists(file_path_dst):
+                    md5_dst = generate_file_md5value(file_path_dst)
+                    if md5_src != md5_dst:
+                        flag = -1
+                        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查:" + "\n" + u"md5校验失败" + "\n"
+                        return flag, log_str
+
         # 删除文件
         shutil.rmtree(remote_deploy_path_temp)
 
