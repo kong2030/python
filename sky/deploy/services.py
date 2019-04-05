@@ -14,6 +14,8 @@ import traceback
 import logging
 from stat import ST_ATIME, ST_CTIME, ST_MTIME
 
+import cmdb.services
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -29,9 +31,16 @@ def connect(host):
         host_user = host.host_user
         password = host.password
 
+        # 判断连接是否已经存在
+        result = os.popen("net use").readlines()
+        for line in result:
+            if "OK" in line.upper() and host_ip in line:
+                flag = 0
+                log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 连接存在，无需新建" + "\n"
+                return flag, log_str
+
         # 解密
-        decode_str = base64.decodestring(password)
-        password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
+        password = cmdb.services.decrypt(password)
 
         # 根据操作类型，升级文件的存放位置
         os_id = host.os_type.os_id
@@ -56,7 +65,7 @@ def connect(host):
         logging.error("connection has an error:")
         logging.exception(Exception)
         flag = -1
-        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 连接失败，请检查。。。" + "\n"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 连接失败，请检查:" + "\n" + str(e) + "\n"
 
     return flag, log_str
 
@@ -89,7 +98,7 @@ def copy_deploy_file(order, host):
         logging.error(order_code+" copy has an error:")
         logging.exception(Exception)
         flag = -1
-        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 复制失败，请检查。。。" + "\n"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 复制失败，请检查:" + "\n" + str(e) + "\n"
 
     return flag, log_str
 
@@ -111,15 +120,22 @@ def deploy_backup(order, host):
         else:
             print u"目录已经存在，请先整理。。。"
 
+        #raise RuntimeError('testError')
+
         print u"备份成功"
         flag = 0
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份成功" + "\n"
     except Exception as e:
+        # 备份失败,删除备份垃圾数据
+        dst_remote_path = r"\\" + host_ip + r"\d$\backup\deploy-before" + "\\" + order_code
+        if os.path.exists(dst_remote_path):
+            shutil.rmtree(dst_remote_path)
+
         traceback.print_exc()
         logging.error(order_code+" backup has an error:")
         logging.exception(Exception)
         flag = -1
-        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份失败，请检查。。。" + "\n"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份失败，请检查:" + "\n" + str(e) + "\n"
 
     return flag, log_str
 
@@ -173,14 +189,14 @@ def deploy_do(order, host):
             print u"发布失败"
             logging.info(order_code + u" has no success flag 复制了")
             flag = -1
-            log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查。。。" + "\n"
+            log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查:" + "\n" + u"没找到复制成功标志: 复制了" + "\n"
 
     except Exception as e:
         traceback.print_exc()
         logging.error(order_code+" deploy has an error:")
         logging.exception("EXCEPTION")
         flag = -1
-        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查。。。" + "\n"
+        log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查:" + "\n" + str(e) + "\n"
 
     return flag, log_str
 
@@ -433,6 +449,31 @@ def get_order_sql_files(order_code):
     # 直接把文件名与文件内容返回，免得再次解析
     return sql_file_list
 
+
+# 获取order完整状态
+def get_order_status_all(order_code):
+    order = Order.objects.filter(order_code=order_code)[0]
+
+    order_status_html = ""
+    for env_id in range(1,6):
+        env_name = Environment.objects.filter(env_id=env_id)[0].env_name
+        # 使用反射获取对应环境
+        arg_name = "env_" + str(env_id)
+        order_status = getattr(order, arg_name)
+        temp_str = ""
+        if order_status == 0:
+            temp_str = '<button class="btn purple">%s未发布</button>' % (env_name)
+        elif order_status == 1:
+            temp_str = '<button class="btn btn-primary">%s待发布</button>' % (env_name)
+        elif order_status == 2:
+            temp_str = '<button class="btn btn-success">%s已发布</button>' % (env_name)
+
+        if env_id < 5:
+            temp_str = temp_str + '<span class="fa fa-arrow-right"></span>'
+
+        order_status_html = order_status_html + temp_str
+
+    return order_status_html
 
 # 主函数，测试
 if __name__ == "__main__":

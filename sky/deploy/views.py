@@ -189,6 +189,9 @@ def deploy_order_page(request):
     # ManyToMany取值
     hosts = module.host_set.filter(environment=env)
 
+    # 获取此order完整状态
+    order_status_all = mark_safe(services.get_order_status_all(order_code))
+
     # 发布页的页面封装类
     class DeployModel(object):
         pass
@@ -229,7 +232,7 @@ def deploy_order_page(request):
             deploy_model_list.append(deploy_model)
 
     return render(request, "deploy/order_deploy.html", {"main_memu": main_memu, "sub_menu": sub_menu, "deploy_model_list": deploy_model_list,
-                                                        "order_code":order_code, "module_name": module_name, "env_name":env_name, "current_env":current_env})
+                                                        "order_code":order_code, "module_name": module_name, "env_name":env_name, "current_env":current_env, "order_status_all":order_status_all})
 
 
 # sql发布页面
@@ -333,6 +336,7 @@ def save_deploy(request):
             # 发布单表状态更新
             arg_name = "env_" + str(current_env)
             setattr(order, arg_name, 2)
+            order.update_time = datetime.datetime.now()
             order.save()
 
         if flag == 0:
@@ -381,6 +385,7 @@ def save_deploy_sql(request):
             # 发布单表状态更新
         arg_name = "env_" + str(current_env)
         setattr(order, arg_name, 2)
+        order.update_time = datetime.datetime.now()
         order.save()
 
         if flag == 0:

@@ -45,7 +45,7 @@ class Module(models.Model):
     module_name = models.CharField(max_length=50, unique=True)
     chinese_name = models.CharField(max_length=50)
     program_path = models.CharField(max_length=128)   # 程序安装路径
-    script_path = models.CharField(max_length=128)    # 部署需用到的本地脚本路径
+    kwargs = models.TextField(null=True, blank=True, default="{}")
     app_system = models.ForeignKey(AppSystem, on_delete=models.PROTECT)
 
     def __unicode__(self):

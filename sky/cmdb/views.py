@@ -39,12 +39,10 @@ def encrypt(request):
     password = request.POST["password"]
     if len(password) >= 8:
         # 加密
-        new_password = password[-1] + password[-2] + password[2:-2] + password[1] + password[0]
-        encrypt_str = base64.encodestring(new_password)
+        encrypt_str = services.encrypt(password)
 
         # 解密
-        decode_str = base64.decodestring(encrypt_str)
-        password = decode_str[-1] + decode_str[-2] + decode_str[2:-2] + decode_str[1] + decode_str[0]
+        password = services.decrypt(encrypt_str)
     else:
         password = "the password is too simple"
         encrypt_str = ""
@@ -103,18 +101,22 @@ def edit_module_page(request):
 def save_module(request):
     try:
         # 先获取参数
-        module_id = request.POST["moduleId"]
         module_name = request.POST["moduleName"].upper().replace(" ", "")
         chinese_name = request.POST["chineseName"].replace(" ", "")
         program_path = request.POST["programPath"].replace(" ", "")
-        script_path = request.POST["scriptPath"].replace(" ", "")
+        kwargs = request.POST["kwargs"].strip()
         app_name = request.POST["appSystem"].replace(" ", "")
         app_system = AppSystem.objects.filter(app_name=app_name)[0]
 
+        module = Module(module_name=module_name, chinese_name=chinese_name, app_system=app_system, program_path=program_path, kwargs=kwargs)
+
+        # 如果是编辑就加上id,
+        if request.POST.has_key("moduleId"):
+            module_id = request.POST["moduleId"]
+            module.id = module_id
+
         # 更新数据库
-        update_field = {"module_name": module_name, "chinese_name": chinese_name, "program_path": program_path,\
-                        "script_path": script_path, "app_system": app_system}
-        Module.objects.update_or_create(id=module_id, defaults=update_field)
+        module.save()
 
     except Exception as e:
         print e

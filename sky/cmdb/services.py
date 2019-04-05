@@ -4,6 +4,7 @@ import time
 import sys
 
 from models import *
+import base64
 
 
 # 获取用户所管系统
@@ -25,3 +26,17 @@ def get_apps_by_user(user):
                 app_systems = AppSystem.objects.filter(id__in=app_ids_list)
 
     return app_systems
+
+
+# 加密
+def encrypt(password):
+    temp = password[-1] + password[-2] + password[2:-2] + password[1] + password[0]
+    encrypt_str = base64.encodestring(temp)
+    return encrypt_str
+
+
+# 解密，返回解密串
+def decrypt(ciphertext):
+    temp = base64.decodestring(ciphertext)
+    plaintext = temp[-1] + temp[-2] + temp[2:-2] + temp[1] + temp[0]
+    return plaintext

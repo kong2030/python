@@ -133,6 +133,7 @@ app.controller('orderCtrl', function($scope, $http, $compile) {
                 if(deployChecked.length<1)return;
 
                 // 弹出模态框，防止乱动
+                $('#myModal .progress-bar').css('width','50%')
                 $('#myModal').modal({backdrop:'static',keyboard:false});
 
                 //ajax请求到后端
