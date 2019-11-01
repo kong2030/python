@@ -23,6 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMP_PATH = os.path.join(BASE_DIR, "temp")
 DEPLOY_PATH = r"D:\backup\deploy"
 
+# 打印日志
+logger = logging.getLogger(__name__)
+
 
 # 首先建立连接
 def connect(host):
@@ -62,8 +65,8 @@ def connect(host):
 
     except Exception as e:
         traceback.print_exc()
-        logging.error("connection has an error:")
-        logging.exception(Exception)
+        logger.error("connection has an error:")
+        logger.exception(Exception)
         flag = -1
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 连接失败，请检查:" + "\n" + str(e) + "\n"
 
@@ -95,8 +98,8 @@ def copy_deploy_file(order, host):
 
     except Exception as e:
         traceback.print_exc()
-        logging.error(order_code+" copy has an error:")
-        logging.exception(Exception)
+        logger.error(order_code+" copy has an error:")
+        logger.exception(Exception)
         flag = -1
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 复制失败，请检查:" + "\n" + str(e) + "\n"
 
@@ -132,8 +135,8 @@ def deploy_backup(order, host):
             shutil.rmtree(dst_remote_path)
 
         traceback.print_exc()
-        logging.error(order_code+" backup has an error:")
-        logging.exception(Exception)
+        logger.error(order_code+" backup has an error:")
+        logger.exception(Exception)
         flag = -1
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 备份失败，请检查:" + "\n" + str(e) + "\n"
 
@@ -159,7 +162,7 @@ def deploy_do(order, host):
             os.makedirs(remote_deploy_path_temp)
         f = zipfile.ZipFile(deploy_file_zip, 'r')
         # 获取解压后根目录
-        app_root_dir = f.namelist()[0][:-1]
+        app_root_dir = f.namelist()[0].split('/')[0]
         # 保留原修改时间
         for file_ in f.infolist():
             d = file_.date_time
@@ -196,19 +199,19 @@ def deploy_do(order, host):
 
         if "复制了".encode("gb2312") in "".join(result):
             print u"发布成功"
-            logging.info(order_code + u" has success flag 复制了")
+            logger.info(order_code + u" has success flag 复制了")
             flag = 0
             log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布成功" + "\n"
         else:
             print u"发布失败"
-            logging.info(order_code + u" has no success flag 复制了")
+            logger.info(order_code + u" has no success flag 复制了")
             flag = -1
             log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查:" + "\n" + u"没找到复制成功标志: 复制了" + "\n"
 
     except Exception as e:
         traceback.print_exc()
-        logging.error(order_code+" deploy has an error:")
-        logging.exception("EXCEPTION")
+        logger.error(order_code+" deploy has an error:")
+        logger.exception("EXCEPTION")
         flag = -1
         log_str = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 发布失败，请检查:" + "\n" + str(e) + "\n"
 
@@ -241,7 +244,7 @@ def md5_check(order, host):
         for file_ in file_unzip.namelist():
             file_unzip.extract(file_, deploy_file_zip_temp)
         # 获取解压后根目录
-        app_root_dir = file_unzip.namelist()[0][:-1]
+        app_root_dir = file_unzip.namelist()[0].split('/')[0]
         deploy_file_path = os.path.join(deploy_file_zip_temp, app_root_dir)
 
         # 先建立连接
@@ -293,8 +296,8 @@ def md5_check(order, host):
         shutil.rmtree(deploy_file_zip_temp)
     except Exception as e:
         traceback.print_exc()
-        logging.error("md5 check has an error:")
-        logging.exception("EXCEPTION")
+        logger.error("md5 check has an error:")
+        logger.exception("EXCEPTION")
 
     return md5_form_list, result_all
 
@@ -353,8 +356,8 @@ def deploy_sql(order, host):
                         print log_str
     except Exception as e:
         traceback.print_exc()
-        logging.error(order_code+" has an error:")
-        logging.exception(Exception)
+        logger.error(order_code+" has an error:")
+        logger.exception(Exception)
         flag = 1
         log_str = log_str + datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + " " + file_ + "\n" + result
 
@@ -425,8 +428,8 @@ def rollback(order, host):
 
     except Exception as e:
         traceback.print_exc()
-        logging.error(order_code+"rollback has an error:")
-        logging.exception(Exception)
+        logger.error(order_code+"rollback has an error:")
+        logger.exception(Exception)
         flag = -1
         log_all = log_all + datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S") + u" 回滚失败，请检查。。。" + "\n"
 
